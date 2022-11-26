@@ -1,0 +1,44 @@
+.smart-ir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.ir-buttons {
+  padding: 0.7rem;
+  border-radius: 50%;
+  transition: all 0.5s;
+}
+.power {
+  margin: 0 8rem;
+}
+.ir-block {
+  display: flex;
+  flex-direction: column;
+}
+.ok-menu {
+  width: 10rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.ok-up {
+  margin: 0 2rem;
+}
+.vol,
+.chanel {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.ir-buttons:hover {
+  cursor: pointer;
+}
+.ir-buttons:active {
+  background-color: #ccc;
+}
+.btn-pow:active {
+  color: red;
+}

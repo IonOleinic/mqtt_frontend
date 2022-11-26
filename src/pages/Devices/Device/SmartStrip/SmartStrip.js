@@ -61,7 +61,7 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
       } catch (error) {
         console.log(error)
       }
-    }, 609)
+    }, 809)
     return () => {
       clearInterval(interval)
     }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import './Device.css'
 import SmartStrip from './SmartStrip/SmartStrip'
+import SmartIR from './SmartIR/SmartIR'
 import { MdOutlineExpandMore } from 'react-icons/md'
-import { MdOutlineExpandLess } from 'react-icons/md'
 import Favorite from './Favorite/Favorite'
 
 const iconMore = (
@@ -34,6 +34,8 @@ function Device({
         visibility={visibility}
       />
     )
+  } else if (device.device_type === 'smartIR') {
+    final_device = <SmartIR visibility={visibility} device={device} />
   }
   const togglevisibility = () => {
     setVisibility(!visibility)
