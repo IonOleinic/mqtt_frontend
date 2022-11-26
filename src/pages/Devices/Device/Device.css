@@ -1,0 +1,122 @@
+.device-item {
+  max-width: 20rem;
+  min-width: 20rem;
+  min-height: 6rem;
+  margin: 0.5rem 1rem;
+  position: relative;
+  background-color: white;
+  border-radius: 9px;
+  padding: 0.5rem;
+  box-shadow: 1px 1px 14px 1px #888888;
+  text-align: center;
+  transition: all 0.4s;
+}
+.device-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: -0.7rem;
+}
+
+#chk-visibility:checked ~ .icon-expand {
+  transform: rotate(180deg);
+}
+.icon-expand {
+  transition: all 0.5s;
+  padding: 0.2rem;
+  /* border: 2px solid red; */
+  margin-left: -0.5rem;
+}
+.device-img {
+  height: 70px;
+  width: 80px;
+  margin: 0;
+  padding: 0;
+}
+.device-name:hover,
+.device-img:hover,
+.icon-expand:hover {
+  cursor: pointer;
+}
+.device-name {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+.device-name * {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+.device-name h4 {
+  font-size: 1rem;
+  font-style: oblique;
+}
+.vertical-menu {
+  margin: 0;
+  position: relative;
+  background-color: transparent;
+}
+.vertical-menu-item {
+  display: none;
+  position: absolute;
+  left: -2rem;
+  margin: 0.3em 1em;
+  transition: all 0.5s;
+  z-index: 10;
+  text-align: left;
+}
+
+.checkbox-sub-menu {
+  display: none;
+}
+.checkbox-sub-menu:checked ~ .vertical-menu-item {
+  display: block;
+}
+.label-sub-menu img:hover {
+  background-color: rgba(204, 204, 204, 0.429);
+  border-radius: 50%;
+}
+.checkbox-sub-menu:checked ~ .label-sub-menu img {
+  background-color: rgba(204, 204, 204, 0.629);
+  border-radius: 50%;
+}
+
+.label-sub-menu {
+  background-color: transparent;
+  max-height: 2rem;
+  margin-left: 1rem;
+}
+.label-sub-menu img {
+  transition: all 0.5s;
+  padding: 0.6rem;
+}
+.label-sub-menu:hover {
+  cursor: pointer;
+}
+
+.vertical-menu ul {
+  position: relative;
+  top: 1rem;
+  right: 4.5em;
+  margin: 0;
+  list-style: none;
+  padding: 0;
+  box-shadow: 2px 2px 25px 1px #888888;
+  background-color: white;
+  transition: all 0.4s ease-in-out;
+}
+.vertical-menu-item li {
+  list-style-type: none;
+  background-color: white;
+  width: 180px;
+  padding: 0.2rem 1rem;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #ccc;
+  transition: all 0.4s ease-in-out;
+}
+
+.vertical-menu-item li:hover {
+  background-color: #ccc;
+  cursor: pointer;
+}
