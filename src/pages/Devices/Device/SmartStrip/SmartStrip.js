@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './SmartStrip.css'
+import io from 'socket.io-client'
 import Switch from './Switch/Switch'
+const serverURL = 'http://192.168.0.108'
+const serverPort = '5000'
 const app = axios.create({
-  baseURL: 'http://192.168.0.108:5000',
+  baseURL: `${serverURL}:${serverPort}`,
   timeout: 2000,
 })
-// let source = new EventSource('http://192.168.0.108:5000/stream')
+let socket = undefined
+
 const data = {
   StatusSNS: {
     Time: '0000-00-00T00:00:00',
@@ -34,6 +38,50 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
   const [statusList, setStatusList] = useState(init_statuses)
   const [isCheckedList, setIsCheckedList] = useState(initCheckedlist)
   const [sensorData, setSensorData] = useState(data)
+  function initSocket(__bool) {
+    if (__bool) {
+      if (!socket) {
+        socket = io.connect(`${serverURL}:${serverPort}`, {
+          secure: false,
+          forceNew: true,
+        })
+        socket.on('connect', function () {
+          console.log('connected')
+        })
+        socket.on('disconnect', function () {
+          console.log('disconnected')
+        })
+      } else {
+        socket.connect() // Yep, socket.socket ( 2 times )
+        console.log('reconected')
+      }
+    } else {
+      socket.disconnect()
+    }
+  }
+  const updateStatuses = (power_status) => {
+    setStatusList(power_status)
+    for (let i = 0; i < power_status.length; i++) {
+      if (power_status[i] === 'ON') {
+        isCheckedList[i] = true
+        setIsCheckedList(isCheckedList)
+      } else {
+        isCheckedList[i] = false
+        setIsCheckedList(isCheckedList)
+      }
+    }
+  }
+  useEffect(() => {
+    initSocket(true)
+    if (socket) {
+      socket.on('update_smart_strip', (data) => {
+        if (data.mqtt_name === mqtt_name) {
+          console.log('updating')
+          updateStatuses(data.power_status)
+        }
+      })
+    }
+  }, [])
 
   useEffect(() => {
     let interval = setInterval(async () => {
@@ -41,16 +89,7 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
         const smart_strip_power = await app.get(
           `/smartStrip?device_name=${mqtt_name}&req_topic=POWER&req_payload=''}`
         )
-        setStatusList(smart_strip_power.data.power_status)
-        for (let i = 0; i < smart_strip_power.data.power_status.length; i++) {
-          if (smart_strip_power.data.power_status[i] === 'ON') {
-            isCheckedList[i] = true
-            setIsCheckedList(isCheckedList)
-          } else {
-            isCheckedList[i] = false
-            setIsCheckedList(isCheckedList)
-          }
-        }
+        updateStatuses(smart_strip_power.data.power_status)
         if (device_type === 'smartSwitch') {
         } else if (device_type === 'smartStrip') {
           let smart_strip_sensor = await app.get(
@@ -61,43 +100,14 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
       } catch (error) {
         console.log(error)
       }
-    }, 809)
+    }, 3809)
     return () => {
       clearInterval(interval)
     }
   }, [])
-  // useEffect(() => {
-  //   const handleStream = (e) => {
-  //     let result = JSON.parse(e.data)
-  //     if (result.mqtt_name && result.mqtt_name === mqtt_name) {
-  //       console.log(result)
-  //       setStatusList(result.power_status)
-  //       for (let i = 0; i < result.power_status.length; i++) {
-  //         if (result.power_status[i] === 'ON') {
-  //           isCheckedList[i] = true
-  //           setIsCheckedList(isCheckedList)
-  //         } else {
-  //           isCheckedList[i] = false
-  //           setIsCheckedList(isCheckedList)
-  //         }
-  //       }
-  //     }
-  //   }
-  //   source.addEventListener('message', handleStream)
-  //   return () => {
-  //     source.removeEventListener('message', handleStream, true)
-  //   }
-  // }, [])
-
-  const toggleChecked = (id) => {
-    // isCheckedList[id] = !isCheckedList[id]
-    // setIsCheckedList(isCheckedList)
-  }
   const handlePower = async (id) => {
     try {
       if (statusList[id] === 'ON') {
-        statusList[id] = 'ON'
-        setStatusList(statusList)
         const response = await app.post(
           `/smartStrip?status=OFF&device_name=${mqtt_name}&req_type=POWER${
             id + 1
@@ -105,8 +115,6 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
         )
         console.log(response.data)
       } else {
-        statusList[id] = 'OFF'
-        setStatusList(statusList)
         const response = await app.post(
           `/smartStrip?status=ON&device_name=${mqtt_name}&req_type=POWER${
             id + 1
@@ -118,17 +126,8 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
       console.log(err.message)
     }
   }
-
   const { Time, ENERGY } = sensorData.StatusSNS
 
-  const checkForStatuses = () => {
-    for (let i = 0; i < statusList.length; i++) {
-      if (statusList[i] === 'ON') {
-        return true
-      }
-    }
-    return false
-  }
   let sensor_part
   if (device_type === 'smartStrip') {
     sensor_part = (
@@ -165,7 +164,6 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
       <Switch
         key={i}
         id={i}
-        toggleChecked={toggleChecked}
         isChecked={isCheckedList[i]}
         handlePower={handlePower}
       />
@@ -175,9 +173,7 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
     <>
       <div>
         <form
-          className={`form ${
-            checkForStatuses() === true ? 'form-enabled' : ''
-          }`}
+          className='form-smart-strip'
           style={{ display: visibility === true ? 'flex' : 'none' }}
         >
           <div className='smart-switches'>

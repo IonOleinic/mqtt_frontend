@@ -11,9 +11,7 @@ const Switch = ({ isChecked, handlePower, toggleChecked, id }) => {
         onClick={() => {
           handlePower(id)
         }}
-        onChange={() => {
-          toggleChecked(id)
-        }}
+        onChange={() => {}}
       ></input>
       <span className='slider round'></span>
     </label>

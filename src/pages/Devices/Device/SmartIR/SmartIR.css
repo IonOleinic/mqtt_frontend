@@ -7,7 +7,7 @@
 .ir-buttons {
   padding: 0.7rem;
   border-radius: 50%;
-  transition: all 0.5s;
+  transition: all 0.8s;
 }
 .power {
   margin: 0 8rem;
@@ -38,6 +38,7 @@
 }
 .ir-buttons:active {
   background-color: #ccc;
+  color: #4abced;
 }
 .btn-pow:active {
   color: red;

@@ -8,8 +8,10 @@ import { BiChevronDown } from 'react-icons/bi'
 import { BiChevronUp } from 'react-icons/bi'
 import { BiChevronLeft } from 'react-icons/bi'
 import { BiChevronRight } from 'react-icons/bi'
+const serverURL = 'http://192.168.0.108'
+const serverPort = '5000'
 const app = axios.create({
-  baseURL: 'http://192.168.0.108:5000',
+  baseURL: `${serverURL}:${serverPort}`,
   timeout: 4000,
 })
 function SmartIR({ device, visibility }) {
