@@ -8,6 +8,10 @@ import { BiChevronDown } from 'react-icons/bi'
 import { BiChevronUp } from 'react-icons/bi'
 import { BiChevronLeft } from 'react-icons/bi'
 import { BiChevronRight } from 'react-icons/bi'
+import { BiVolumeMute } from 'react-icons/bi'
+import { BiInfoCircle } from 'react-icons/bi'
+import { MdInput } from 'react-icons/md'
+import {RiArrowGoBackFill} from 'react-icons/ri'
 const serverURL = 'http://192.168.0.108'
 const serverPort = '5000'
 const app = axios.create({
@@ -119,6 +123,88 @@ function SmartIR({ device, visibility }) {
           <BiMinus size={30} />
         </div>
       </div>
+     
+     <div className='ir-buttons simple-button mute' onClick={() => {
+            handlePressBtn(device.btn_mute)
+          }}>
+            <BiVolumeMute size={25}/>
+     </div>
+     <div className='ir-buttons simple-button menu' onClick={() => {
+            handlePressBtn(device.btn_home)
+          }}>
+            Menu
+     </div>
+     <div className='ir-buttons simple-button input' onClick={() => {
+            handlePressBtn(device.btn_input)
+          }}>
+            <MdInput size={25}/>
+     </div>
+     <div className='ir-buttons simple-button info' onClick={() => {
+            handlePressBtn(device.btn_info)
+          }}>
+            <BiInfoCircle size={25}/>
+     </div>
+     
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_1)
+          }}>
+            1
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_2)
+          }}>
+            2
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_3)
+          }}>
+            3
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_4)
+          }}>
+            4
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_5)
+          }}>
+            5
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_6)
+          }}>
+            6
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_7)
+          }}>
+            7
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_8)
+          }}>
+            8
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_9)
+          }}>
+            9
+     </div>
+     <div className='ir-buttons number back' onClick={() => {
+            handlePressBtn(device.btn_back)
+          }}>
+            <RiArrowGoBackFill size={25}/>
+     </div>
+     <div className='ir-buttons number' onClick={() => {
+            handlePressBtn(device.btn_0)
+          }}>
+            0
+     </div>
+     <div className='ir-buttons number exit' onClick={() => {
+            handlePressBtn(device.btn_exit)
+          }}>
+            Exit
+     </div>
     </div>
   )
 }

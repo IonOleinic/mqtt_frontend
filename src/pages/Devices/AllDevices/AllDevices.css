@@ -3,9 +3,9 @@
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
-  height: 100%;
+  min-height: 90vh;
   width: 100%;
-  background-color: rgb(227, 227, 227);
+  background-color: #e3e3e3;
 }
 .toolbar {
   position: sticky;
@@ -92,7 +92,7 @@
 .alldevices-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   height: 100%;
   width: 100%;
@@ -101,6 +101,9 @@
 
 @media (max-width: 568px) {
   .alldevices-container {
+    height: 90%;
+  }
+  .alldevices{
     height: 90%;
   }
   .sidebar {

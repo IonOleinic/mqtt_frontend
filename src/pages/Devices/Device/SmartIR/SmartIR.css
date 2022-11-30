@@ -9,8 +9,24 @@
   border-radius: 50%;
   transition: all 0.8s;
 }
+.simple-button{
+  border: 1px solid #ccc;
+  max-width: 4rem;
+  border-radius: 6px;
+  margin: 0 0.7rem;
+}
+.number{
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  margin: 1rem 1.5rem;
+}
 .power {
   margin: 0 8rem;
+}
+.back,.exit{
+  border-radius: 6px;
 }
 .ir-block {
   display: flex;
