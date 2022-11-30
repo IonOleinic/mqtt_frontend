@@ -82,6 +82,9 @@ const Devices = () => {
   const toggleSubMenu = () => {
     setFilterOpen(!filterOpen)
   }
+  const updateSelectedDevice = (device) => {
+    setSelectedDevice(device)
+  }
   return (
     <div className='alldevices'>
       <div className='toolbar'>
@@ -132,6 +135,8 @@ const Devices = () => {
               handleAddToFavorite={handleAddToFavorite}
               handleDeleteDevice={handleDeleteDevice}
               toggleInfoBar={toggleInfoBar}
+              handleSelectDevice={updateSelectedDevice}
+              isOpenInfoBar={infoOpen}
             />
           )
         })}

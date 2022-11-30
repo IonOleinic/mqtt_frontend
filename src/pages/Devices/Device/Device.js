@@ -13,6 +13,8 @@ function Device({
   handleDeleteDevice,
   device,
   toggleInfoBar,
+  handleSelectDevice,
+  isOpenInfoBar,
 }) {
   const [openSubMenu, setOpenSubMenu] = useState(false)
   const [visibility, setVisibility] = useState(false)
@@ -97,7 +99,10 @@ function Device({
               <li
                 onClick={() => {
                   toggleSubMenu()
-                  toggleInfoBar()
+                  if (!isOpenInfoBar) {
+                    toggleInfoBar()
+                  }
+                  handleSelectDevice(device)
                 }}
               >
                 Info
