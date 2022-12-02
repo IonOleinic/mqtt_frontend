@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './SmartIR.css'
 import axios from 'axios'
+import io from 'socket.io-client'
 import { BiPowerOff } from 'react-icons/bi'
 import { BiPlus } from 'react-icons/bi'
 import { BiMinus } from 'react-icons/bi'
@@ -18,7 +19,9 @@ const app = axios.create({
   baseURL: `${serverURL}:${serverPort}`,
   timeout: 4000,
 })
+let socket = undefined
 function SmartIR({ device, visibility }) {
+  const [receivedCode,setReceivedCode]=useState("")
   const handlePressBtn = async (btn) => {
     try {
       let result = await app.post(
@@ -28,6 +31,38 @@ function SmartIR({ device, visibility }) {
       console.log(error)
     }
   }
+  function initSocket(__bool) {
+    if (__bool) {
+      if (!socket) {
+        socket = io.connect(`${serverURL}:${serverPort}`, {
+          secure: false,
+          forceNew: true,
+        })
+        socket.on('connect', function () {
+          console.log('connected')
+        })
+        socket.on('disconnect', function () {
+          console.log('disconnected')
+        })
+      } else {
+        socket.connect() // Yep, socket.socket ( 2 times )
+        console.log('reconected')
+      }
+    } else {
+      socket.disconnect()
+    }
+  }
+  useEffect(()=>{
+    initSocket(true)
+    if (socket) {
+      socket.on('update_smart_ir', (data) => {
+        if (data.mqtt_name === device.mqtt_name) {
+          console.log('updating')
+          setReceivedCode(data.received_code)
+        }
+      })
+    }
+  },[])
   return (
     <div
       className='smart-ir'
@@ -123,7 +158,6 @@ function SmartIR({ device, visibility }) {
           <BiMinus size={30} />
         </div>
       </div>
-     
      <div className='ir-buttons simple-button mute' onClick={() => {
             handlePressBtn(device.btn_mute)
           }}>
@@ -144,7 +178,6 @@ function SmartIR({ device, visibility }) {
           }}>
             <BiInfoCircle size={25}/>
      </div>
-     
      <div className='ir-buttons number' onClick={() => {
             handlePressBtn(device.btn_1)
           }}>
@@ -205,6 +238,7 @@ function SmartIR({ device, visibility }) {
           }}>
             Exit
      </div>
+     <div>{receivedCode}</div>
     </div>
   )
 }

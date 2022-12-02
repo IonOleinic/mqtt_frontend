@@ -13,6 +13,7 @@ import Scenes from './pages/Scenes/Scenes'
 import Settings from './pages/Settings/Settings'
 import About from './pages/About/About'
 import SignIn from './pages/SignIn/SignIn'
+import AddDevice from './pages/Devices/AddDevice/AddDevice'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path='/settings' element={<Settings />} />
         <Route path='/about' element={<About />} />
         <Route path='/signin' element={<SignIn />} />
+        <Route path='/devices/adddevice' element={<AddDevice />} />
       </Routes>
     </Router>
   )
