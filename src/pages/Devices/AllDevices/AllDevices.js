@@ -1,8 +1,10 @@
 import React from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import { BiRefresh } from 'react-icons/bi'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { GrClose } from 'react-icons/gr'
+import { AiOutlinePlus } from 'react-icons/ai'
 import { useState, useEffect } from 'react'
 import './AllDevices.css'
 import Device from '../Device/Device'
@@ -24,6 +26,7 @@ const initDevice = {
   battery: 'unknown',
 }
 const Devices = () => {
+  const navigate = useNavigate();
   const [devices, setDevices] = useState([])
   const [infoOpen, setInfoOpen] = useState(false)
   const [filterOpen, setFilterOpen] = useState(false)
@@ -120,6 +123,12 @@ const Devices = () => {
             items={['Nume', 'Data adaugarii']}
             action={sort_devices_by}
           />
+        </div>
+        <div className='toolbar-item'>
+        <p>Add</p>
+        <button type='button' className='btn btn-primary' onClick={()=>{navigate("/devices/adddevice")}}>
+            <AiOutlinePlus size={20} color="white"/>
+          </button>
         </div>
       </div>
 
