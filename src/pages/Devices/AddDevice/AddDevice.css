@@ -1,54 +1,53 @@
-
 .Add-form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 90vh;
-    transition: all 0.4s ease-in-out;
+  margin: 3rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 90vh;
+  transition: all 0.4s ease-in-out;
+}
+
+.Add-form {
+  width: 420px;
+  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+  padding: 30px 20px 20px 20px;
+  border-radius: 8px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Add-form-content {
+  padding-left: 12%;
+  padding-right: 12%;
+  width: 100%;
+}
+
+.Add-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+}
+.btn-add-device {
+  width: 50%;
+  justify-self: center;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}
+@media (max-width: 500px) {
+  .Auth-form-container {
+    height: 80vh;
   }
-  
-  .Add-form {
-    width: 420px;
-    box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
-    padding: 30px 20px 20px 20px;
-    border-radius: 8px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .Auth-form {
+    width: 350px;
   }
-  
-  .Add-form-content {
-    padding-left: 12%;
-    padding-right: 12%;
-    width: 100%;
-  }
-  
-  .Add-form-title {
-    text-align: center;
-    margin-bottom: 1em;
-    font-size: 24px;
-    color: rgb(34, 34, 34);
-    font-weight: 800;
-  }
-  .btn-add-device{
-    width: 50%;
-    justify-self: center;
-  }
-  
-  label {
-    font-size: 14px;
-    font-weight: 600;
-    color: rgb(34, 34, 34);
-  }
-  @media (max-width: 500px) {
-    .Auth-form-container {
-      height: 80vh;
-    }
-    .Auth-form {
-      width: 350px;
-    }
-  }
-  
+}

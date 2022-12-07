@@ -1,0 +1,11 @@
+.btn-apply {
+  width: 30%;
+  justify-self: flex-end;
+}
+.ir-codes {
+  width: 30%;
+}
+.ir-group-codes {
+  display: flex;
+  justify-content: space-between;
+}
