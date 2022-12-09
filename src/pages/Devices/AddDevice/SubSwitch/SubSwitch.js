@@ -5,8 +5,9 @@ function SubSwitch({ setSubProps }) {
   return (
     <>
       <div className='form-group mt-3'>
-        <label>Nr. of Sockets</label>
+        <label htmlFor='input nr-sockets'>Nr. of Sockets</label>
         <input
+          id='input nr-sockets'
           pattern='[0-9]{1,5}'
           maxLength={1}
           type='number'

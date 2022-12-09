@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import './SmartStrip.css'
 import io from 'socket.io-client'
 import Switch from './Switch/Switch'
-const serverURL = 'http://192.168.0.108'
-const serverPort = '5000'
-const app = axios.create({
-  baseURL: `${serverURL}:${serverPort}`,
-  timeout: 2000,
-})
+import { app, serverPort, serverURL } from '../../../api/api'
 let socket = undefined
 
 const data = {
@@ -84,49 +78,50 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
   }, [])
 
   useEffect(() => {
-    let interval = setInterval(async () => {
+    const send_update_req = async () => {
       try {
         const smart_strip_power = await app.get(
-          `/smartStrip?device_name=${mqtt_name}&req_topic=POWER&req_payload=''}`
+          `/smartStrip?device_name=${mqtt_name}&req_topic=POWER`
         )
         updateStatuses(smart_strip_power.data.power_status)
         if (device_type === 'smartSwitch') {
         } else if (device_type === 'smartStrip') {
           let smart_strip_sensor = await app.get(
-            `/smartStrip?device_name=${mqtt_name}&req_topic=STATUS&req_payload=8}`
+            `/smartStrip?device_name=${mqtt_name}&req_topic=STATUS`
           )
           setSensorData(smart_strip_sensor.data.sensor_status)
         }
       } catch (error) {
         console.log(error)
       }
+    }
+    send_update_req()
+    let interval = setInterval(async () => {
+      send_update_req()
     }, 3809)
     return () => {
       clearInterval(interval)
     }
   }, [])
+  const send_change_power = async (socket_nr, pwr_status) => {
+    const response = await app.post(
+      `/smartStrip?status=${pwr_status}&device_name=${mqtt_name}&socket_nr=${
+        socket_nr + 1
+      }`
+    )
+  }
   const handlePower = async (id) => {
     try {
       if (statusList[id] === 'ON') {
-        const response = await app.post(
-          `/smartStrip?status=OFF&device_name=${mqtt_name}&req_type=POWER${
-            id + 1
-          }`
-        )
-        console.log(response.data)
+        send_change_power(id, 'OFF')
       } else {
-        const response = await app.post(
-          `/smartStrip?status=ON&device_name=${mqtt_name}&req_type=POWER${
-            id + 1
-          }`
-        )
-        console.log(response.data)
+        send_change_power(id, 'ON')
       }
     } catch (err) {
       console.log(err.message)
     }
   }
-  const { Time, ENERGY } = sensorData.StatusSNS
+  const { ENERGY } = sensorData.StatusSNS
 
   let sensor_part
   if (device_type === 'smartStrip') {

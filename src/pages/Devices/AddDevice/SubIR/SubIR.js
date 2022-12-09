@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './SubIR.css'
 import { app, serverURL, serverPort } from '../../../api/api'
 import io from 'socket.io-client'
-import { TiInputChecked } from 'react-icons/ti'
 let socket = undefined
 let buttons_init = [
   {
@@ -56,8 +55,40 @@ let buttons_init = [
     name: 'btn_right',
     code: '',
   },
+  {
+    fullName: 'Mute',
+    name: 'btn_mute',
+    code: '',
+  },
+  {
+    fullName: 'Exit',
+    name: 'btn_exit',
+    code: '',
+  },
+  {
+    fullName: 'Back',
+    name: 'btn_back',
+    code: '',
+  },
+  {
+    fullName: 'info',
+    name: 'btn_info',
+    code: '',
+  },
+  {
+    fullName: 'Home',
+    name: 'btn_home',
+    code: '',
+  },
+  {
+    fullName: 'input',
+    name: 'btn_input',
+    code: '',
+  },
 ]
 function SubIR({ mqtt_name, manufacter, setSubProps }) {
+  const [initProtocol, setInitProtocol] = useState('')
+  const [initBits, setInitBits] = useState('')
   const [buttons, setButtons] = useState(buttons_init)
   const [selectedBtn, setSelectedBtn] = useState(buttons_init[0].name)
   const [code, setCode] = useState('')
@@ -94,10 +125,10 @@ function SubIR({ mqtt_name, manufacter, setSubProps }) {
   }
   const apply_btn_code = () => {
     set_btn(selectedBtn, code)
-    console.log(protocol, bits)
-    console.log(buttons)
+    setButtons(buttons_init)
   }
   useEffect(() => {
+    setButtons(buttons_init)
     try {
       let result = app.post('/tempIR', {
         mqtt_name,
@@ -112,8 +143,10 @@ function SubIR({ mqtt_name, manufacter, setSubProps }) {
         if (data.mqtt_name === mqtt_name) {
           console.log('updating')
           let buffer = data.received_code.split(' ')
-          setProtocol(buffer[0])
+          setProtocol(buffer[0].replace('IR_', ''))
+          setInitProtocol(buffer[0].replace('IR_', ''))
           setBits(buffer[1])
+          setInitBits(buffer[1])
           setCode(buffer[2])
         }
       })
@@ -128,18 +161,20 @@ function SubIR({ mqtt_name, manufacter, setSubProps }) {
           className='form-select select-type'
           aria-label='Default select example'
           onChange={(e) => {
-            setSelectedBtn(e.target.value)
             let button = buttons.find((elem) => elem.name === e.target.value)
-            setProtocol('')
-            setBits('')
-            setCode('')
+            setSelectedBtn(button.name)
+            setProtocol(initProtocol)
+            setBits(initBits)
+            setCode(button.code)
           }}
         >
-          {buttons.map((button) => {
+          {buttons.map((button, index) => {
             let checked = button.code === '' ? '' : '✔'
             return (
-              <option value={button.name}>
-                {button.fullName} {checked}
+              <option key={index} value={button.name}>
+                {button.fullName}
+                {'\t'}
+                {checked}
               </option>
             )
           })}
@@ -183,14 +218,27 @@ function SubIR({ mqtt_name, manufacter, setSubProps }) {
           />
         </div>
       </div>
-      <div className='d-grid gap-2 mt-3'>
-        <button
-          type='button'
-          className='btn btn-primary btn-apply'
-          onClick={apply_btn_code}
-        >
-          Apply
-        </button>
+      <div className='ir-align'>
+        <div className='d-grid gap-2 mt-3 btn-ir'>
+          <button
+            type='button'
+            className='btn btn-primary '
+            onClick={() => {
+              setSubProps({ buttons, protocol, bits })
+            }}
+          >
+            Done
+          </button>
+        </div>
+        <div className='d-grid gap-2 mt-3 btn-ir'>
+          <button
+            type='button'
+            className='btn btn-primary '
+            onClick={apply_btn_code}
+          >
+            Apply
+          </button>
+        </div>
       </div>
     </>
   )

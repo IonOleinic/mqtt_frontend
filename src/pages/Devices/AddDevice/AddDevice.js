@@ -13,7 +13,7 @@ function AddDevice() {
   const [mqttName, setMqttName] = useState('')
   const [manufacter, setManufacter] = useState('')
   const [deviceType, setDeviceType] = useState('')
-  const [groups, setGroups] = useState([])
+  const [groups, setGroups] = useState('')
   const [iconUrl, setIconUrl] = useState('')
   const [props, setProps] = useState({})
   const [subDevice, setSubDevice] = useState(<></>)
@@ -45,6 +45,7 @@ function AddDevice() {
     }
   }
   const setSubProps = (props) => {
+    console.log(props)
     setProps(props)
   }
   const choose_sub_device = (type) => {
@@ -89,6 +90,7 @@ function AddDevice() {
           <div className='form-group mt-3'>
             <label htmlFor='input-name'>Device Name</label>
             <input
+              required={true}
               id='input-name'
               type='text'
               className='form-control mt-1'
@@ -118,6 +120,7 @@ function AddDevice() {
               MQTT Name <span style={{ color: 'red' }}>*</span>
             </label>
             <input
+              required={true}
               id='input-mqtt'
               type='text'
               className='form-control mt-1'

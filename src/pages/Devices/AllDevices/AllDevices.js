@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { BiRefresh } from 'react-icons/bi'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -10,10 +9,7 @@ import './AllDevices.css'
 import Device from '../Device/Device'
 import './AllDevices.css'
 import DropDownMenu from './DropDownMenu/DropDownMenu'
-const app = axios.create({
-  baseURL: 'http://192.168.0.108:5000',
-  timeout: 4000,
-})
+import { app } from '../../api/api'
 
 const initDevice = {
   name: 'unknown',
@@ -26,7 +22,7 @@ const initDevice = {
   battery: 'unknown',
 }
 const Devices = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [devices, setDevices] = useState([])
   const [infoOpen, setInfoOpen] = useState(false)
   const [filterOpen, setFilterOpen] = useState(false)
@@ -125,9 +121,15 @@ const Devices = () => {
           />
         </div>
         <div className='toolbar-item'>
-        <p>Add</p>
-        <button type='button' className='btn btn-primary' onClick={()=>{navigate("/devices/adddevice")}}>
-            <AiOutlinePlus size={20} color="white"/>
+          <p>Add</p>
+          <button
+            type='button'
+            className='btn btn-primary'
+            onClick={() => {
+              navigate('/devices/adddevice')
+            }}
+          >
+            <AiOutlinePlus size={20} color='white' />
           </button>
         </div>
       </div>

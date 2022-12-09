@@ -51,6 +51,8 @@
 .device-name h4 {
   font-size: 1rem;
   font-style: oblique;
+  max-width: 20rem;
+  word-wrap: break-word;
 }
 .vertical-menu {
   margin: 0;
