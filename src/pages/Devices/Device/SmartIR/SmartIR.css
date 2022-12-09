@@ -3,34 +3,64 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
 }
 .ir-buttons {
   padding: 0.7rem;
   border-radius: 50%;
   transition: all 0.8s;
 }
-.simple-button{
+.simple-button {
   border: 1px solid #ccc;
   max-width: 4rem;
   border-radius: 6px;
   margin: 0 0.7rem;
 }
-.number{
+.number {
   width: 3rem;
   height: 3rem;
   border: 1px solid #ccc;
   border-radius: 50%;
-  margin: 1rem 1.5rem;
+  margin: 0.6rem 1.5rem;
 }
-.power {
-  margin: 0 8rem;
-}
-.back,.exit{
+
+.back,
+.exit {
   border-radius: 6px;
 }
 .ir-block {
   display: flex;
   flex-direction: column;
+}
+.power {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+.power .btn-pow {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.power .ir-buttons {
+  margin: 0 auto;
+}
+.numbers {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  top: -200%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  transition: all 0.5s ease-in-out;
+}
+.btn-close:active {
+  box-shadow: none;
+  border: none;
 }
 .ok-menu {
   width: 10rem;

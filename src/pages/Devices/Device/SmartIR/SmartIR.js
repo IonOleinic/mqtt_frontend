@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './SmartIR.css'
+import { MDBBtn } from 'mdb-react-ui-kit'
 import { BiPowerOff } from 'react-icons/bi'
 import { BiPlus } from 'react-icons/bi'
 import { BiMinus } from 'react-icons/bi'
@@ -14,6 +15,7 @@ import { RiArrowGoBackFill } from 'react-icons/ri'
 import { app } from '../../../api/api'
 
 function SmartIR({ device, visibility }) {
+  const [checkedNumbers, setCheckedNumbers] = useState(false)
   const handlePressBtn = async (btn) => {
     try {
       let result = await app.post(
@@ -23,7 +25,6 @@ function SmartIR({ device, visibility }) {
       console.log(error)
     }
   }
-
   useEffect(() => {}, [])
   return (
     <div
@@ -39,6 +40,30 @@ function SmartIR({ device, visibility }) {
           }}
         >
           <BiPowerOff size={30} />
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            setCheckedNumbers(!checkedNumbers)
+          }}
+        >
+          123
+        </div>
+        <div
+          className='ir-buttons number exit'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_exit)
+          }}
+        >
+          Exit
+        </div>
+        <div
+          className='ir-buttons number back'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_back)
+          }}
+        >
+          <RiArrowGoBackFill size={25} />
         </div>
       </div>
       <div className='ir-block vol'>
@@ -153,101 +178,112 @@ function SmartIR({ device, visibility }) {
       >
         <BiInfoCircle size={25} />
       </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_1)
-        }}
-      >
-        1
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_2)
-        }}
-      >
-        2
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_3)
-        }}
-      >
-        3
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_4)
-        }}
-      >
-        4
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_5)
-        }}
-      >
-        5
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_6)
-        }}
-      >
-        6
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_7)
-        }}
-      >
-        7
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_8)
-        }}
-      >
-        8
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_9)
-        }}
-      >
-        9
-      </div>
-      <div
-        className='ir-buttons number back'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_back)
-        }}
-      >
-        <RiArrowGoBackFill size={25} />
-      </div>
-      <div
-        className='ir-buttons number'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_0)
-        }}
-      >
-        0
-      </div>
-      <div
-        className='ir-buttons number exit'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_exit)
-        }}
-      >
-        Exit
+      <div className='numbers' style={{ top: checkedNumbers ? '0' : '200%' }}>
+        {/* <div className='div-close'>
+          <MDBBtn
+            className='btn-close'
+            color='none'
+            aria-label='Close'
+            size={20}
+            onClick={() => {
+              setCheckedNumbers(!checkedNumbers)
+            }}
+          />
+        </div> */}
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_1)
+          }}
+        >
+          1
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_2)
+          }}
+        >
+          2
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_3)
+          }}
+        >
+          3
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_4)
+          }}
+        >
+          4
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_5)
+          }}
+        >
+          5
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_6)
+          }}
+        >
+          6
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_7)
+          }}
+        >
+          7
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_8)
+          }}
+        >
+          8
+        </div>
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_9)
+          }}
+        >
+          9
+        </div>
+
+        <div
+          className='ir-buttons number'
+          onClick={() => {
+            handlePressBtn(device.buttons.btn_0)
+          }}
+        >
+          0
+        </div>
+        <div
+          className='ir-buttons number div-close'
+          onClick={() => {
+            setCheckedNumbers(!checkedNumbers)
+          }}
+        >
+          <MDBBtn
+            className='btn-close'
+            color='none'
+            aria-label='Close'
+            size={20}
+          />
+        </div>
       </div>
     </div>
   )

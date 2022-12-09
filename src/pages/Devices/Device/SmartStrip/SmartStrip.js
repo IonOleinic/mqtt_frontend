@@ -70,31 +70,32 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
     if (socket) {
       socket.on('update_smart_strip', (data) => {
         if (data.mqtt_name === mqtt_name) {
-          console.log('updating')
           updateStatuses(data.power_status)
+          if (data.sensor_status) {
+            setSensorData(data.sensor_status)
+          }
         }
       })
     }
   }, [])
-
-  useEffect(() => {
-    const send_update_req = async () => {
-      try {
-        const smart_strip_power = await app.get(
-          `/smartStrip?device_name=${mqtt_name}&req_topic=POWER`
+  const send_update_req = async () => {
+    try {
+      const smart_strip_power = await app.get(
+        `/smartStrip?device_name=${mqtt_name}&req_topic=POWER`
+      )
+      updateStatuses(smart_strip_power.data.power_status)
+      if (device_type === 'smartSwitch') {
+      } else if (device_type === 'smartStrip') {
+        let smart_strip_sensor = await app.get(
+          `/smartStrip?device_name=${mqtt_name}&req_topic=STATUS`
         )
-        updateStatuses(smart_strip_power.data.power_status)
-        if (device_type === 'smartSwitch') {
-        } else if (device_type === 'smartStrip') {
-          let smart_strip_sensor = await app.get(
-            `/smartStrip?device_name=${mqtt_name}&req_topic=STATUS`
-          )
-          setSensorData(smart_strip_sensor.data.sensor_status)
-        }
-      } catch (error) {
-        console.log(error)
+        setSensorData(smart_strip_sensor.data.sensor_status)
       }
+    } catch (error) {
+      console.log(error)
     }
+  }
+  useEffect(() => {
     send_update_req()
     let interval = setInterval(async () => {
       send_update_req()
@@ -109,6 +110,7 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
         socket_nr + 1
       }`
     )
+    send_update_req()
   }
   const handlePower = async (id) => {
     try {

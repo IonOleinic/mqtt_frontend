@@ -8,6 +8,7 @@ import SubIR from './SubIR/SubIR'
 
 function AddDevice() {
   const navigate = useNavigate()
+  const [disabledAddBtn, setDisabledBtn] = useState(true)
   const [deviceTypes, setDeviceTypes] = useState([])
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
@@ -53,13 +54,14 @@ function AddDevice() {
     setDeviceType(type)
     switch (type) {
       case 'smartPlug':
-        subtype = <SubSwitch setSubProps={setSubProps} />
-        break
       case 'smartStrip':
-        subtype = <SubSwitch setSubProps={setSubProps} />
-        break
       case 'smartSwitch':
-        subtype = <SubSwitch setSubProps={setSubProps} />
+        subtype = (
+          <SubSwitch
+            setSubProps={setSubProps}
+            disable_add_btn={disable_add_btn}
+          />
+        )
         break
       case 'smartIR':
         subtype = (
@@ -67,6 +69,7 @@ function AddDevice() {
             setSubProps={setSubProps}
             mqtt_name={mqttName}
             manufacter={manufacter}
+            disable_add_btn={disable_add_btn}
           />
         )
         break
@@ -82,6 +85,10 @@ function AddDevice() {
     }
     setSubDevice(subtype)
   }
+  const disable_add_btn = (__bool) => {
+    setDisabledBtn(__bool)
+  }
+
   return (
     <div className='Add-form-container'>
       <form className='Add-form'>
@@ -166,6 +173,7 @@ function AddDevice() {
               onChange={(e) => {
                 choose_sub_device(e.target.value)
                 setProps({})
+                disable_add_btn(true)
               }}
             >
               <option value='none'>None</option>
@@ -181,6 +189,7 @@ function AddDevice() {
           </div>
           <div className='d-grid gap-2 mt-3'>
             <button
+              disabled={disabledAddBtn}
               type='button'
               className='btn btn-primary btn-add-device'
               onClick={handleAddDevice}

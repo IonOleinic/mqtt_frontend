@@ -54,10 +54,10 @@ const Devices = () => {
       console.log(error.message)
     }
   }
-  const handleDeleteDevice = async (selected_device_name) => {
+  const handleDeleteDevice = async (selected_device_id) => {
     console.log('handle delete')
     try {
-      app.post(`/deleteDevice?device_name=${selected_device_name}`)
+      app.post(`/deleteDevice?device_id=${selected_device_id}`)
     } catch (error) {
       console.log(error.message)
     }
@@ -141,7 +141,7 @@ const Devices = () => {
         {devices.map((device) => {
           return (
             <Device
-              key={device.mqtt_name}
+              key={device.id}
               device={device}
               handleAddToFavorite={handleAddToFavorite}
               handleDeleteDevice={handleDeleteDevice}

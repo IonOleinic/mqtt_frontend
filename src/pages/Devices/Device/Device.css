@@ -10,6 +10,7 @@
   box-shadow: 1px 1px 14px 1px #888888;
   text-align: center;
   transition: all 0.4s;
+  /* overflow: hidden; */
 }
 .device-top {
   display: flex;
@@ -51,7 +52,7 @@
 .device-name h4 {
   font-size: 1rem;
   font-style: oblique;
-  max-width: 20rem;
+  width: 8rem;
   word-wrap: break-word;
 }
 .vertical-menu {
@@ -62,7 +63,7 @@
 .vertical-menu-item {
   display: none;
   position: absolute;
-  left: -2rem;
+  left: -4rem;
   margin: 0.3em 1em;
   transition: all 0.5s;
   z-index: 10;

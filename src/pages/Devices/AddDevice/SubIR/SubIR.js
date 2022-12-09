@@ -86,7 +86,7 @@ let buttons_init = [
     code: '',
   },
 ]
-function SubIR({ mqtt_name, manufacter, setSubProps }) {
+function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
   const [initProtocol, setInitProtocol] = useState('')
   const [initBits, setInitBits] = useState('')
   const [buttons, setButtons] = useState(buttons_init)
@@ -125,10 +125,10 @@ function SubIR({ mqtt_name, manufacter, setSubProps }) {
   }
   const apply_btn_code = () => {
     set_btn(selectedBtn, code)
-    setButtons(buttons_init)
   }
   useEffect(() => {
     setButtons(buttons_init)
+    console.log(buttons)
     try {
       let result = app.post('/tempIR', {
         mqtt_name,
@@ -141,7 +141,6 @@ function SubIR({ mqtt_name, manufacter, setSubProps }) {
     if (socket) {
       socket.on('update_temp_ir', (data) => {
         if (data.mqtt_name === mqtt_name) {
-          console.log('updating')
           let buffer = data.received_code.split(' ')
           setProtocol(buffer[0].replace('IR_', ''))
           setInitProtocol(buffer[0].replace('IR_', ''))
@@ -225,6 +224,8 @@ function SubIR({ mqtt_name, manufacter, setSubProps }) {
             className='btn btn-primary '
             onClick={() => {
               setSubProps({ buttons, protocol, bits })
+              disable_add_btn(false)
+              setButtons(buttons_init)
             }}
           >
             Done

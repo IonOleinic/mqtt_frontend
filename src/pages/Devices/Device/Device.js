@@ -81,7 +81,7 @@ function Device({
         <span className='vertical-menu'>
           <input
             type='checkbox'
-            id={`check-sub-menu${device.mqtt_name}`}
+            id={`check-sub-menu${device.id}`}
             className='checkbox-sub-menu'
             checked={openSubMenu}
             onChange={() => {
@@ -89,7 +89,7 @@ function Device({
             }}
           />
           <label
-            htmlFor={`check-sub-menu${device.mqtt_name}`}
+            htmlFor={`check-sub-menu${device.id}`}
             className='label-sub-menu'
           >
             <img src='https://img.icons8.com/material-rounded/24/null/menu-2.png' />
@@ -119,7 +119,7 @@ function Device({
               <li
                 onClick={() => {
                   toggleSubMenu()
-                  handleDeleteDevice(device.mqtt_name)
+                  handleDeleteDevice(device.id)
                 }}
               >
                 Delete

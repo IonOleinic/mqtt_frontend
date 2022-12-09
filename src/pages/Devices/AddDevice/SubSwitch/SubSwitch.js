@@ -1,7 +1,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './SubSwitch.css'
-function SubSwitch({ setSubProps }) {
+function SubSwitch({ setSubProps, disable_add_btn }) {
   return (
     <>
       <div className='form-group mt-3'>
@@ -15,6 +15,11 @@ function SubSwitch({ setSubProps }) {
           placeholder='Enter number of sockets'
           onChange={(e) => {
             setSubProps({ nr_of_sockets: e.target.value })
+            if (Number(e.target.value) > 0 && e.target.value < 10) {
+              disable_add_btn(false)
+            } else {
+              disable_add_btn(true)
+            }
           }}
         />
       </div>
