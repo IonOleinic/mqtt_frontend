@@ -33,6 +33,9 @@ const Devices = () => {
 
   async function get_all_devices(filter) {
     try {
+      if (filter === undefined || filter === '') {
+        filter = selectedGroup
+      }
       let result = await app.get(`/devices?filter=${filter}`)
       setDevices(result.data)
       console.log(result.data)
@@ -66,7 +69,6 @@ const Devices = () => {
   const updateSelectedGroup = (filter_name) => {
     setSelectedGroup(filter_name)
   }
-  const handleAddToFavorite = () => {}
   useEffect(() => {
     get_all_devices(selectedGroup)
     get_all_groups()
@@ -143,11 +145,11 @@ const Devices = () => {
             <Device
               key={device.id}
               device={device}
-              handleAddToFavorite={handleAddToFavorite}
               handleDeleteDevice={handleDeleteDevice}
               toggleInfoBar={toggleInfoBar}
               handleSelectDevice={updateSelectedDevice}
               isOpenInfoBar={infoOpen}
+              refresh={get_all_devices}
             />
           )
         })}

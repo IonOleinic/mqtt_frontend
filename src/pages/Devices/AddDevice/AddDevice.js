@@ -9,6 +9,7 @@ import SubIR from './SubIR/SubIR'
 function AddDevice() {
   const navigate = useNavigate()
   const [disabledAddBtn, setDisabledBtn] = useState(true)
+  const [disabledTypeSelect, setDisabledTypeSelect] = useState(true)
   const [deviceTypes, setDeviceTypes] = useState([])
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
@@ -97,7 +98,6 @@ function AddDevice() {
           <div className='form-group mt-3'>
             <label htmlFor='input-name'>Device Name</label>
             <input
-              required={true}
               id='input-name'
               type='text'
               className='form-control mt-1'
@@ -135,6 +135,11 @@ function AddDevice() {
               value={mqttName}
               onChange={(e) => {
                 setMqttName(e.target.value)
+                if (e.target.value.length > 3 && e.target.value.length < 30) {
+                  setDisabledTypeSelect(false)
+                } else {
+                  setDisabledTypeSelect(true)
+                }
               }}
             />
           </div>
@@ -167,6 +172,7 @@ function AddDevice() {
           <div className='form-group mt-3'>
             <label htmlFor='select-type'>Device Type</label>
             <select
+              disabled={disabledTypeSelect}
               id='select-type'
               className='form-select select-type'
               aria-label='Default select example'
@@ -189,6 +195,7 @@ function AddDevice() {
           </div>
           <div className='d-grid gap-2 mt-3'>
             <button
+              id='btn-add-dev'
               disabled={disabledAddBtn}
               type='button'
               className='btn btn-primary btn-add-device'

@@ -10,7 +10,6 @@
   box-shadow: 1px 1px 14px 1px #888888;
   text-align: center;
   transition: all 0.4s;
-  /* overflow: hidden; */
 }
 .device-top {
   display: flex;
@@ -25,11 +24,10 @@
 .icon-expand {
   transition: all 0.5s;
   padding: 0.2rem;
-  /* border: 2px solid red; */
   margin-left: -0.5rem;
 }
 .device-img {
-  height: 70px;
+  height: 80px;
   width: 80px;
   margin: 0;
   padding: 0;
@@ -54,6 +52,14 @@
   font-style: oblique;
   width: 8rem;
   word-wrap: break-word;
+}
+.fav-icon {
+  margin-top: 0.5rem;
+  margin-left: 0.2rem;
+  transition: all 0.5s ease-in-out;
+}
+.fav-icon:hover {
+  cursor: pointer;
 }
 .vertical-menu {
   margin: 0;
@@ -88,7 +94,7 @@
 .label-sub-menu {
   background-color: transparent;
   max-height: 2rem;
-  margin-left: 1rem;
+  margin-left: 0.2rem;
 }
 .label-sub-menu img {
   transition: all 0.5s;

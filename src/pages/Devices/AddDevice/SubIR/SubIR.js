@@ -94,6 +94,7 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
   const [code, setCode] = useState('')
   const [protocol, setProtocol] = useState('')
   const [bits, setBits] = useState('')
+  const [disableDoneBtn, setDisableDoneBtn] = useState(true)
   function initSocket(__bool) {
     if (__bool) {
       if (!socket) {
@@ -125,6 +126,7 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
   }
   const apply_btn_code = () => {
     set_btn(selectedBtn, code)
+    setDisableDoneBtn(false)
   }
   useEffect(() => {
     setButtons(buttons_init)
@@ -220,6 +222,7 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
       <div className='ir-align'>
         <div className='d-grid gap-2 mt-3 btn-ir'>
           <button
+            disabled={disableDoneBtn}
             type='button'
             className='btn btn-primary '
             onClick={() => {

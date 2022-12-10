@@ -3,26 +3,48 @@ import './Device.css'
 import SmartStrip from './SmartStrip/SmartStrip'
 import SmartIR from './SmartIR/SmartIR'
 import { MdOutlineExpandMore } from 'react-icons/md'
-import Favorite from './Favorite/Favorite'
-
+import { AiOutlineStar } from 'react-icons/ai'
+import { AiFillStar } from 'react-icons/ai'
+import { useEffect } from 'react'
+import { app } from '../../api/api'
 const iconMore = (
   <MdOutlineExpandMore size={30} style={{ margin: '0', padding: '0' }} />
 )
+const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
+const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
 function Device({
-  handleAddToFavorite,
   handleDeleteDevice,
   device,
   toggleInfoBar,
   handleSelectDevice,
   isOpenInfoBar,
+  refresh,
 }) {
   const [openSubMenu, setOpenSubMenu] = useState(false)
   const [visibility, setVisibility] = useState(false)
   const [expandIcon, setExpandIcon] = useState(iconMore)
+  const [favIcon, setFavIcon] = useState(favIconDisabled)
   const toggleSubMenu = () => {
     setOpenSubMenu(!openSubMenu)
   }
-  let final_device
+  async function update_fav(fav_bool) {
+    device.favorite = fav_bool
+    try {
+      let result = await app.post(`/updateDevice`, device)
+      console.log(result.data)
+      refresh()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+  useEffect(() => {
+    if (device.favorite) {
+      setFavIcon(favIconEnabled)
+    } else {
+      setFavIcon(favIconDisabled)
+    }
+  }, [device.favorite])
+  let final_device = <></>
   if (
     device.device_type === 'smartStrip' ||
     device.device_type === 'smartSwitch'
@@ -78,6 +100,18 @@ function Device({
           <br />
           <h4>{device.mqtt_group.toString()}</h4>
         </span>
+        <span
+          className='fav-icon'
+          onClick={() => {
+            if (device.favorite === true) {
+              update_fav(false)
+            } else {
+              update_fav(true)
+            }
+          }}
+        >
+          {favIcon}
+        </span>
         <span className='vertical-menu'>
           <input
             type='checkbox'
@@ -110,10 +144,9 @@ function Device({
               <li
                 onClick={() => {
                   toggleSubMenu()
-                  handleAddToFavorite()
                 }}
               >
-                Add to Favorite
+                blalvla
               </li>
 
               <li

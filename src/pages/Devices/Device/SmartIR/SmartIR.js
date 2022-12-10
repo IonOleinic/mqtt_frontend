@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './SmartIR.css'
-import { MDBBtn } from 'mdb-react-ui-kit'
+import { FaTimes } from 'react-icons/fa'
 import { BiPowerOff } from 'react-icons/bi'
 import { BiPlus } from 'react-icons/bi'
 import { BiMinus } from 'react-icons/bi'
@@ -179,17 +179,6 @@ function SmartIR({ device, visibility }) {
         <BiInfoCircle size={25} />
       </div>
       <div className='numbers' style={{ top: checkedNumbers ? '0' : '200%' }}>
-        {/* <div className='div-close'>
-          <MDBBtn
-            className='btn-close'
-            color='none'
-            aria-label='Close'
-            size={20}
-            onClick={() => {
-              setCheckedNumbers(!checkedNumbers)
-            }}
-          />
-        </div> */}
         <div
           className='ir-buttons number'
           onClick={() => {
@@ -277,12 +266,7 @@ function SmartIR({ device, visibility }) {
             setCheckedNumbers(!checkedNumbers)
           }}
         >
-          <MDBBtn
-            className='btn-close'
-            color='none'
-            aria-label='Close'
-            size={20}
-          />
+          <b>X</b>
         </div>
       </div>
     </div>
