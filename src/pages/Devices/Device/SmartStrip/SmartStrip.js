@@ -4,7 +4,6 @@ import io from 'socket.io-client'
 import Switch from './Switch/Switch'
 import { app, serverPort, serverURL } from '../../../api/api'
 let socket = undefined
-
 const data = {
   StatusSNS: {
     Time: '0000-00-00T00:00:00',
@@ -22,10 +21,10 @@ const data = {
     },
   },
 }
-function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
+function SmartStrip({ device, visibility }) {
   let init_statuses = []
   let initCheckedlist = []
-  for (let i = 0; i < nr_of_sochets; i++) {
+  for (let i = 0; i < device.nr_of_sockets; i++) {
     init_statuses.push('OFF')
     initCheckedlist.push(false)
   }
@@ -69,7 +68,7 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
     initSocket(true)
     if (socket) {
       socket.on('update_smart_strip', (data) => {
-        if (data.mqtt_name === mqtt_name) {
+        if (data.mqtt_name === device.mqtt_name) {
           updateStatuses(data.power_status)
           if (data.sensor_status) {
             setSensorData(data.sensor_status)
@@ -81,13 +80,13 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
   const send_update_req = async () => {
     try {
       const smart_strip_power = await app.get(
-        `/smartStrip?device_name=${mqtt_name}&req_topic=POWER`
+        `/smartStrip?device_name=${device.mqtt_name}&req_topic=POWER`
       )
       updateStatuses(smart_strip_power.data.power_status)
-      if (device_type === 'smartSwitch') {
-      } else if (device_type === 'smartStrip') {
+      if (device.device_type === 'smartSwitch') {
+      } else if (device.device_type === 'smartStrip') {
         let smart_strip_sensor = await app.get(
-          `/smartStrip?device_name=${mqtt_name}&req_topic=STATUS`
+          `/smartStrip?device_name=${device.mqtt_name}&req_topic=STATUS`
         )
         setSensorData(smart_strip_sensor.data.sensor_status)
       }
@@ -106,9 +105,9 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
   }, [])
   const send_change_power = async (socket_nr, pwr_status) => {
     const response = await app.post(
-      `/smartStrip?status=${pwr_status}&device_name=${mqtt_name}&socket_nr=${
-        socket_nr + 1
-      }`
+      `/smartStrip?status=${pwr_status}&device_name=${
+        device.mqtt_name
+      }&socket_nr=${socket_nr + 1}`
     )
     send_update_req()
   }
@@ -124,9 +123,8 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
     }
   }
   const { ENERGY } = sensorData.StatusSNS
-
   let sensor_part
-  if (device_type === 'smartStrip') {
+  if (device.device_type === 'smartStrip') {
     sensor_part = (
       <>
         <div
@@ -156,7 +154,7 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
     sensor_part = <></>
   }
   let switches = []
-  for (let i = 0; i < nr_of_sochets; i++) {
+  for (let i = 0; i < device.nr_of_sockets; i++) {
     switches.push(
       <Switch
         key={i}
@@ -178,7 +176,7 @@ function SmartStrip({ mqtt_name, device_type, nr_of_sochets, visibility }) {
             <div
               className='energy-today'
               style={{
-                display: device_type === 'smartSwitch' ? 'none' : 'flex',
+                display: device.device_type === 'smartSwitch' ? 'none' : 'flex',
               }}
             >
               <h1>{ENERGY.Today}</h1>

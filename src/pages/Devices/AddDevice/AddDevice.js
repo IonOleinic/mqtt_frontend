@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { app } from '../../api/api'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './AddDevice.css'
 import SubSwitch from './SubSwitch/SubSwitch'
-import { app } from '../../api/api'
 import SubIR from './SubIR/SubIR'
 
 function AddDevice() {
   const navigate = useNavigate()
-  const [disabledAddBtn, setDisabledBtn] = useState(true)
+  const [disabledAddBtn, setDisabledAddBtn] = useState(true)
   const [disabledTypeSelect, setDisabledTypeSelect] = useState(true)
   const [deviceTypes, setDeviceTypes] = useState([])
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
   const [manufacter, setManufacter] = useState('')
-  const [deviceType, setDeviceType] = useState('')
+  const [resultMessage, setResultMessage] = useState('')
   const [groups, setGroups] = useState('')
   const [iconUrl, setIconUrl] = useState('')
+  const [deviceType, setDeviceType] = useState('')
   const [props, setProps] = useState({})
   const [subDevice, setSubDevice] = useState(<></>)
-  const [resultMessage, setResultMessage] = useState('')
   useEffect(() => {
     const get_all_types = async () => {
       let result = await app.get('/deviceTypes')
@@ -87,7 +87,7 @@ function AddDevice() {
     setSubDevice(subtype)
   }
   const disable_add_btn = (__bool) => {
-    setDisabledBtn(__bool)
+    setDisabledAddBtn(__bool)
   }
 
   return (

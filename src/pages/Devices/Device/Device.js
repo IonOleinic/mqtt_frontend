@@ -49,15 +49,7 @@ function Device({
     device.device_type === 'smartStrip' ||
     device.device_type === 'smartSwitch'
   ) {
-    final_device = (
-      <SmartStrip
-        mqtt_name={device.mqtt_name}
-        device_type={device.device_type}
-        device_name={device.name}
-        nr_of_sochets={device.nr_of_plugs}
-        visibility={visibility}
-      />
-    )
+    final_device = <SmartStrip visibility={visibility} device={device} />
   } else if (device.device_type === 'smartIR') {
     final_device = <SmartIR visibility={visibility} device={device} />
   }
