@@ -1,27 +1,54 @@
 import './EditDevice.css'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { app } from '../../api/api'
 import 'bootstrap/dist/css/bootstrap.min.css'
-function EditDevice({ device }) {
+function EditDevice() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [device, setDevice] = useState({})
   const [disabledModifyBtn, setDisabledModifyBtn] = useState(true)
-  const [name, setName] = useState(device.name)
-  const [mqttName, setMqttName] = useState(device.mqtt_name)
-  const [manufacter, setManufacter] = useState(device.manufacter)
-  const [resultMessage, setResultMessage] = useState(device.group)
+  const [name, setName] = useState('')
+  const [mqttName, setMqttName] = useState('')
+  const [manufacter, setManufacter] = useState('')
+  const [resultMessage, setResultMessage] = useState('')
   const [groups, setGroups] = useState('')
-  const [iconUrl, setIconUrl] = useState(device.img)
-  useEffect(() => {}, [])
-  const handleModifyDevice = () => {
+  const [iconUrl, setIconUrl] = useState('')
+  const get_device = async () => {
+    try {
+      let result = await app.get(`/device/${id}`)
+      setDevice(result.data)
+      setName(result.data.name)
+      setMqttName(result.data.mqtt_name)
+      setManufacter(result.data.manufacter)
+      setGroups(result.data.mqtt_group.toString())
+      setIconUrl(result.data.img)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    get_device()
+  }, [])
+  const handleModifyDevice = async () => {
+    setDisabledModifyBtn(true)
     let new_device = device
     new_device.name = name
     new_device.mqttName = mqttName
     new_device.manufacter = manufacter
-    new_device.type = deviceType
-    new_device.groups = groups
+    new_device.mqtt_group = groups.split(',')
     new_device.iconUrl = iconUrl
-
-    console.log(new_device)
+    try {
+      let result = await app.post('/updateDevice', new_device)
+      if (result.data.Succes) {
+        navigate('/devices')
+      } else {
+        setDisabledModifyBtn(false)
+        console.log(result.data.msg)
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
   return (
     <div className='Add-form-container'>

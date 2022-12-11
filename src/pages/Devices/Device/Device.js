@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import './Device.css'
+import { useNavigate } from 'react-router-dom'
 import SmartStrip from './SmartStrip/SmartStrip'
 import SmartIR from './SmartIR/SmartIR'
 import { MdOutlineExpandMore } from 'react-icons/md'
 import { AiOutlineStar } from 'react-icons/ai'
 import { AiFillStar } from 'react-icons/ai'
+import { AiOutlineEdit } from 'react-icons/ai'
 import { useEffect } from 'react'
 import { app } from '../../api/api'
 const iconMore = (
@@ -20,6 +22,7 @@ function Device({
   isOpenInfoBar,
   refresh,
 }) {
+  const navigate = useNavigate()
   const [openSubMenu, setOpenSubMenu] = useState(false)
   const [visibility, setVisibility] = useState(false)
   const [expandIcon, setExpandIcon] = useState(iconMore)
@@ -158,6 +161,14 @@ function Device({
               </li>
             </ul>
           </span>
+        </span>
+        <span
+          className='icon-edit'
+          onClick={() => {
+            navigate(`/devices/editdevice/${device.id}`)
+          }}
+        >
+          <AiOutlineEdit size={25} />
         </span>
       </div>
       {final_device}
