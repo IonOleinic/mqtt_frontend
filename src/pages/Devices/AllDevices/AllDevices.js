@@ -4,7 +4,7 @@ import { BiRefresh } from 'react-icons/bi'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { GrClose } from 'react-icons/gr'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useReducer } from 'react'
 import './AllDevices.css'
 import Device from '../Device/Device'
 import './AllDevices.css'
@@ -23,10 +23,9 @@ const initDevice = {
 }
 const Devices = () => {
   const navigate = useNavigate()
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0)
   const [devices, setDevices] = useState([])
   const [infoOpen, setInfoOpen] = useState(false)
-  const [filterOpen, setFilterOpen] = useState(false)
-  const [orderOpen, setOrderOpen] = useState(false)
   const [filterList, setFilterList] = useState([])
   const [selectedGroup, setSelectedGroup] = useState('')
   const [selectedDevice, setSelectedDevice] = useState(initDevice)
@@ -47,6 +46,7 @@ const Devices = () => {
     if (sortval === 'Nume') {
       setDevices(devices.sort((a, b) => (a.name > b.name ? 1 : -1)))
     }
+    forceUpdate()
   }
   async function get_all_groups() {
     try {
@@ -58,7 +58,6 @@ const Devices = () => {
     }
   }
   const handleDeleteDevice = async (selected_device_id) => {
-    console.log('handle delete')
     try {
       app.post(`/deleteDevice?device_id=${selected_device_id}`)
     } catch (error) {
@@ -80,9 +79,6 @@ const Devices = () => {
   const toggleInfoBar = () => {
     setInfoOpen(!infoOpen)
   }
-  const toggleSubMenu = () => {
-    setFilterOpen(!filterOpen)
-  }
   const updateSelectedDevice = (device) => {
     setSelectedDevice(device)
   }
@@ -101,8 +97,6 @@ const Devices = () => {
           <p>Filter by</p>
           <DropDownMenu
             className='drop-down-menu'
-            isOpen={filterOpen}
-            toggleSubMenu={toggleSubMenu}
             message={'choose...'}
             items={filterList}
             action={get_all_devices}
@@ -113,10 +107,6 @@ const Devices = () => {
           <p>Order by</p>
           <DropDownMenu
             className='drop-down-menu'
-            isOpen={orderOpen}
-            toggleSubMenu={() => {
-              setOrderOpen(!orderOpen)
-            }}
             message={'choose...'}
             items={['Nume', 'Data adaugarii']}
             action={sort_devices_by}
@@ -161,17 +151,13 @@ const Devices = () => {
           display: infoOpen === true ? 'flex' : 'none',
         }}
       >
-        <input
-          type='checkbox'
-          name='close-icon'
-          id='chk-exit'
-          style={{ display: 'none' }}
-          checked={infoOpen}
-          onChange={() => {
+        <label
+          htmlFor='chk-exit'
+          className='close-icon'
+          onClick={() => {
             toggleInfoBar()
           }}
-        />
-        <label htmlFor='chk-exit' className='close-icon'>
+        >
           <GrClose size={20} />
         </label>
         <div className='sidebar-item'>

@@ -62,17 +62,13 @@ function Device({
   return (
     <div className='device-item' key={device.mqtt_name}>
       <div className='device-top'>
-        <input
-          type='checkbox'
-          name='chk-visibility'
-          id='chk-visibility'
-          checked={visibility}
-          style={{ display: 'none' }}
-        />
         <label
           className='icon-expand'
           onClick={() => {
             togglevisibility()
+          }}
+          style={{
+            transform: visibility ? 'rotate(180deg)' : 'rotate(0)',
           }}
         >
           {expandIcon}
@@ -108,22 +104,22 @@ function Device({
           {favIcon}
         </span>
         <span className='vertical-menu'>
-          <input
-            type='checkbox'
-            id={`check-sub-menu${device.id}`}
-            className='checkbox-sub-menu'
-            checked={openSubMenu}
-            onChange={() => {
-              toggleSubMenu()
-            }}
-          />
           <label
-            htmlFor={`check-sub-menu${device.id}`}
             className='label-sub-menu'
+            onClick={() => {
+              setOpenSubMenu(!openSubMenu)
+            }}
+            tabIndex={0}
+            onBlur={() => {
+              setOpenSubMenu(false)
+            }}
           >
             <img src='https://img.icons8.com/material-rounded/24/null/menu-2.png' />
           </label>
-          <span className='vertical-menu-item'>
+          <span
+            className='vertical-menu-item'
+            style={{ display: openSubMenu ? 'block' : 'none' }}
+          >
             <ul>
               <li
                 onClick={() => {

@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import './DropDownMenu.css'
-function DropDownMenu({
-  isOpen,
-  toggleSubMenu,
-  message,
-  items,
-  action,
-  updateFunc,
-}) {
+function DropDownMenu({ message, items, action, updateFunc }) {
   const [title, setTitle] = useState(message)
+  const [isopen, setIsOpen] = useState(false)
   useEffect(() => {}, [])
   return (
-    <div class='dropdown'>
+    <div className='dropdown'>
       <button
-        class='btn btn-secondary dropdown-toggle'
+        className='btn btn-secondary dropdown-toggle'
         type='button'
         id='dropdownMenuButton'
         data-toggle='dropdown'
         aria-haspopup='true'
         aria-expanded='false'
         onClick={() => {
-          toggleSubMenu()
+          setIsOpen(!isopen)
+        }}
+        onBlur={() => {
+          setTimeout(() => {
+            setIsOpen(false)
+          }, 100)
         }}
       >
         {title}
       </button>
       <div
-        class='dropdown-menu'
+        className='dropdown-menu'
         aria-labelledby='dropdownMenuButton'
         style={{
-          display: isOpen === true ? 'flex' : 'none',
+          display: isopen === true ? 'flex' : 'none',
           flexDirection: 'column',
         }}
       >
@@ -37,10 +36,9 @@ function DropDownMenu({
           return (
             <i
               key={index}
-              class='dropdown-item'
+              className='dropdown-item'
               onClick={() => {
                 setTitle(item)
-                toggleSubMenu()
                 if (action) {
                   action(item)
                 }

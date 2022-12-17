@@ -33,21 +33,11 @@ const Navbar = ({ toggle, isOpen }) => {
         <Bars isOpen={isOpen} onClick={toggle} />
       </Icon>
       <NavMenu>
-        <NavLink to='/home' activestyle='true'>
-          Home
-        </NavLink>
-        <NavLink to='/devices' activestyle='true'>
-          Devices
-        </NavLink>
-        <NavLink to='/scenes' activestyle='true'>
-          Scenes
-        </NavLink>
-        <NavLink to='/settings' activestyle='true'>
-          Settings
-        </NavLink>
-        <NavLink to='/about' activestyle='true'>
-          About
-        </NavLink>
+        <NavLink to='/home'>Home</NavLink>
+        <NavLink to='/devices'>Devices</NavLink>
+        <NavLink to='/scenes'>Scenes</NavLink>
+        <NavLink to='/settings'>Settings</NavLink>
+        <NavLink to='/about'>About</NavLink>
         <NavBtn>
           <NavBtnLink to='/signin'>Sign In</NavBtnLink>
         </NavBtn>

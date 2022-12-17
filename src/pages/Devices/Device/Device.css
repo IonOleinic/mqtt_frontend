@@ -16,12 +16,8 @@
   align-items: flex-start;
   justify-content: space-between;
   position: relative;
-  /* margin-bottom: -0.7rem; */
 }
 
-#chk-visibility:checked ~ .icon-expand {
-  transform: rotate(180deg);
-}
 .icon-expand {
   transition: all 0.5s;
   padding: 0.2rem;
@@ -92,12 +88,6 @@
   text-align: left;
 }
 
-.checkbox-sub-menu {
-  display: none;
-}
-.checkbox-sub-menu:checked ~ .vertical-menu-item {
-  display: block;
-}
 .label-sub-menu img:hover {
   background-color: rgba(204, 204, 204, 0.429);
   border-radius: 50%;
