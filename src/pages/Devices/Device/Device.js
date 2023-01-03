@@ -111,7 +111,9 @@ function Device({
             }}
             tabIndex={0}
             onBlur={() => {
-              setOpenSubMenu(false)
+              setTimeout(() => {
+                setOpenSubMenu(false)
+              }, 100)
             }}
           >
             <img src='https://img.icons8.com/material-rounded/24/null/menu-2.png' />

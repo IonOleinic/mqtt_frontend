@@ -1,17 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import Scene from './Scene/Scene'
+import './Scenes.css'
 
 const Scenes = () => {
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '90vh',
-        }}
-      >
-        <h1>Scenes</h1>
+      <div className='scenes-container'>
+        <Scene mqtt_name='gosund_sp111_1' />
       </div>
     </>
   )
