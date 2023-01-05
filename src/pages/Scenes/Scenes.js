@@ -6,7 +6,7 @@ const Scenes = () => {
   return (
     <>
       <div className='scenes-container'>
-        <Scene mqtt_name='gosund_sp111_1' />
+        <Scene />
       </div>
     </>
   )
