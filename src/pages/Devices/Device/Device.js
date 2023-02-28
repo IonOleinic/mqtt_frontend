@@ -7,6 +7,7 @@ import { MdOutlineExpandMore } from 'react-icons/md'
 import { AiOutlineStar } from 'react-icons/ai'
 import { AiFillStar } from 'react-icons/ai'
 import { AiOutlineEdit } from 'react-icons/ai'
+import { FiMoreVertical } from 'react-icons/fi'
 import { useEffect } from 'react'
 import { app } from '../../api/api'
 const iconMore = (
@@ -33,7 +34,7 @@ function Device({
   async function update_fav(fav_bool) {
     device.favorite = fav_bool
     try {
-      let result = await app.post(`/updateDevice`, device)
+      let result = await app.put(`/device/${device.id}`, device)
       console.log(result.data)
       refresh()
     } catch (error) {
@@ -81,16 +82,15 @@ function Device({
             togglevisibility()
           }}
         />
-        <span
+        <div
           className='device-name'
           onClick={() => {
             togglevisibility()
           }}
         >
           <h3>{device.name} </h3>
-          <br />
-          <h4>{device.mqtt_group.toString()}</h4>
-        </span>
+          <span>{device.mqtt_group.toString().slice(0, 20)}</span>
+        </div>
         <span
           className='fav-icon'
           onClick={() => {
@@ -113,10 +113,11 @@ function Device({
             onBlur={() => {
               setTimeout(() => {
                 setOpenSubMenu(false)
-              }, 100)
+              }, 250)
             }}
           >
             <img src='https://img.icons8.com/material-rounded/24/null/menu-2.png' />
+            {/* <FiMoreVertical size={25} className='more-vertical' /> */}
           </label>
           <span
             className='vertical-menu-item'

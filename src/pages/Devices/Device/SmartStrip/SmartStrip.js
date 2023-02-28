@@ -4,7 +4,7 @@ import io from 'socket.io-client'
 import Switch from './Switch/Switch'
 import { app, serverPort, serverURL } from '../../../api/api'
 let socket = undefined
-const data = {
+const sensor_data_demo = {
   StatusSNS: {
     Time: '0000-00-00T00:00:00',
     ENERGY: {
@@ -30,7 +30,7 @@ function SmartStrip({ device, visibility }) {
   }
   const [statusList, setStatusList] = useState(init_statuses)
   const [isCheckedList, setIsCheckedList] = useState(initCheckedlist)
-  const [sensorData, setSensorData] = useState(data)
+  const [sensorData, setSensorData] = useState(sensor_data_demo)
   function initSocket(__bool) {
     if (__bool) {
       if (!socket) {
@@ -86,7 +86,7 @@ function SmartStrip({ device, visibility }) {
       if (device.device_type === 'smartSwitch') {
       } else if (device.device_type === 'smartStrip') {
         let smart_strip_sensor = await app.get(
-          `/smartStrip?device_name=${device.mqtt_name}&req_topic=STATUS`
+          `/smartStrip?device_name=${device.mqtt_name}&req_topic=STATUS&req_payload=8`
         )
         setSensorData(smart_strip_sensor.data.sensor_status)
       }
@@ -98,7 +98,7 @@ function SmartStrip({ device, visibility }) {
     send_update_req()
     let interval = setInterval(async () => {
       send_update_req()
-    }, 3809)
+    }, 2809)
     return () => {
       clearInterval(interval)
     }
@@ -167,8 +167,8 @@ function SmartStrip({ device, visibility }) {
   return (
     <>
       <div>
-        <form
-          className='form-smart-strip'
+        <div
+          className='smart-strip'
           style={{ display: visibility === true ? 'flex' : 'none' }}
         >
           <div className='smart-switches'>
@@ -184,7 +184,7 @@ function SmartStrip({ device, visibility }) {
             </div>
           </div>
           {sensor_part}
-        </form>
+        </div>
       </div>
     </>
   )

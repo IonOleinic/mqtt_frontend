@@ -5,8 +5,21 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './AddDevice.css'
 import SubSwitch from './SubSwitch/SubSwitch'
 import SubIR from './SubIR/SubIR'
-
+import { Checkmark } from 'react-checkmark'
+import { VscError } from 'react-icons/vsc'
+import CheckMessage from '../../CheckMessage/CheckMessage'
+import UseAnimations from 'react-useanimations'
+import loading from 'react-useanimations/lib/loading'
+let iconSucces = <Checkmark size='25px' color='green' />
+let iconError = <VscError className='icon-inside' color='red' size='25px' />
+let iconLoading = <UseAnimations animation={loading} size={40} />
 function AddDevice() {
+  //validation info
+  const [checkmark, setCheckmark] = useState(false)
+  const [icon, setIcon] = useState(iconLoading)
+  const [message, setMessage] = useState('Loading...')
+  const [textColor, setTextColor] = useState('black')
+
   const navigate = useNavigate()
   const [disabledAddBtn, setDisabledAddBtn] = useState(true)
   const [disabledTypeSelect, setDisabledTypeSelect] = useState(true)
@@ -14,7 +27,6 @@ function AddDevice() {
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
   const [manufacter, setManufacter] = useState('')
-  const [resultMessage, setResultMessage] = useState('')
   const [groups, setGroups] = useState('')
   const [iconUrl, setIconUrl] = useState('')
   const [deviceType, setDeviceType] = useState('')
@@ -27,7 +39,14 @@ function AddDevice() {
     }
     get_all_types()
   }, [])
+  useEffect(() => {
+    setCheckmark(false)
+  }, [deviceTypes, name, mqttName, deviceType, iconUrl, manufacter])
   const handleAddDevice = async () => {
+    setIcon(iconLoading)
+    setMessage('Adding...')
+    setTextColor('black')
+    setCheckmark(true)
     let device = {}
     device.name = name
     device.mqttName = mqttName
@@ -38,12 +57,18 @@ function AddDevice() {
     device.props = props
     try {
       let result = await app.post('/addDevice', device)
-      setResultMessage(result.data.msg)
       if (result.data.Succes) {
         navigate('/devices')
+      } else {
+        setIcon(iconError)
+        setTextColor('red')
+        setMessage('Server error.Please Try again.')
       }
     } catch (error) {
       console.log(error)
+      setIcon(iconError)
+      setTextColor('red')
+      setMessage('Error occured.Please Try again.')
     }
   }
   const setSubProps = (props) => {
@@ -193,7 +218,7 @@ function AddDevice() {
             </select>
             {subDevice}
           </div>
-          <div className='d-grid gap-2 mt-3'>
+          <div className='form-group mt-3 btn-form-container'>
             <button
               id='btn-add-dev'
               disabled={disabledAddBtn}
@@ -204,8 +229,13 @@ function AddDevice() {
               Add
             </button>
           </div>
-          <div className='d-grid gap-2 mt-3'>
-            <p>{resultMessage}</p>
+          <div className='form-group mt-3'>
+            <CheckMessage
+              textColor={textColor}
+              visibility={checkmark}
+              icon={icon}
+              message={message}
+            />
           </div>
         </div>
       </form>

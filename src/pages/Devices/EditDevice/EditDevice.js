@@ -39,7 +39,7 @@ function EditDevice() {
     new_device.mqtt_group = groups.split(',')
     new_device.iconUrl = iconUrl
     try {
-      let result = await app.post('/updateDevice', new_device)
+      let result = await app.put(`/device/${new_device.id}`, new_device)
       if (result.data.Succes) {
         navigate('/devices')
       } else {

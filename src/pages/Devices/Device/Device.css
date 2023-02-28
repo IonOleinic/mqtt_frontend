@@ -16,6 +16,7 @@
   align-items: flex-start;
   justify-content: space-between;
   position: relative;
+  height: 100px;
 }
 
 .icon-expand {
@@ -39,21 +40,26 @@
 .device-name {
   margin: 0;
   padding: 0;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 8rem;
-  word-wrap: break-word;
+  height: 100%;
 }
 .device-name * {
   margin: 0;
   padding: 0;
   display: inline-block;
 }
-.device-name h4 {
+.device-name span {
+  width: 100%;
   font-size: 1rem;
   font-style: oblique;
 }
 .device-name h3 {
   font-size: 1.5rem;
+  height: 3.4rem;
+  width: 100%;
 }
 .fav-icon {
   margin-top: 0.5rem;
@@ -87,7 +93,19 @@
   z-index: 10;
   text-align: left;
 }
-
+.label-sub-menu {
+  background-color: transparent;
+  max-height: 2rem;
+  margin-left: 0rem;
+  margin-right: -0.4rem;
+}
+.label-sub-menu:hover {
+  cursor: pointer;
+}
+.label-sub-menu img {
+  transition: all 0.5s;
+  padding: 0.6rem;
+}
 .label-sub-menu img:hover {
   background-color: rgba(204, 204, 204, 0.429);
   border-radius: 50%;
@@ -96,20 +114,6 @@
   background-color: rgba(204, 204, 204, 0.629);
   border-radius: 50%;
 }
-
-.label-sub-menu {
-  background-color: transparent;
-  max-height: 2rem;
-  margin-left: 0.2rem;
-}
-.label-sub-menu img {
-  transition: all 0.5s;
-  padding: 0.6rem;
-}
-.label-sub-menu:hover {
-  cursor: pointer;
-}
-
 .vertical-menu ul {
   position: relative;
   top: 1rem;

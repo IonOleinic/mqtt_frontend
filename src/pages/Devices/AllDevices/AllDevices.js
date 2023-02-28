@@ -1,15 +1,15 @@
 import React from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { useNavigate } from 'react-router-dom'
 import { BiRefresh } from 'react-icons/bi'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { GrClose } from 'react-icons/gr'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useState, useEffect, useReducer } from 'react'
 import './AllDevices.css'
 import Device from '../Device/Device'
-import './AllDevices.css'
-import DropDownMenu from './DropDownMenu/DropDownMenu'
+import DropDownMenu from '../../DropDownMenu/DropDownMenu'
 import { app } from '../../api/api'
+import './AllDevices.css'
 
 const initDevice = {
   name: 'unknown',
@@ -52,18 +52,17 @@ const Devices = () => {
     try {
       let result = await app.get('/mqtt_groups')
       setFilterList(result.data)
-      console.log(result.data)
     } catch (error) {
       console.log(error.message)
     }
   }
   const handleDeleteDevice = async (selected_device_id) => {
     try {
-      app.post(`/deleteDevice?device_id=${selected_device_id}`)
+      const response = await app.delete(`/device/${selected_device_id}`)
+      setDevices(response.data)
     } catch (error) {
       console.log(error.message)
     }
-    get_all_devices(selectedGroup)
   }
   const updateSelectedGroup = (filter_name) => {
     setSelectedGroup(filter_name)
@@ -83,17 +82,17 @@ const Devices = () => {
     setSelectedDevice(device)
   }
   return (
-    <div className='alldevices'>
-      <div className='toolbar'>
+    <div className='alldevices-container'>
+      <div className='toolbar-devices'>
         <div
-          className='toolbar-item refresh-icon'
+          className='toolbar-devices-item refresh-icon'
           onClick={() => {
             get_all_devices(selectedGroup)
           }}
         >
           <BiRefresh size={30} />
         </div>
-        <div className='toolbar-item'>
+        <div className='toolbar-devices-item'>
           <p>Filter by</p>
           <DropDownMenu
             className='drop-down-menu'
@@ -103,7 +102,7 @@ const Devices = () => {
             updateFunc={updateSelectedGroup}
           />
         </div>
-        <div className='toolbar-item'>
+        <div className='toolbar-devices-item'>
           <p>Order by</p>
           <DropDownMenu
             className='drop-down-menu'
@@ -112,7 +111,7 @@ const Devices = () => {
             action={sort_devices_by}
           />
         </div>
-        <div className='toolbar-item'>
+        <div className='toolbar-devices-item'>
           <p>Add</p>
           <button
             type='button'
@@ -125,9 +124,8 @@ const Devices = () => {
           </button>
         </div>
       </div>
-
       <div
-        className='alldevices-container'
+        className='alldevices'
         style={{ width: infoOpen === true ? '70%' : '90%' }}
       >
         {devices.map((device) => {
