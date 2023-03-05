@@ -1,0 +1,43 @@
+.scene {
+  display: flex;
+  flex-direction: column;
+  width: 22rem;
+  background-color: white;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin: 1rem;
+}
+.scene-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  height: 110px;
+}
+.scene-img {
+  min-height: 40px;
+  max-height: 80px;
+  max-width: 80px;
+  min-width: 40px;
+  margin: 0;
+  padding: 0;
+}
+.scene-info {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  width: 10rem;
+}
+.scene-info h3 {
+  font-size: 1.3rem;
+}
+.scene-date {
+  position: absolute;
+  font-size: 0.8rem;
+  bottom: 0rem;
+  left: 0.5rem;
+  font-style: italic;
+}

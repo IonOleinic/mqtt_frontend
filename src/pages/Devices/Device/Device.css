@@ -16,7 +16,7 @@
   align-items: flex-start;
   justify-content: space-between;
   position: relative;
-  height: 100px;
+  height: 110px;
 }
 
 .icon-expand {
@@ -32,12 +32,12 @@
   margin: 0;
   padding: 0;
 }
-.device-name:hover,
+.device-info:hover,
 .device-img:hover,
 .icon-expand:hover {
   cursor: pointer;
 }
-.device-name {
+.device-info {
   margin: 0;
   padding: 0;
   display: flex;
@@ -46,17 +46,17 @@
   width: 8rem;
   height: 100%;
 }
-.device-name * {
+.device-info * {
   margin: 0;
   padding: 0;
   display: inline-block;
 }
-.device-name span {
+.device-info span {
   width: 100%;
   font-size: 1rem;
   font-style: oblique;
 }
-.device-name h3 {
+.device-info h3 {
   font-size: 1.5rem;
   height: 3.4rem;
   width: 100%;
@@ -71,7 +71,7 @@
 }
 .icon-edit {
   position: absolute;
-  bottom: 0.5rem;
+  bottom: 0rem;
   right: 0.5rem;
   transition: all 0.2s ease-in-out;
 }
@@ -79,63 +79,10 @@
   cursor: pointer;
   color: blue;
 }
-.vertical-menu {
-  margin: 0;
-  position: relative;
-  background-color: transparent;
-}
-.vertical-menu-item {
-  display: none;
+.device-date {
   position: absolute;
-  left: -4rem;
-  margin: 0.3em 1em;
-  transition: all 0.5s;
-  z-index: 10;
-  text-align: left;
-}
-.label-sub-menu {
-  background-color: transparent;
-  max-height: 2rem;
-  margin-left: 0rem;
-  margin-right: -0.4rem;
-}
-.label-sub-menu:hover {
-  cursor: pointer;
-}
-.label-sub-menu img {
-  transition: all 0.5s;
-  padding: 0.6rem;
-}
-.label-sub-menu img:hover {
-  background-color: rgba(204, 204, 204, 0.429);
-  border-radius: 50%;
-}
-.checkbox-sub-menu:checked ~ .label-sub-menu img {
-  background-color: rgba(204, 204, 204, 0.629);
-  border-radius: 50%;
-}
-.vertical-menu ul {
-  position: relative;
-  top: 1rem;
-  right: 4.5em;
-  margin: 0;
-  list-style: none;
-  padding: 0;
-  box-shadow: 2px 2px 25px 1px #888888;
-  background-color: white;
-  transition: all 0.4s ease-in-out;
-}
-.vertical-menu-item li {
-  list-style-type: none;
-  background-color: white;
-  width: 180px;
-  padding: 0.2rem 1rem;
-  font-size: 1.2rem;
-  border-bottom: 1px solid #ccc;
-  transition: all 0.4s ease-in-out;
-}
-
-.vertical-menu-item li:hover {
-  background-color: #ccc;
-  cursor: pointer;
+  font-size: 0.8rem;
+  bottom: 0rem;
+  left: 0.5rem;
+  font-style: italic;
 }

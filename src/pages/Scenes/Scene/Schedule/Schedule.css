@@ -1,0 +1,108 @@
+.schedule {
+  display: flex;
+  background-color: transparent;
+  width: 100%;
+  flex-direction: column;
+  padding: 0.7rem;
+  position: relative;
+}
+.schedule-top {
+  width: 100%;
+  margin-top: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+}
+.schedule-device {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.schedule-device img {
+  max-width: 60px;
+}
+.schedule-device p {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-left: 0.4rem;
+  word-break: break-all;
+  width: 80px;
+  margin: 0;
+}
+.arrow-right {
+  width: 3rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.schedule-action {
+  width: 8rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.schedule-action p {
+  padding: 0;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.schedule-time {
+  margin-bottom: 0.4rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.schedule-time-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.schedule-time-group p {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.schedule-time-group .schedule-clock-icon {
+  margin: 0 0.3rem;
+  margin-bottom: 0.2rem;
+}
+.schedule-time-group .schedule-repeat-once-icon {
+  position: absolute;
+  bottom: 0.3rem;
+  right: -1.5rem;
+}
+.schedule-repeat {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.schedule-repeat p {
+  font-size: 0.8rem;
+  width: 45px;
+  height: 35px;
+  padding: 0.3rem;
+  margin: 0.3rem;
+  color: #ccc;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: center;
+}
+.schedule-disabled-mask {
+  position: absolute;
+  top: 1rem;
+  left: 0.5rem;
+  z-index: 10;
+  width: 95%;
+  height: 90%;
+  background-color: #ccc;
+  opacity: 50%;
+  border-radius: 7px;
+}

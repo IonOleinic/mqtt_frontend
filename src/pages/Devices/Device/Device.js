@@ -17,48 +17,66 @@ const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
 const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
 function Device({
   handleDeleteDevice,
-  device,
+  init_device,
   toggleInfoBar,
   handleSelectDevice,
   isOpenInfoBar,
-  refresh,
 }) {
   const navigate = useNavigate()
   const [openSubMenu, setOpenSubMenu] = useState(false)
   const [visibility, setVisibility] = useState(false)
   const [expandIcon, setExpandIcon] = useState(iconMore)
   const [favIcon, setFavIcon] = useState(favIconDisabled)
+  const [device, setDevice] = useState(init_device)
+  const [favBool, setFavBool] = useState(false)
   const toggleSubMenu = () => {
     setOpenSubMenu(!openSubMenu)
   }
-  async function update_fav(fav_bool) {
-    device.favorite = fav_bool
+  async function update_device() {
     try {
       let result = await app.put(`/device/${device.id}`, device)
-      console.log(result.data)
-      refresh()
+      setDevice(result.data)
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
   }
   useEffect(() => {
     if (device.favorite) {
       setFavIcon(favIconEnabled)
+      setFavBool(true)
     } else {
       setFavIcon(favIconDisabled)
+      setFavBool(false)
     }
-  }, [device.favorite])
+  }, [device])
   let final_device = <></>
   if (
     device.device_type === 'smartStrip' ||
     device.device_type === 'smartSwitch'
   ) {
     final_device = <SmartStrip visibility={visibility} device={device} />
-  } else if (device.device_type === 'smartIR') {
+  } else if (init_device.device_type === 'smartIR') {
     final_device = <SmartIR visibility={visibility} device={device} />
   }
   const togglevisibility = () => {
     setVisibility(!visibility)
+  }
+  const get_date_from_str = (date) => {
+    const addZero = (i) => {
+      if (i <= 9) {
+        return '0' + i
+      } else {
+        return i
+      }
+    }
+    let temp_date = new Date(date)
+    return (
+      temp_date.getFullYear() +
+      '-' +
+      addZero(temp_date.getMonth()) +
+      '-' +
+      addZero(temp_date.getDate())
+    )
   }
   return (
     <div className='device-item' key={device.mqtt_name}>
@@ -75,7 +93,7 @@ function Device({
           {expandIcon}
         </label>
         <img
-          src={`${device.img}`}
+          src={`${init_device.img}`}
           alt='device-img'
           className='device-img'
           onClick={() => {
@@ -83,7 +101,7 @@ function Device({
           }}
         />
         <div
-          className='device-name'
+          className='device-info'
           onClick={() => {
             togglevisibility()
           }}
@@ -94,11 +112,8 @@ function Device({
         <span
           className='fav-icon'
           onClick={() => {
-            if (device.favorite === true) {
-              update_fav(false)
-            } else {
-              update_fav(true)
-            }
+            device.favorite = !favBool
+            update_device()
           }}
         >
           {favIcon}
@@ -168,6 +183,9 @@ function Device({
           }}
         >
           <AiOutlineEdit size={25} />
+        </span>
+        <span className='device-date'>
+          {get_date_from_str(device.date.toString())}
         </span>
       </div>
       {final_device}

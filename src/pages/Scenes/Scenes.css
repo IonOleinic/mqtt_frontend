@@ -11,10 +11,12 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  min-height: 70vh;
+  min-height: 90vh;
   width: 100%;
   background-color: #e3e3e3;
+  padding: 1rem;
 }
 .toolbar-scenes {
   position: sticky;

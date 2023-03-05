@@ -132,12 +132,11 @@ const Devices = () => {
           return (
             <Device
               key={device.id}
-              device={device}
+              init_device={device}
               handleDeleteDevice={handleDeleteDevice}
               toggleInfoBar={toggleInfoBar}
               handleSelectDevice={updateSelectedDevice}
               isOpenInfoBar={infoOpen}
-              refresh={get_all_devices}
             />
           )
         })}

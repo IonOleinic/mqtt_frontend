@@ -40,12 +40,7 @@ function EditDevice() {
     new_device.iconUrl = iconUrl
     try {
       let result = await app.put(`/device/${new_device.id}`, new_device)
-      if (result.data.Succes) {
-        navigate('/devices')
-      } else {
-        setDisabledModifyBtn(false)
-        console.log(result.data.msg)
-      }
+      navigate('/devices')
     } catch (error) {
       console.log(error)
     }

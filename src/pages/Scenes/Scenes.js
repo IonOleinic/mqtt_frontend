@@ -2,13 +2,35 @@ import React, { useState, useEffect } from 'react'
 import Scene from './Scene/Scene'
 import { useNavigate } from 'react-router-dom'
 import { BiRefresh } from 'react-icons/bi'
-import { GrClose } from 'react-icons/gr'
 import { AiOutlinePlus } from 'react-icons/ai'
 import DropDownMenu from '../DropDownMenu/DropDownMenu'
 import { app } from '../api/api'
 import './Scenes.css'
+
 const Scenes = () => {
   const navigate = useNavigate()
+  const [scenes, setScenes] = useState([])
+  const get_scenes = async () => {
+    try {
+      const response = await app.get('scenes')
+      setScenes(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    get_scenes()
+  }, [])
+
+  const handleDeleteScene = async (selected_scene_id) => {
+    try {
+      const response = await app.delete(`/scene/${selected_scene_id}`)
+      setScenes(response.data)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
   return (
     <>
       <div className='scenes-container'>
@@ -46,7 +68,15 @@ const Scenes = () => {
           </div>
         </div>
         <div className='scenes'>
-          <Scene />
+          {scenes.map((scene) => {
+            return (
+              <Scene
+                init_scene={scene}
+                key={scene.id}
+                handleDeleteScene={handleDeleteScene}
+              />
+            )
+          })}
         </div>
       </div>
     </>
