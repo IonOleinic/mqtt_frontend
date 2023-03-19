@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import './SmartStrip.css'
-import io from 'socket.io-client'
 import Switch from './Switch/Switch'
-import { app, serverPort, serverURL } from '../../../api/api'
-let socket = undefined
+import { app } from '../../../api/api'
+import { socket } from '../../../api/io'
+
 const sensor_data_demo = {
   StatusSNS: {
     Time: '0000-00-00T00:00:00',
@@ -31,27 +31,7 @@ function SmartStrip({ device, visibility }) {
   const [statusList, setStatusList] = useState(init_statuses)
   const [isCheckedList, setIsCheckedList] = useState(initCheckedlist)
   const [sensorData, setSensorData] = useState(sensor_data_demo)
-  function initSocket(__bool) {
-    if (__bool) {
-      if (!socket) {
-        socket = io.connect(`${serverURL}:${serverPort}`, {
-          secure: false,
-          forceNew: true,
-        })
-        socket.on('connect', function () {
-          console.log('connected')
-        })
-        socket.on('disconnect', function () {
-          console.log('disconnected')
-        })
-      } else {
-        socket.connect() // Yep, socket.socket ( 2 times )
-        console.log('reconected')
-      }
-    } else {
-      socket.disconnect()
-    }
-  }
+
   const updateStatuses = (power_status) => {
     setStatusList(power_status)
     for (let i = 0; i < power_status.length; i++) {
@@ -65,7 +45,6 @@ function SmartStrip({ device, visibility }) {
     }
   }
   useEffect(() => {
-    initSocket(true)
     if (socket) {
       socket.on('update_smart_strip', (data) => {
         if (data.mqtt_name === device.mqtt_name) {
@@ -98,7 +77,7 @@ function SmartStrip({ device, visibility }) {
     send_update_req()
     let interval = setInterval(async () => {
       send_update_req()
-    }, 2809)
+    }, 3809)
     return () => {
       clearInterval(interval)
     }
@@ -165,28 +144,24 @@ function SmartStrip({ device, visibility }) {
     )
   }
   return (
-    <>
-      <div>
+    <div
+      className='smart-strip'
+      style={{ display: visibility === true ? 'flex' : 'none' }}
+    >
+      <div className='smart-switches'>
+        {switches}
         <div
-          className='smart-strip'
-          style={{ display: visibility === true ? 'flex' : 'none' }}
+          className='energy-today'
+          style={{
+            display: device.device_type === 'smartSwitch' ? 'none' : 'flex',
+          }}
         >
-          <div className='smart-switches'>
-            {switches}
-            <div
-              className='energy-today'
-              style={{
-                display: device.device_type === 'smartSwitch' ? 'none' : 'flex',
-              }}
-            >
-              <h1>{ENERGY.Today}</h1>
-              <p>kW</p>
-            </div>
-          </div>
-          {sensor_part}
+          <h1>{ENERGY.Today}</h1>
+          <p>kW</p>
         </div>
       </div>
-    </>
+      {sensor_part}
+    </div>
   )
 }
 

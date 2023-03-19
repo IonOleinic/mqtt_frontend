@@ -1,0 +1,31 @@
+.smart-temp-sensor {
+  /* margin-bottom: 0.5rem; */
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+.smart-temp-sensor-item {
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0.6rem;
+}
+.smart-temp-sensor-item p {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+.temp-item {
+  width: 150px;
+}
+.temp-item p {
+  margin-left: 0.3rem;
+}
+.celsius-icon {
+  margin-bottom: 0.4rem;
+  margin-left: -0.3rem;
+}
