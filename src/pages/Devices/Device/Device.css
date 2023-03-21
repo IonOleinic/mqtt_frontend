@@ -1,6 +1,5 @@
 .device-item {
-  max-width: 20rem;
-  min-width: 20rem;
+  width: 20rem;
   min-height: 6rem;
   margin: 0.5rem 1rem;
   position: relative;
@@ -60,6 +59,7 @@
   font-size: 1.5rem;
   height: 3.4rem;
   width: 100%;
+  word-wrap: break-word;
 }
 .fav-icon {
   margin-top: 0.5rem;

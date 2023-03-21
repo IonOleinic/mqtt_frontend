@@ -1,0 +1,42 @@
+.smart-door-sensor {
+  margin: 0.5rem 0;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 120px;
+}
+.display-status {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+}
+.display-status p {
+  margin: 0;
+  margin-left: 0.3rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  transition: all 0.3s ease-in-out;
+}
+.door-sensor-image {
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: center;
+}
+.door-main-module {
+  height: 130px;
+  transition: all 0.6s ease-in-out;
+}
+.door-secondary-module {
+  height: 80px;
+  transition: all 0.6s ease-in-out;
+}
+.door-sensor-image-item img {
+  height: 100%;
+}

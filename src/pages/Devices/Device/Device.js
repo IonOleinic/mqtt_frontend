@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import SmartStrip from './SmartStrip/SmartStrip'
 import SmartIR from './SmartIR/SmartIR'
 import SmartTempSensor from './SmartTempSensor/SmartTempSensor'
+import SmartDoorSensor from './SmartDoorSensor/SmartDoorSensor'
 import { MdOutlineExpandMore } from 'react-icons/md'
 import { AiOutlineStar } from 'react-icons/ai'
 import { AiFillStar } from 'react-icons/ai'
@@ -60,6 +61,8 @@ function Device({
     final_device = <SmartIR visibility={visibility} device={device} />
   } else if (init_device.device_type === 'smartTempSensor') {
     final_device = <SmartTempSensor visibility={visibility} device={device} />
+  } else if (init_device.device_type === 'smartDoorSensor') {
+    final_device = <SmartDoorSensor visibility={visibility} device={device} />
   }
   const togglevisibility = () => {
     setVisibility(!visibility)

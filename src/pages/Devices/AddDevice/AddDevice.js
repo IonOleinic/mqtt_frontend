@@ -35,6 +35,7 @@ function AddDevice() {
   useEffect(() => {
     const get_all_types = async () => {
       let result = await app.get('/deviceTypes')
+      console.log(result.data)
       setDeviceTypes(result.data)
     }
     get_all_types()
@@ -208,9 +209,9 @@ function AddDevice() {
               }}
             >
               <option value='none'>None</option>
-              {deviceTypes.map((deviceType, index) => {
+              {Object.keys(deviceTypes).map((deviceType) => {
                 return (
-                  <option key={index} value={deviceType}>
+                  <option key={deviceType} value={deviceTypes[deviceType]}>
                     {deviceType}
                   </option>
                 )

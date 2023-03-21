@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './SubIR.css'
-import { app, serverURL, serverPort } from '../../../api/api'
-import io from 'socket.io-client'
-let socket = undefined
+import { app } from '../../../api/api'
+import { socket } from '../../../api/io'
+
 let buttons_init = [
   {
     fullName: 'Power',
@@ -95,27 +95,7 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
   const [protocol, setProtocol] = useState('')
   const [bits, setBits] = useState('')
   const [disableDoneBtn, setDisableDoneBtn] = useState(true)
-  function initSocket(__bool) {
-    if (__bool) {
-      if (!socket) {
-        socket = io.connect(`${serverURL}:${serverPort}`, {
-          secure: false,
-          forceNew: true,
-        })
-        socket.on('connect', function () {
-          console.log('connected')
-        })
-        socket.on('disconnect', function () {
-          console.log('disconnected')
-        })
-      } else {
-        socket.connect() // Yep, socket.socket ( 2 times )
-        console.log('reconected')
-      }
-    } else {
-      socket.disconnect()
-    }
-  }
+
   const set_btn = (btn_name, btn_code) => {
     for (let i = 0; i < buttons.length; i++) {
       if (buttons[i].name === btn_name) {
@@ -139,7 +119,6 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
     } catch (error) {
       console.log(error)
     }
-    initSocket(true)
     if (socket) {
       socket.on('update_temp_ir', (data) => {
         if (data.mqtt_name === mqtt_name) {
