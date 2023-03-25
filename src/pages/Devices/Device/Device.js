@@ -12,6 +12,7 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { FiMoreVertical } from 'react-icons/fi'
 import { useEffect } from 'react'
 import { app } from '../../api/api'
+import SmartSirenAlarm from './SmartAlarmSiren/SmartSirenAlarm'
 const iconMore = (
   <MdOutlineExpandMore size={30} style={{ margin: '0', padding: '0' }} />
 )
@@ -63,6 +64,8 @@ function Device({
     final_device = <SmartTempSensor visibility={visibility} device={device} />
   } else if (init_device.device_type === 'smartDoorSensor') {
     final_device = <SmartDoorSensor visibility={visibility} device={device} />
+  } else if (init_device.device_type === 'smartSirenAlarm') {
+    final_device = <SmartSirenAlarm visibility={visibility} device={device} />
   }
   const togglevisibility = () => {
     setVisibility(!visibility)

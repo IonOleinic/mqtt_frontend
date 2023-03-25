@@ -1,0 +1,76 @@
+.smart-alarm-siren {
+  width: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  margin: 0.3rem 0;
+}
+.siren-alarm-sensors {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+.siren-alarm-sensor-item {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0.5rem 0rem;
+}
+.siren-alarm-temp-item {
+  margin-left: 0.6rem;
+}
+
+.siren-alarm-sensor-item p {
+  margin: 0;
+  margin-left: 0.3rem;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+.siren-alarm-control {
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.siren-alarm-btn {
+  padding: 0.8rem;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+.siren-alarm-btn-info {
+  border-top: 1px solid black;
+  margin: 0;
+  margin-top: 0.5rem;
+  padding-top: 0.4rem;
+  font-size: 0.8rem;
+}
+.siren-alarm-btn:hover {
+  background-color: #efefef;
+  cursor: pointer;
+}
+.siren-alarm-btn:active {
+  background-color: #d4d4d4;
+}
+.siren-alarm-options {
+  width: 80px;
+  max-height: 100%;
+  margin-left: 0.5rem;
+}
+.siren-alarm-volume {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.volume-control-icon {
+  margin-right: 0.4rem;
+}

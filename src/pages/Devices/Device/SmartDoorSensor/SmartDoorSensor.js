@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import './SmartDoorSensor.css'
 import { AiFillLock } from 'react-icons/ai'
 import { AiFillUnlock } from 'react-icons/ai'
+import { HiOutlineSwitchHorizontal } from 'react-icons/hi'
 import DoorMainModule from './DoorSensorImages/door_sensor_main_module.png'
 import DoorSecondModule from './DoorSensorImages/door_sensor_second_module.png'
 import { socket } from '../../../api/io'
+import { app } from '../../../api/api'
 let lockedImg = <AiFillLock size={25} color='#46B60A' />
 let unlockedImg = <AiFillUnlock size={25} color='red' />
 function SmartDoorSensor({ device, visibility }) {
@@ -20,7 +22,11 @@ function SmartDoorSensor({ device, visibility }) {
     }
     setBatteryLevel(device.battery_level)
   }, [device])
-
+  const send_toggle_direction = async () => {
+    const response = await app.post(
+      `/smartDoorSensor?device_name=${device.mqtt_name}`
+    )
+  }
   useEffect(() => {
     if (socket) {
       socket.on('update_smart_door_sensor', (data) => {
@@ -60,6 +66,9 @@ function SmartDoorSensor({ device, visibility }) {
         >
           <img src={DoorSecondModule} alt='Door Sensor Second Module' />
         </div>
+      </div>
+      <div className='switch-direction-btn' onClick={send_toggle_direction}>
+        <HiOutlineSwitchHorizontal size={20} color='black' />
       </div>
     </div>
   )
