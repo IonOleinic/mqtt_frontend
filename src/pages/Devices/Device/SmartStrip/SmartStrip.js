@@ -44,18 +44,13 @@ function SmartStrip({ device, visibility }) {
       }
     }
   }
+
   useEffect(() => {
-    if (socket) {
-      socket.on('update_smart_strip', (data) => {
-        if (data.mqtt_name === device.mqtt_name) {
-          updateStatuses(data.power_status)
-          if (data.sensor_status) {
-            setSensorData(data.sensor_status)
-          }
-        }
-      })
+    updateStatuses(device.power_status)
+    if (device.sensor_status) {
+      setSensorData(device.sensor_status)
     }
-  }, [])
+  }, [device])
   const send_update_req = async () => {
     try {
       const smart_strip_power = await app.get(

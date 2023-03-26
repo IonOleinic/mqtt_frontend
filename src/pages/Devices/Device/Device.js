@@ -10,14 +10,34 @@ import { AiOutlineStar } from 'react-icons/ai'
 import { AiFillStar } from 'react-icons/ai'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { FiMoreVertical } from 'react-icons/fi'
+import { CgBatteryFull } from 'react-icons/cg'
+import { CgBattery } from 'react-icons/cg'
+import { CgBatteryEmpty } from 'react-icons/cg'
+import { TbBatteryOff } from 'react-icons/tb'
+import { TbUsb } from 'react-icons/tb'
 import { useEffect } from 'react'
 import { app } from '../../api/api'
+import { socket } from '../../api/io'
 import SmartSirenAlarm from './SmartAlarmSiren/SmartSirenAlarm'
 const iconMore = (
   <MdOutlineExpandMore size={30} style={{ margin: '0', padding: '0' }} />
 )
 const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
 const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
+
+let battery_full = <CgBatteryFull size={25} color='green' />
+let powered_usb = (
+  <div className='battery-icon-usb-powered'>
+    <CgBatteryFull size={25} color='green' />
+    <p>
+      <TbUsb size={10} />
+      USB
+    </p>
+  </div>
+)
+let battery_medium = <CgBattery size={25} color='gold' />
+let battery_low = <CgBatteryEmpty size={25} color='red' />
+let battery_no_data = <TbBatteryOff size={24} color='#ccc' />
 function Device({
   handleDeleteDevice,
   init_device,
@@ -32,8 +52,20 @@ function Device({
   const [favIcon, setFavIcon] = useState(favIconDisabled)
   const [device, setDevice] = useState(init_device)
   const [favBool, setFavBool] = useState(false)
+  const [batteryIcon, setBatteryIcon] = useState(battery_no_data)
   const toggleSubMenu = () => {
     setOpenSubMenu(!openSubMenu)
+  }
+  const set_battery_icon = (battery_level) => {
+    if (battery_level == 1) {
+      setBatteryIcon(battery_low)
+    } else if (battery_level == 2) {
+      setBatteryIcon(battery_medium)
+    } else if (battery_level == 3) {
+      setBatteryIcon(battery_full)
+    } else if (battery_level == 4) {
+      setBatteryIcon(powered_usb)
+    }
   }
   async function update_device() {
     try {
@@ -44,6 +76,15 @@ function Device({
     }
   }
   useEffect(() => {
+    if (socket) {
+      socket.on('update_device', (data) => {
+        if (data.device.mqtt_name === device.mqtt_name) {
+          setDevice(data.device)
+        }
+      })
+    }
+  }, [])
+  useEffect(() => {
     if (device.favorite) {
       setFavIcon(favIconEnabled)
       setFavBool(true)
@@ -51,6 +92,7 @@ function Device({
       setFavIcon(favIconDisabled)
       setFavBool(false)
     }
+    set_battery_icon(device.battery_level)
   }, [device])
   let final_device = <></>
   if (
@@ -193,9 +235,12 @@ function Device({
         >
           <AiOutlineEdit size={25} />
         </span>
-        <span className='device-date'>
-          {get_date_from_str(device.date.toString())}
-        </span>
+        <div
+          className='battery-level-icon'
+          style={{ display: device.battery == false ? 'none' : 'revert' }}
+        >
+          {batteryIcon}
+        </div>
       </div>
       {final_device}
     </div>

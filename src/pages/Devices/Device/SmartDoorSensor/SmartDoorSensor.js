@@ -27,21 +27,7 @@ function SmartDoorSensor({ device, visibility }) {
       `/smartDoorSensor?device_name=${device.mqtt_name}`
     )
   }
-  useEffect(() => {
-    if (socket) {
-      socket.on('update_smart_door_sensor', (data) => {
-        if (data.mqtt_name === device.mqtt_name) {
-          setStatus(data.status)
-          if (data.status == 'Closed') {
-            setLockImg(lockedImg)
-          } else {
-            setLockImg(unlockedImg)
-          }
-          setBatteryLevel(data.battery_level)
-        }
-      })
-    }
-  }, [])
+
   return (
     <div
       className='smart-door-sensor'

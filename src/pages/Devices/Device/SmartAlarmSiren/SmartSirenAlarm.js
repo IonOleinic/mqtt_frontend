@@ -11,6 +11,7 @@ import { socket } from '../../../api/io'
 import { app } from '../../../api/api'
 let volume_on = <SlVolume2 size={40} color='red' />
 let volume_off = <SlVolumeOff size={40} color='black' />
+
 function SmartSirenAlarm({ device, visibility }) {
   const [status, setStatus] = useState('OFF')
   const [temperature, setTemperature] = useState(0)
@@ -20,10 +21,14 @@ function SmartSirenAlarm({ device, visibility }) {
   const [inversedVolume, setInversedVolume] = useState(1)
   const [soundDuration, setSoundDuration] = useState(0)
   const [volumeIcon, setVolumeIcon] = useState(volume_off)
-  const [batteryLevel, setBatteryLevel] = useState(0)
 
   useEffect(() => {
     setStatus(device.status)
+    if (device.status == 'ON') {
+      setVolumeIcon(volume_on)
+    } else {
+      setVolumeIcon(volume_off)
+    }
     setTemperature(device.temperature)
     setHumidity(device.humidity)
     setSound(device.sound)
@@ -36,8 +41,8 @@ function SmartSirenAlarm({ device, visibility }) {
     }
     setVolume(device.volume)
     setSoundDuration(device.sound_duration)
-    setBatteryLevel(device.battery_level)
   }, [device])
+
   const send_change_power = async (pwr_status) => {
     try {
       const response = await app.post(
@@ -47,26 +52,7 @@ function SmartSirenAlarm({ device, visibility }) {
       console.log(error)
     }
   }
-  useEffect(() => {
-    if (socket) {
-      socket.on('update_smart_alarm_siren', (data) => {
-        if (data.mqtt_name === device.mqtt_name) {
-          setStatus(data.status)
-          if (data.status == 'ON') {
-            setVolumeIcon(volume_on)
-          } else {
-            setVolumeIcon(volume_off)
-          }
-          setTemperature(data.temperature)
-          setHumidity(data.humidity)
-          setSound(data.sound)
-          setVolume(data.volume)
-          setSoundDuration(data.sound_duration)
-          setBatteryLevel(data.battery_level)
-        }
-      })
-    }
-  }, [])
+
   const update_options = async (new_sound, new_volume, new_duration) => {
     try {
       const response = await app.post(
@@ -100,7 +86,9 @@ function SmartSirenAlarm({ device, visibility }) {
           </div>
           <div className='siren-alarm-sensor-item'>
             <WiHumidity size={35} color='blue' />
-            <p>{humidity} %</p>
+            <p>
+              {humidity} <b>%</b>
+            </p>
           </div>
         </div>
         <div

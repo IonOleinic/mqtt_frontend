@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: center;
   min-height: 120px;
+  position: relative;
 }
 .smart-temp-sensor-item {
   width: 120px;
