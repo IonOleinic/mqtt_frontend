@@ -10,6 +10,7 @@ import Home from './pages/Home/Home'
 import Devices from './pages/Devices/AllDevices/AllDevices'
 import Scenes from './pages/Scenes/Scenes'
 import AddSchedule from './pages/Scenes/AddSchedule/AddSchedule'
+import AddDeviceScene from './pages/Scenes/AddDeviceScene/AddDeviceScene'
 import Settings from './pages/Settings/Settings'
 import About from './pages/About/About'
 import SignIn from './pages/SignIn/SignIn'
@@ -31,7 +32,8 @@ function App() {
         <Route path='/signin' element={<SignIn />} />
         <Route path='/devices/adddevice' element={<AddDevice />} />
         <Route path='/devices/editdevice/:id' element={<EditDevice />} />
-        <Route path='/scenes/addscene' element={<AddSchedule />} />
+        <Route path='/scenes/addschedule' element={<AddSchedule />} />
+        <Route path='/scenes/adddevicescene' element={<AddDeviceScene />} />
       </Routes>
     </Router>
   )

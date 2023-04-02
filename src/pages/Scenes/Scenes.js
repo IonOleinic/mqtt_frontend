@@ -60,7 +60,7 @@ const Scenes = () => {
               type='button'
               className='btn btn-primary'
               onClick={() => {
-                navigate('/scenes/addscene')
+                navigate('/scenes/adddevicescene')
               }}
             >
               <AiOutlinePlus size={20} color='white' />

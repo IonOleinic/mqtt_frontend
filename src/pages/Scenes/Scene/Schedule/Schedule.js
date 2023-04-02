@@ -103,7 +103,7 @@ function Schedule({ scene }) {
         </p>
       </div>
       <span
-        className='schedule-disabled-mask'
+        className='scene-disabled-mask'
         style={{ display: scene.active == 'true' ? 'none' : 'revert' }}
       ></span>
     </div>

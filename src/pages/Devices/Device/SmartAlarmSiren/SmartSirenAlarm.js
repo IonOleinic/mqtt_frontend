@@ -7,7 +7,6 @@ import { WiHumidity } from 'react-icons/wi'
 import { SlVolume2 } from 'react-icons/sl'
 import { SlVolumeOff } from 'react-icons/sl'
 import { GrVolumeControl } from 'react-icons/gr'
-import { socket } from '../../../api/io'
 import { app } from '../../../api/api'
 let volume_on = <SlVolume2 size={40} color='red' />
 let volume_off = <SlVolumeOff size={40} color='black' />

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import './SmartStrip.css'
 import Switch from './Switch/Switch'
 import { app } from '../../../api/api'
-import { socket } from '../../../api/io'
 
 const sensor_data_demo = {
   StatusSNS: {
@@ -44,19 +43,14 @@ function SmartStrip({ device, visibility }) {
       }
     }
   }
-
   useEffect(() => {
     updateStatuses(device.power_status)
     if (device.sensor_status) {
       setSensorData(device.sensor_status)
     }
   }, [device])
-  const send_update_req = async () => {
+  const sensor_update_req = async () => {
     try {
-      const smart_strip_power = await app.get(
-        `/smartStrip?device_name=${device.mqtt_name}&req_topic=POWER`
-      )
-      updateStatuses(smart_strip_power.data.power_status)
       if (device.device_type === 'smartSwitch') {
       } else if (device.device_type === 'smartStrip') {
         let smart_strip_sensor = await app.get(
@@ -69,9 +63,9 @@ function SmartStrip({ device, visibility }) {
     }
   }
   useEffect(() => {
-    send_update_req()
+    sensor_update_req()
     let interval = setInterval(async () => {
-      send_update_req()
+      sensor_update_req()
     }, 3809)
     return () => {
       clearInterval(interval)
@@ -83,7 +77,7 @@ function SmartStrip({ device, visibility }) {
         device.mqtt_name
       }&socket_nr=${socket_nr + 1}`
     )
-    send_update_req()
+    sensor_update_req()
   }
   const handlePower = async (id) => {
     try {

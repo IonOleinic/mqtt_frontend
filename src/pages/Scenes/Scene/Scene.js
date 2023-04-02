@@ -7,6 +7,7 @@ import Switch from 'react-switch'
 import Schedule from './Schedule/Schedule'
 import { app } from '../../api/api'
 import './Scene.css'
+import DeviceScene from './DeviceScene/DeviceScene'
 
 const iconMore = (
   <MdOutlineExpandMore size={30} style={{ margin: '0', padding: '0' }} />
@@ -42,13 +43,15 @@ function Scene({ init_scene, handleDeleteScene }) {
   async function update_scene() {
     try {
       let result = await app.put(`/scene/${scene.id}`, scene)
-      setScene(result.data)
+      if (result.data) {
+        setScene(result.data)
+      }
     } catch (error) {
       console.log(error.message)
     }
   }
   useEffect(() => {
-    if (scene.active == 'true') {
+    if (scene.active == true || scene.active == 'true') {
       setIsActive(true)
     } else {
       setIsActive(false)
@@ -57,6 +60,8 @@ function Scene({ init_scene, handleDeleteScene }) {
   let final_scene = <></>
   if (scene.scene_type === 'schedule') {
     final_scene = <Schedule scene={scene} />
+  } else if (scene.scene_type === 'deviceScene') {
+    final_scene = <DeviceScene scene={scene} />
   }
   return (
     <div className='scene'>
@@ -76,7 +81,6 @@ function Scene({ init_scene, handleDeleteScene }) {
             checked={isActive}
             onChange={() => {
               scene.active = !isActive
-              //setIsActive(!isActive)
               update_scene()
             }}
           />

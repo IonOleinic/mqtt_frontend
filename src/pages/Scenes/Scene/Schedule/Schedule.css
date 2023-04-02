@@ -5,6 +5,8 @@
   flex-direction: column;
   padding: 0.7rem;
   position: relative;
+  height: 160px;
+  margin-top: 0.5rem;
 }
 .schedule-top {
   width: 100%;
@@ -21,15 +23,15 @@
   height: 100%;
 }
 .schedule-device img {
-  max-width: 60px;
+  width: 60px;
 }
 .schedule-device p {
   font-size: 1rem;
-  font-weight: 400;
-  margin-left: 0.4rem;
+  font-weight: 600;
   word-break: break-all;
   width: 80px;
   margin: 0;
+  margin-left: 0.2rem;
 }
 .arrow-right {
   width: 3rem;
@@ -94,15 +96,4 @@
   border: 1px solid #ccc;
   border-radius: 3px;
   text-align: center;
-}
-.schedule-disabled-mask {
-  position: absolute;
-  top: 1rem;
-  left: 0.5rem;
-  z-index: 1;
-  width: 95%;
-  height: 90%;
-  background-color: #ccc;
-  opacity: 50%;
-  border-radius: 7px;
 }

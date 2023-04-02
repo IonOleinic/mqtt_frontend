@@ -5,13 +5,11 @@ import { AiFillUnlock } from 'react-icons/ai'
 import { HiOutlineSwitchHorizontal } from 'react-icons/hi'
 import DoorMainModule from './DoorSensorImages/door_sensor_main_module.png'
 import DoorSecondModule from './DoorSensorImages/door_sensor_second_module.png'
-import { socket } from '../../../api/io'
 import { app } from '../../../api/api'
 let lockedImg = <AiFillLock size={25} color='#46B60A' />
 let unlockedImg = <AiFillUnlock size={25} color='red' />
 function SmartDoorSensor({ device, visibility }) {
   const [status, setStatus] = useState('Closed')
-  const [batteryLevel, setBatteryLevel] = useState(0)
   const [lockImg, setLockImg] = useState(lockedImg)
   useEffect(() => {
     setStatus(device.status)
@@ -20,7 +18,6 @@ function SmartDoorSensor({ device, visibility }) {
     } else {
       setLockImg(unlockedImg)
     }
-    setBatteryLevel(device.battery_level)
   }, [device])
   const send_toggle_direction = async () => {
     const response = await app.post(
