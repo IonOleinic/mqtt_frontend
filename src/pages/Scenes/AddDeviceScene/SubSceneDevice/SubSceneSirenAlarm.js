@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
-function SubEventSirenAlarm({
+function SubSceneSirenAlarm({
   device,
   setConditionalTopic,
   setConditionalPayload,
@@ -15,7 +15,11 @@ function SubEventSirenAlarm({
   useEffect(() => {
     if (event_or_action == 'event') {
       setConditionalTopic(device.receive_status_topic)
-      setConditionalPayload('OFF')
+      if (device.manufacter == 'tasmota') {
+        setConditionalPayload('OFF')
+      } else if (device.manufacter == 'openBeken') {
+        setConditionalPayload('0')
+      }
       setConditionalText(`Sound OFF`)
     } else if (event_or_action == 'action') {
       setExecutableTopic(device.cmnd_status_topic)
@@ -32,19 +36,38 @@ function SubEventSirenAlarm({
         aria-label='Default select example'
         onChange={(e) => {
           if (event_or_action == 'event') {
-            setConditionalPayload(e.target.value)
-            setConditionalText(`Sound ${e.target.value}`)
+            if (e.target.value == 'OFF') {
+              setConditionalText(`Sound OFF`)
+              if (device.manufacter == 'tasmota') {
+                setConditionalPayload('OFF')
+              } else if (device.manufacter == 'openBeken') {
+                setConditionalPayload('0')
+              }
+            } else {
+              setConditionalText(`Sound ON`)
+              if (device.manufacter == 'tasmota') {
+                setConditionalPayload('ON')
+              } else if (device.manufacter == 'openBeken') {
+                setConditionalPayload('1')
+              }
+            }
           } else if (event_or_action == 'action') {
             setExecutablePayload(e.target.value)
             setExecutableText(`Sound ${e.target.value}`)
+            // if (e.target.value == 'TOGGLE') {
+            //   setExecutableText(`${e.target.value}`)
+            // } else {
+            //   setExecutableText(`Sound ${e.target.value}`)
+            // }
           }
         }}
       >
         <option value='OFF'>Sound OFF</option>
         <option value='ON'>Sound ON</option>
+        {/* <option value='TOGGLE'>Sound TOGGLE</option> */}
       </select>
     </div>
   )
 }
 
-export default SubEventSirenAlarm
+export default SubSceneSirenAlarm

@@ -6,6 +6,7 @@
   position: relative;
   overflow: hidden;
   padding: 0.5rem 0;
+  user-select: none;
 }
 .ir-buttons {
   padding: 0.7rem;
@@ -70,6 +71,12 @@
 
 .ok-up {
   margin: 0 2rem;
+}
+.vol {
+  margin-right: 0.35rem;
+}
+.chanel {
+  margin-left: 0.35rem;
 }
 .vol,
 .chanel {

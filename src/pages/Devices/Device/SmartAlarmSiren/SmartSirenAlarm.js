@@ -45,7 +45,7 @@ function SmartSirenAlarm({ device, visibility }) {
   const send_change_power = async (pwr_status) => {
     try {
       const response = await app.post(
-        `/smartSirenAlarm?status=${pwr_status}&device_name=${device.mqtt_name}`
+        `/smartSirenAlarm/power?status=${pwr_status}&device_id=${device.id}`
       )
     } catch (error) {
       console.log(error)
@@ -55,7 +55,7 @@ function SmartSirenAlarm({ device, visibility }) {
   const update_options = async (new_sound, new_volume, new_duration) => {
     try {
       const response = await app.post(
-        `/updateOptionsSirenAlarm?new_sound=${new_sound}&new_volume=${new_volume}&new_duration=${new_duration}&device_name=${device.mqtt_name}`
+        `/smartSirenAlarm/options?new_sound=${new_sound}&new_volume=${new_volume}&new_duration=${new_duration}&device_id=${device.id}`
       )
     } catch (error) {
       console.log(error)

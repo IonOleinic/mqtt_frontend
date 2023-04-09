@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
-// import { TimePicker } from 'react-ios-time-picker'
 import { app } from '../../api/api'
-// use material theme
 import 'react-times/css/material/default.css'
 import './AddSchedule.css'
 import { Checkmark } from 'react-checkmark'

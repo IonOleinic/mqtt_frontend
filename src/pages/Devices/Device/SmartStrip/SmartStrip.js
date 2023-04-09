@@ -53,10 +53,9 @@ function SmartStrip({ device, visibility }) {
     try {
       if (device.device_type === 'smartSwitch') {
       } else if (device.device_type === 'smartStrip') {
-        let smart_strip_sensor = await app.get(
-          `/smartStrip?device_name=${device.mqtt_name}&req_topic=STATUS&req_payload=8`
+        let response = await app.get(
+          `/smartStrip?device_id=${device.id}&req_topic=STATUS&req_payload=8`
         )
-        setSensorData(smart_strip_sensor.data.sensor_status)
       }
     } catch (error) {
       console.log(error)
@@ -73,9 +72,9 @@ function SmartStrip({ device, visibility }) {
   }, [])
   const send_change_power = async (socket_nr, pwr_status) => {
     const response = await app.post(
-      `/smartStrip?status=${pwr_status}&device_name=${
-        device.mqtt_name
-      }&socket_nr=${socket_nr + 1}`
+      `/smartStrip?status=${pwr_status}&device_id=${device.id}&socket_nr=${
+        socket_nr + 1
+      }`
     )
     sensor_update_req()
   }
@@ -90,14 +89,17 @@ function SmartStrip({ device, visibility }) {
       console.log(err.message)
     }
   }
-  const { ENERGY } = sensorData.StatusSNS
+  let ENERGY
+  if (sensorData.StatusSNS) {
+    ENERGY = sensorData.StatusSNS.ENERGY
+  }
   let sensor_part
   if (device.device_type === 'smartStrip') {
     sensor_part = (
       <>
         <div
           className='sensor'
-          style={{ display: sensorData === undefined ? 'none' : 'flex' }}
+          style={{ display: ENERGY === undefined ? 'none' : 'flex' }}
         >
           <div className='sensor-item'>
             <img src='https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-voltage-electrician-flaticons-lineal-color-flat-icons-15.png' />

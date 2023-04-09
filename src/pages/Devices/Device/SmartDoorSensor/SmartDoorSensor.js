@@ -20,9 +20,7 @@ function SmartDoorSensor({ device, visibility }) {
     }
   }, [device])
   const send_toggle_direction = async () => {
-    const response = await app.post(
-      `/smartDoorSensor?device_name=${device.mqtt_name}`
-    )
+    const response = await app.post(`/smartDoorSensor?device_id=${device.id}`)
   }
 
   return (

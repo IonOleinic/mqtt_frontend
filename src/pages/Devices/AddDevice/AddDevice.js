@@ -58,7 +58,7 @@ function AddDevice() {
     device.props = props
     try {
       let result = await app.post('/addDevice', device)
-      if (result.data.Succes) {
+      if (result.data.succes) {
         navigate('/devices')
       } else {
         setIcon(iconError)

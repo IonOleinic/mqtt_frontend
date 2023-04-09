@@ -9,6 +9,7 @@ import loading from 'react-useanimations/lib/loading'
 import SubSceneSmartStrip from './SubSceneDevice/SubSceneSmartStrip'
 import SubSceneDoorSensor from './SubSceneDevice/SubSceneDoorSensor'
 import SubSceneSirenAlarm from './SubSceneDevice/SubSceneSirenAlarm'
+import SubSceneSmartIR from './SubSceneDevice/SubSceneSmartIR'
 
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
@@ -93,7 +94,7 @@ function AddSchedule() {
       let response = await app.post(
         `/deviceScene?name=${name}&cond_device_id=${eventDeviceId}&exec_device_id=${actionDeviceId}&conditional_topic=${conditionalTopic}&conditional_payload=${conditionalPayload}&executable_topic=${executableTopic}&executable_payload=${executablePayload}&conditional_text=${conditionalText}&executable_text=${executableText}`
       )
-      if (response.data.Succes) {
+      if (response.data.succes) {
         setIcon(iconSucces)
         setTextColor('black')
         setMessage('Schedule Added')
@@ -175,6 +176,19 @@ function AddSchedule() {
               event_or_action={event_or_action}
             />
           )
+        } else if (devices[i].device_type == 'smartIR') {
+          sub_dev = (
+            <SubSceneSmartIR
+              device={devices[i]}
+              setConditionalTopic={setConditionalTopic}
+              setConditionalPayload={setConditionalPayload}
+              setExecutableTopic={setExecutableTopic}
+              setExecutablePayload={setExecutablePayload}
+              setConditionalText={setConditionalText}
+              setExecutableText={setExecutableText}
+              event_or_action={event_or_action}
+            />
+          )
         }
       }
     }
@@ -207,6 +221,8 @@ function AddSchedule() {
               className='form-select select-type'
               aria-label='Default select example'
               onChange={(e) => {
+                setConditionalTopic('')
+                setConditionalPayload('')
                 setEventDeviceId(e.target.value)
                 setSubEventDevice(choose_sub_device(e.target.value, 'event'))
                 revert_field_style(e.target)
@@ -231,6 +247,8 @@ function AddSchedule() {
               className='form-select select-type'
               aria-label='Default select example'
               onChange={(e) => {
+                setExecutableTopic('')
+                setExecutablePayload('')
                 setActionDeviceId(e.target.value)
                 setSubActionDevice(choose_sub_device(e.target.value, 'action'))
                 revert_field_style(e.target)

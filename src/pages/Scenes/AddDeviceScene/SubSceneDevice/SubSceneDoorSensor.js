@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react'
 
-function SubEventDoorSensor({
+function SubSceneDoorSensor({
   device,
   setConditionalTopic,
   setConditionalPayload,
@@ -9,7 +9,11 @@ function SubEventDoorSensor({
 }) {
   useEffect(() => {
     setConditionalTopic(device.receive_status_topic)
-    setConditionalPayload('OFF')
+    if (device.manufacter == 'tasmota') {
+      setConditionalPayload('OFF')
+    } else if (device.manufacter == 'openBeken') {
+      setConditionalPayload('0')
+    }
     setConditionalText(`Closed`)
   }, [])
   return (
@@ -21,10 +25,19 @@ function SubEventDoorSensor({
         className='form-select select-type'
         aria-label='Default select example'
         onChange={(e) => {
-          setConditionalPayload(e.target.value)
           if (e.target.value == 'ON') {
+            if (device.manufacter == 'tasmota') {
+              setConditionalPayload('ON')
+            } else if (device.manufacter == 'openBeken') {
+              setConditionalPayload('1')
+            }
             setConditionalText(`Opened`)
-          } else if (e.target.value == 'OFF') {
+          } else {
+            if (device.manufacter == 'tasmota') {
+              setConditionalPayload('OFF')
+            } else if (device.manufacter == 'openBeken') {
+              setConditionalPayload('0')
+            }
             setConditionalText(`Closed`)
           }
         }}
@@ -36,4 +49,4 @@ function SubEventDoorSensor({
   )
 }
 
-export default SubEventDoorSensor
+export default SubSceneDoorSensor
