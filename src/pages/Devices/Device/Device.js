@@ -19,6 +19,7 @@ import { useEffect } from 'react'
 import { app } from '../../api/api'
 import { socket } from '../../api/io'
 import SmartSirenAlarm from './SmartAlarmSiren/SmartSirenAlarm'
+import SmartBulb from './SmartBulb/SmartBulb'
 const iconMore = (
   <MdOutlineExpandMore size={30} style={{ margin: '0', padding: '0' }} />
 )
@@ -108,6 +109,8 @@ function Device({
     final_device = <SmartDoorSensor visibility={visibility} device={device} />
   } else if (init_device.device_type === 'smartSirenAlarm') {
     final_device = <SmartSirenAlarm visibility={visibility} device={device} />
+  } else if (init_device.device_type === 'smartBulb') {
+    final_device = <SmartBulb visibility={visibility} device={device} />
   }
   const togglevisibility = () => {
     setVisibility(!visibility)

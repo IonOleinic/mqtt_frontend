@@ -53,18 +53,22 @@ function SubSceneSirenAlarm({
             }
           } else if (event_or_action == 'action') {
             setExecutablePayload(e.target.value)
-            setExecutableText(`Sound ${e.target.value}`)
-            // if (e.target.value == 'TOGGLE') {
-            //   setExecutableText(`${e.target.value}`)
-            // } else {
-            //   setExecutableText(`Sound ${e.target.value}`)
-            // }
+            if (e.target.value == 'TOGGLE') {
+              setExecutableText(`${e.target.value}`)
+            } else {
+              setExecutableText(`Sound ${e.target.value}`)
+            }
           }
         }}
       >
         <option value='OFF'>Sound OFF</option>
         <option value='ON'>Sound ON</option>
-        {/* <option value='TOGGLE'>Sound TOGGLE</option> */}
+        <option
+          value='TOGGLE'
+          style={{ display: event_or_action == 'action' ? 'revert' : 'none' }}
+        >
+          Sound TOGGLE
+        </option>
       </select>
     </div>
   )

@@ -39,7 +39,7 @@ function SubSceneSirenAlarm({
         onChange={(e) => {
           let button = JSON.parse(e.target.value)
           if (event_or_action == 'event') {
-            let payload = `IR_${device.IR_protocol} ${device.bits} ${button.code} 1`
+            let payload = `IR_${device.IR_protocol} ${device.bits} ${button.code} 0`
             setConditionalPayload(payload)
             setConditionalText(`Button ${button.fullName}`)
           } else if (event_or_action == 'action') {

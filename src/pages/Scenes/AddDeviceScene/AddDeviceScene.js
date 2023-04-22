@@ -24,6 +24,7 @@ function AddSchedule() {
   const [name, setName] = useState('')
   const [devices, setDevices] = useState([])
   const [eventDeviceId, setEventDeviceId] = useState('')
+  const [eventDeviceMqtt, setEventDeviceMqtt] = useState('')
   const [actionDeviceId, setActionDeviceId] = useState('')
   const [conditionalPayload, setConditionalPayload] = useState('OFF')
   const [executablePayload, setExecutablePayload] = useState('OFF')
@@ -34,6 +35,10 @@ function AddSchedule() {
   const [subEventDevice, setSubEventDevice] = useState(<></>)
   const [subActionDevice, setSubActionDevice] = useState(<></>)
 
+  const get_mqtt_name_by_id = (id) => {
+    let filtered_devices = devices.filter((device) => device.id == id)
+    return filtered_devices[0].mqtt_name
+  }
   const check_choosed_devices = () => {
     let event_device = document.getElementById('select-event-device')
     let action_device = document.getElementById('select-action-device')
@@ -92,7 +97,7 @@ function AddSchedule() {
     setCheckmark(true)
     try {
       let response = await app.post(
-        `/deviceScene?name=${name}&cond_device_id=${eventDeviceId}&exec_device_id=${actionDeviceId}&conditional_topic=${conditionalTopic}&conditional_payload=${conditionalPayload}&executable_topic=${executableTopic}&executable_payload=${executablePayload}&conditional_text=${conditionalText}&executable_text=${executableText}`
+        `/deviceScene?name=${name}&cond_device_mqtt=${eventDeviceMqtt}&cond_device_id=${eventDeviceId}&exec_device_id=${actionDeviceId}&conditional_topic=${conditionalTopic}&conditional_payload=${conditionalPayload}&executable_topic=${executableTopic}&executable_payload=${executablePayload}&conditional_text=${conditionalText}&executable_text=${executableText}`
       )
       if (response.data.succes) {
         setIcon(iconSucces)
@@ -224,6 +229,7 @@ function AddSchedule() {
                 setConditionalTopic('')
                 setConditionalPayload('')
                 setEventDeviceId(e.target.value)
+                setEventDeviceMqtt(get_mqtt_name_by_id(e.target.value))
                 setSubEventDevice(choose_sub_device(e.target.value, 'event'))
                 revert_field_style(e.target)
               }}
@@ -256,7 +262,11 @@ function AddSchedule() {
             >
               <option value=''>None</option>
               {devices.map((device) => {
-                if (device.read_only == false && device.id != eventDeviceId) {
+                if (
+                  device.read_only == false &&
+                  device.id != eventDeviceId &&
+                  device.mqtt_name != eventDeviceMqtt
+                ) {
                   return (
                     <option key={device.id} value={device.id}>
                       {device.name}

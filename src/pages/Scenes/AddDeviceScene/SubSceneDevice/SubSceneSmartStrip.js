@@ -121,17 +121,22 @@ function SubSceneSmartStrip({
             } else if (event_or_action == 'action') {
               setExecutablePayload(e.target.value)
               setExecutableText(`Power${selectedSocket} ${e.target.value}`)
-              // if (e.target.value == 'TOGGLE') {
-              //   setExecutableText(`${e.target.value}${selectedSocket}`)
-              // } else {
-              //   setExecutableText(`Power${selectedSocket} ${e.target.value}`)
-              // }
+              if (e.target.value == 'TOGGLE') {
+                setExecutableText(`${e.target.value}${selectedSocket}`)
+              } else {
+                setExecutableText(`Power${selectedSocket} ${e.target.value}`)
+              }
             }
           }}
         >
           <option value='OFF'>OFF</option>
           <option value='ON'>ON</option>
-          {/* <option value='TOGGLE'>TOGGLE</option> */}
+          <option
+            value='TOGGLE'
+            style={{ display: event_or_action == 'action' ? 'revert' : 'none' }}
+          >
+            TOGGLE
+          </option>
         </select>
       </div>
     </div>
