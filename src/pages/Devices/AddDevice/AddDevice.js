@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './AddDevice.css'
 import SubSwitch from './SubSwitch/SubSwitch'
 import SubIR from './SubIR/SubIR'
+import SubBulb from './SubBulb/SubBulb'
 import { Checkmark } from 'react-checkmark'
 import { VscError } from 'react-icons/vsc'
 import CheckMessage from '../../CheckMessage/CheckMessage'
@@ -26,7 +27,7 @@ function AddDevice() {
   const [deviceTypes, setDeviceTypes] = useState([])
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
-  const [manufacter, setManufacter] = useState('')
+  const [manufacter, setManufacter] = useState('tasmota')
   const [groups, setGroups] = useState('')
   const [iconUrl, setIconUrl] = useState('')
   const [deviceType, setDeviceType] = useState('')
@@ -105,6 +106,22 @@ function AddDevice() {
         break
       case 'smartTempSensor':
         subtype = <></>
+        break
+      case 'smartSirenAlarm':
+        subtype = <></>
+        break
+      case 'smartMotionSensor':
+        subtype = <></>
+        break
+      case 'smartBulb':
+        subtype = (
+          <SubBulb
+            setSubProps={setSubProps}
+            mqtt_name={mqttName}
+            manufacter={manufacter}
+            disable_add_btn={disable_add_btn}
+          />
+        )
         break
       default:
         subtype = <></>

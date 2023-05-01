@@ -1,9 +1,32 @@
-.smart-rgb-bulb {
+.smart-bulb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+}
+.bulb-item {
+  width: 100%;
+  margin-bottom: -0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.smart-rgb-bulb .div {
-  width: 100px;
-  height: 100px;
+.bulb-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+.bulb-item-icon:hover {
+  cursor: pointer;
+}
+.slider-item {
+  width: 100%;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }

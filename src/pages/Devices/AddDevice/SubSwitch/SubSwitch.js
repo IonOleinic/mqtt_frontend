@@ -1,5 +1,4 @@
 import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import './SubSwitch.css'
 function SubSwitch({ setSubProps, disable_add_btn }) {
   return (

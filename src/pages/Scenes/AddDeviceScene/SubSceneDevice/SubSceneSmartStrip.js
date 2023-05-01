@@ -123,8 +123,6 @@ function SubSceneSmartStrip({
               setExecutableText(`Power${selectedSocket} ${e.target.value}`)
               if (e.target.value == 'TOGGLE') {
                 setExecutableText(`${e.target.value}${selectedSocket}`)
-              } else {
-                setExecutableText(`Power${selectedSocket} ${e.target.value}`)
               }
             }
           }}
