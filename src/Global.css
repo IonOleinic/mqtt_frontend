@@ -12,6 +12,7 @@ input {
   margin: 0;
   position: relative;
   background-color: transparent;
+  user-select: none;
 }
 .vertical-menu-item {
   display: none;
@@ -67,26 +68,4 @@ input {
 .vertical-menu-item li:hover {
   background-color: #ccc;
   cursor: pointer;
-}
-
-.battery-level-icon {
-  position: absolute;
-  bottom: 0rem;
-  left: 0.5rem;
-}
-.battery-icon-usb-powered {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.battery-icon-usb-powered p {
-  display: flex;
-  margin: 0;
-  margin-left: 0.1rem;
-  justify-content: center;
-  align-items: center;
-  padding: 0.1rem;
-  border: 1px solid black;
-  border-radius: 4px;
-  font-size: 0.5rem;
 }

@@ -3,9 +3,10 @@ import { app } from '../../../api/api'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { GrAction } from 'react-icons/gr'
 import { MdPendingActions } from 'react-icons/md'
+import Parser from 'html-react-parser'
 import './DeviceScene.css'
 
-function DeviceScene({ scene }) {
+function DeviceScene({ scene, visibility }) {
   const [condDevice, setCondDevice] = useState({})
   const [execDevice, setExecDevice] = useState({})
 
@@ -25,14 +26,16 @@ function DeviceScene({ scene }) {
       console.log(error.message)
     }
   }
-
   useEffect(() => {
     get_cond_device()
     get_exec_device()
   }, [scene])
 
   return (
-    <div className='device-scene'>
+    <div
+      className='device-scene'
+      style={{ display: visibility === true ? 'flex' : 'none' }}
+    >
       <div className='device-scene-top'>
         <div className='device-scene-item conditional'>
           <div className='device-scene-name-img'>
@@ -53,8 +56,31 @@ function DeviceScene({ scene }) {
             <img src={execDevice.img} alt='executable device img' />
           </div>
           <div className='device-scene-text'>
-            <GrAction size={25} />
-            <p>{scene.executable_text}</p>
+            <GrAction size={20} />
+            {scene.executable_text.includes('Color') ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <p>{'Color'}</p>
+                <div
+                  style={{
+                    width: '35px',
+                    height: '25px',
+                    borderRadius: '5px',
+                    border:
+                      scene.executable_text.split(' ')[1] == 'ffffff'
+                        ? '1px solid black'
+                        : 'none',
+                    backgroundColor: `#${scene.executable_text.split(' ')[1]}`,
+                  }}
+                ></div>
+              </div>
+            ) : (
+              <p>{scene.executable_text}</p>
+            )}
           </div>
         </div>
       </div>

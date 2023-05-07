@@ -3,7 +3,7 @@ import './Schedule.css'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { TbRepeatOnce } from 'react-icons/tb'
 import { BsClock } from 'react-icons/bs'
-function Schedule({ scene }) {
+function Schedule({ scene, visibility }) {
   useEffect(() => {}, [])
   const addZero = (i) => {
     if (i <= 9) {
@@ -13,7 +13,10 @@ function Schedule({ scene }) {
     }
   }
   return (
-    <div className='schedule'>
+    <div
+      className='schedule'
+      style={{ display: visibility === true ? 'flex' : 'none' }}
+    >
       <div className='schedule-top'>
         <div className='schedule-device'>
           <img src={scene.device_img} alt='schedule device img' />

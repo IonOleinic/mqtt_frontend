@@ -1,6 +1,6 @@
 .scenes-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
   min-height: 90vh;
@@ -10,8 +10,7 @@
 .scenes {
   display: flex;
   justify-content: center;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   min-height: 90vh;
   width: 100%;

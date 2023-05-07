@@ -30,6 +30,7 @@
   min-width: 40px;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 .device-info:hover,
 .device-img:hover,
@@ -85,4 +86,30 @@
   bottom: 0rem;
   left: 0.5rem;
   font-style: italic;
+}
+.battery-level-icon {
+  position: absolute;
+  bottom: 0rem;
+  left: 1.5rem;
+}
+.battery-icon-usb-powered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.battery-icon-usb-powered p {
+  display: flex;
+  margin: 0;
+  margin-left: 0.1rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.1rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 0.4rem;
+}
+.device-available-icon {
+  position: absolute;
+  bottom: 0rem;
+  left: 0rem;
 }

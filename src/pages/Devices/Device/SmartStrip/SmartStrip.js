@@ -45,14 +45,13 @@ function SmartStrip({ device, visibility }) {
   }
   useEffect(() => {
     updateStatuses(device.power_status)
-    if (device.sensor_status) {
+    if (device.switch_type == 'plug') {
       setSensorData(device.sensor_status)
     }
   }, [device])
   const sensor_update_req = async () => {
     try {
-      if (device.device_type === 'smartSwitch') {
-      } else if (device.device_type === 'smartStrip') {
+      if (device.switch_type === 'plug') {
         let response = await app.get(
           `/smartStrip?device_id=${device.id}&req_topic=STATUS&req_payload=8`
         )
@@ -63,9 +62,13 @@ function SmartStrip({ device, visibility }) {
   }
   useEffect(() => {
     sensor_update_req()
+
     let interval = setInterval(async () => {
-      sensor_update_req()
+      if (device.switch_type == 'plug') {
+        sensor_update_req()
+      }
     }, 3809)
+
     return () => {
       clearInterval(interval)
     }
@@ -89,39 +92,35 @@ function SmartStrip({ device, visibility }) {
       console.log(err.message)
     }
   }
-  let ENERGY
+  let ENERGY = sensor_data_demo.StatusSNS.ENERGY
   if (sensorData.StatusSNS) {
     ENERGY = sensorData.StatusSNS.ENERGY
   }
-  let sensor_part
-  if (device.device_type === 'smartStrip') {
+  let sensor_part = <></>
+  if (device.switch_type === 'plug') {
     sensor_part = (
-      <>
-        <div
-          className='sensor'
-          style={{ display: ENERGY === undefined ? 'none' : 'flex' }}
-        >
-          <div className='sensor-item'>
-            <img src='https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-voltage-electrician-flaticons-lineal-color-flat-icons-15.png' />
-            <p>{ENERGY.Voltage} V</p>
-          </div>
-          <div className='sensor-item' style={{ marginLeft: '-0.5em' }}>
-            <img src='https://img.icons8.com/emoji/48/null/high-voltage.png' />
-            <p>{ENERGY.Current} A</p>
-          </div>
-          <div className='sensor-item'>
-            <img src='https://cdn-icons-png.flaticon.com/512/5387/5387682.png' />
-            <p>{ENERGY.Power} W</p>
-          </div>
-          <div className='sensor-item' style={{ width: '50%' }}>
-            <img src='https://cdn2.iconfinder.com/data/icons/unit-of-measurement/500/measurement-unit_12-512.png' />
-            <p>{ENERGY.Total} kW</p>
-          </div>
+      <div
+        className='sensor'
+        style={{ display: ENERGY === undefined ? 'none' : 'flex' }}
+      >
+        <div className='sensor-item'>
+          <img src='https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-voltage-electrician-flaticons-lineal-color-flat-icons-15.png' />
+          <p>{ENERGY.Voltage} V</p>
         </div>
-      </>
+        <div className='sensor-item' style={{ marginLeft: '-0.5em' }}>
+          <img src='https://img.icons8.com/emoji/48/null/high-voltage.png' />
+          <p>{ENERGY.Current} A</p>
+        </div>
+        <div className='sensor-item'>
+          <img src='https://cdn-icons-png.flaticon.com/512/5387/5387682.png' />
+          <p>{ENERGY.Power} W</p>
+        </div>
+        <div className='sensor-item' style={{ width: '50%' }}>
+          <img src='https://cdn2.iconfinder.com/data/icons/unit-of-measurement/500/measurement-unit_12-512.png' />
+          <p>{ENERGY.Total} kW</p>
+        </div>
+      </div>
     )
-  } else {
-    sensor_part = <></>
   }
   let switches = []
   for (let i = 0; i < device.nr_of_sockets; i++) {
@@ -144,7 +143,7 @@ function SmartStrip({ device, visibility }) {
         <div
           className='energy-today'
           style={{
-            display: device.device_type === 'smartSwitch' ? 'none' : 'flex',
+            display: device.switch_type === 'plug' ? 'flex' : 'none',
           }}
         >
           <h1>{ENERGY.Today}</h1>

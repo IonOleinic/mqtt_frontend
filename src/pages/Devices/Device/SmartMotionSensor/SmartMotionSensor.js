@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import './SmartMotionSensor.css'
-import { app } from '../../../api/api'
 import no_motion_img from './MotionSensorImages/no_motion_img.jpg'
 import motion_img from './MotionSensorImages/motion_img.jpg'
 function SmartMotionSensor({ device, visibility }) {

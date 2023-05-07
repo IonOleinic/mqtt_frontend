@@ -14,6 +14,8 @@ import { CgBatteryFull } from 'react-icons/cg'
 import { CgBattery } from 'react-icons/cg'
 import { CgBatteryEmpty } from 'react-icons/cg'
 import { TbBatteryOff } from 'react-icons/tb'
+import { HiOutlineStatusOnline } from 'react-icons/hi'
+import { HiOutlineStatusOffline } from 'react-icons/hi'
 import { TbUsb } from 'react-icons/tb'
 import { useEffect } from 'react'
 import { app } from '../../api/api'
@@ -21,25 +23,26 @@ import { socket } from '../../api/io'
 import SmartSirenAlarm from './SmartAlarmSiren/SmartSirenAlarm'
 import SmartBulb from './SmartBulb/SmartBulb'
 import SmartMotionSensor from './SmartMotionSensor/SmartMotionSensor'
-const iconMore = (
-  <MdOutlineExpandMore size={30} style={{ margin: '0', padding: '0' }} />
-)
-const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
-const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
 
-let battery_full = <CgBatteryFull size={25} color='green' />
+let favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
+let favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
+
+let battery_full = <CgBatteryFull size={20} color='green' />
 let powered_usb = (
   <div className='battery-icon-usb-powered'>
-    <CgBatteryFull size={25} color='green' />
+    <CgBatteryFull size={20} color='green' />
     <p>
-      <TbUsb size={10} />
+      <TbUsb size={8} />
       USB
     </p>
   </div>
 )
-let battery_medium = <CgBattery size={25} color='gold' />
-let battery_low = <CgBatteryEmpty size={25} color='red' />
-let battery_no_data = <TbBatteryOff size={24} color='#ccc' />
+let battery_medium = <CgBattery size={20} color='gold' />
+let battery_low = <CgBatteryEmpty size={20} color='red' />
+let battery_no_data = <TbBatteryOff size={20} color='#ccc' />
+
+let icon_online = <HiOutlineStatusOnline size={20} color='green' />
+let icon_offline = <HiOutlineStatusOffline size={20} color='#ccc' />
 function Device({
   handleDeleteDevice,
   init_device,
@@ -50,11 +53,11 @@ function Device({
   const navigate = useNavigate()
   const [openSubMenu, setOpenSubMenu] = useState(false)
   const [visibility, setVisibility] = useState(false)
-  const [expandIcon, setExpandIcon] = useState(iconMore)
   const [favIcon, setFavIcon] = useState(favIconDisabled)
   const [device, setDevice] = useState(init_device)
   const [favBool, setFavBool] = useState(false)
   const [batteryIcon, setBatteryIcon] = useState(battery_no_data)
+  const [availableIcon, setAvailableIcon] = useState(icon_offline)
   const toggleSubMenu = () => {
     setOpenSubMenu(!openSubMenu)
   }
@@ -87,6 +90,11 @@ function Device({
     }
   }, [])
   useEffect(() => {
+    if (device.available) {
+      setAvailableIcon(icon_online)
+    } else {
+      setAvailableIcon(icon_offline)
+    }
     if (device.favorite) {
       setFavIcon(favIconEnabled)
       setFavBool(true)
@@ -97,10 +105,7 @@ function Device({
     set_battery_icon(device.battery_level)
   }, [device])
   let final_device = <></>
-  if (
-    device.device_type === 'smartStrip' ||
-    device.device_type === 'smartSwitch'
-  ) {
+  if (device.device_type === 'smartStrip') {
     final_device = <SmartStrip visibility={visibility} device={device} />
   } else if (init_device.device_type === 'smartIR') {
     final_device = <SmartIR visibility={visibility} device={device} />
@@ -114,9 +119,6 @@ function Device({
     final_device = <SmartBulb visibility={visibility} device={device} />
   } else if (init_device.device_type === 'smartMotionSensor') {
     final_device = <SmartMotionSensor visibility={visibility} device={device} />
-  }
-  const togglevisibility = () => {
-    setVisibility(!visibility)
   }
   const get_date_from_str = (date) => {
     const addZero = (i) => {
@@ -141,26 +143,29 @@ function Device({
         <label
           className='icon-expand'
           onClick={() => {
-            togglevisibility()
+            setVisibility(!visibility)
           }}
           style={{
             transform: visibility ? 'rotate(180deg)' : 'rotate(0)',
           }}
         >
-          {expandIcon}
+          <MdOutlineExpandMore
+            size={30}
+            style={{ margin: '0', padding: '0' }}
+          />
         </label>
         <img
           src={`${init_device.img}`}
           alt='device-img'
           className='device-img'
           onClick={() => {
-            togglevisibility()
+            setVisibility(!visibility)
           }}
         />
         <div
           className='device-info'
           onClick={() => {
-            togglevisibility()
+            setVisibility(!visibility)
           }}
         >
           <h3>{device.name} </h3>
@@ -247,6 +252,7 @@ function Device({
         >
           {batteryIcon}
         </div>
+        <div className='device-available-icon'>{availableIcon}</div>
       </div>
       {final_device}
     </div>

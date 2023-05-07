@@ -10,6 +10,8 @@ import SubSceneSmartStrip from './SubSceneDevice/SubSceneSmartStrip'
 import SubSceneDoorSensor from './SubSceneDevice/SubSceneDoorSensor'
 import SubSceneSirenAlarm from './SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from './SubSceneDevice/SubSceneSmartIR'
+import SubSceneSmartBulb from './SubSceneDevice/SubSceneSmartBulb'
+import SubSceneMotionSensor from './SubSceneDevice/SubSceneMotionSensor'
 
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
@@ -184,6 +186,32 @@ function AddSchedule() {
         } else if (devices[i].device_type == 'smartIR') {
           sub_dev = (
             <SubSceneSmartIR
+              device={devices[i]}
+              setConditionalTopic={setConditionalTopic}
+              setConditionalPayload={setConditionalPayload}
+              setExecutableTopic={setExecutableTopic}
+              setExecutablePayload={setExecutablePayload}
+              setConditionalText={setConditionalText}
+              setExecutableText={setExecutableText}
+              event_or_action={event_or_action}
+            />
+          )
+        } else if (devices[i].device_type == 'smartBulb') {
+          sub_dev = (
+            <SubSceneSmartBulb
+              device={devices[i]}
+              setConditionalTopic={setConditionalTopic}
+              setConditionalPayload={setConditionalPayload}
+              setExecutableTopic={setExecutableTopic}
+              setExecutablePayload={setExecutablePayload}
+              setConditionalText={setConditionalText}
+              setExecutableText={setExecutableText}
+              event_or_action={event_or_action}
+            />
+          )
+        } else if (devices[i].device_type == 'smartMotionSensor') {
+          sub_dev = (
+            <SubSceneMotionSensor
               device={devices[i]}
               setConditionalTopic={setConditionalTopic}
               setConditionalPayload={setConditionalPayload}

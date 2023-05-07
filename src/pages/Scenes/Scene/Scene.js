@@ -9,9 +9,6 @@ import { app } from '../../api/api'
 import './Scene.css'
 import DeviceScene from './DeviceScene/DeviceScene'
 
-const iconMore = (
-  <MdOutlineExpandMore size={30} style={{ margin: '0', padding: '0' }} />
-)
 const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
 const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
 function Scene({ init_scene, handleDeleteScene }) {
@@ -20,7 +17,8 @@ function Scene({ init_scene, handleDeleteScene }) {
     setOpenSubMenu(!openSubMenu)
   }
   const [favIcon, setFavIcon] = useState(favIconDisabled)
-  const [expandIcon, setExpandIcon] = useState(iconMore)
+  const [favBool, setFavBool] = useState(false)
+  const [visibility, setVisibility] = useState(true)
   const [isActive, setIsActive] = useState(false)
   const [scene, setScene] = useState(init_scene)
   const get_date_from_str = (date) => {
@@ -51,6 +49,13 @@ function Scene({ init_scene, handleDeleteScene }) {
     }
   }
   useEffect(() => {
+    if (scene.favorite == 'true' || scene.favorite == true) {
+      setFavIcon(favIconEnabled)
+      setFavBool(true)
+    } else {
+      setFavIcon(favIconDisabled)
+      setFavBool(false)
+    }
     if (scene.active == true || scene.active == 'true') {
       setIsActive(true)
     } else {
@@ -59,24 +64,43 @@ function Scene({ init_scene, handleDeleteScene }) {
   }, [scene])
   let final_scene = <></>
   if (scene.scene_type === 'schedule') {
-    final_scene = <Schedule scene={scene} />
+    final_scene = <Schedule scene={scene} visibility={visibility} />
   } else if (scene.scene_type === 'deviceScene') {
-    final_scene = <DeviceScene scene={scene} />
+    final_scene = <DeviceScene scene={scene} visibility={visibility} />
   }
   return (
     <div className='scene'>
       <div className='scene-top'>
-        <label className='icon-expand' onClick={() => {}} style={{}}>
-          {expandIcon}
+        <label
+          className='icon-expand'
+          onClick={() => {
+            setVisibility(!visibility)
+          }}
+          style={{
+            transform: visibility ? 'rotate(180deg)' : 'rotate(0)',
+          }}
+        >
+          <MdOutlineExpandMore
+            size={30}
+            style={{ margin: '0', padding: '0' }}
+          />
         </label>
         <img
           src={scene.img}
           alt='scene-img'
           className='scene-img'
-          onClick={() => {}}
+          onClick={() => {
+            setVisibility(!visibility)
+          }}
         />
-        <div className='scene-info' onClick={() => {}}>
-          <h3>{scene.name} </h3>
+        <div className='scene-info'>
+          <h3
+            onClick={() => {
+              setVisibility(!visibility)
+            }}
+          >
+            {scene.name}
+          </h3>
           <Switch
             checked={isActive}
             onChange={() => {
@@ -85,7 +109,13 @@ function Scene({ init_scene, handleDeleteScene }) {
             }}
           />
         </div>
-        <span className='fav-icon' onClick={() => {}}>
+        <span
+          className='fav-icon'
+          onClick={() => {
+            scene.favorite = !favBool
+            update_scene()
+          }}
+        >
           {favIcon}
         </span>
         <span className='vertical-menu'>

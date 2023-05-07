@@ -6,6 +6,7 @@
   border-radius: 8px;
   padding: 0.5rem;
   margin: 1rem;
+  box-shadow: 1px 1px 14px 1px #888888;
 }
 .scene-top {
   display: flex;
@@ -21,6 +22,11 @@
   min-width: 40px;
   margin: 0;
   padding: 0;
+  user-select: none;
+}
+.scene-img:hover,
+.scene-info h3:hover {
+  cursor: pointer;
 }
 .scene-info {
   height: 100%;
