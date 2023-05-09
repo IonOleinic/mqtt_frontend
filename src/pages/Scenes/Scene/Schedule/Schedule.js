@@ -26,7 +26,31 @@ function Schedule({ scene, visibility }) {
           <HiOutlineArrowRight size={30} color={'black'} />
         </div>
         <div className='schedule-action'>
-          <p>{scene.actionText}</p>
+          {scene.executable_text.includes('Color') ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <p>{'Color'}</p>
+              <div
+                style={{
+                  width: '25px',
+                  height: '25px',
+                  borderRadius: '5px',
+                  marginLeft: '0.3rem',
+                  border:
+                    scene.executable_text.split(' ')[1] == 'ffffff'
+                      ? '1px solid black'
+                      : 'none',
+                  backgroundColor: `#${scene.executable_text.split(' ')[1]}`,
+                }}
+              ></div>
+            </div>
+          ) : (
+            <p>{scene.executable_text}</p>
+          )}
         </div>
       </div>
       <div className='schedule-time'>
@@ -34,7 +58,7 @@ function Schedule({ scene, visibility }) {
           <span className='schedule-clock-icon'>
             <BsClock size={18} color={'black'} />
           </span>
-          <p>{addZero(scene.hour)}</p>
+          <p>{scene.hour}</p>
           <p>:</p>
           <p>{scene.minute}</p>
           <span
@@ -50,56 +74,63 @@ function Schedule({ scene, visibility }) {
       <div className='schedule-repeat'>
         <p
           style={{
-            color: scene.dayOfWeek.includes(1) ? 'black' : '#ccc',
+            color: scene.dayOfWeek.includes(1) ? 'white' : '#ccc',
             borderColor: scene.dayOfWeek.includes(1) ? 'black' : '#ccc',
+            backgroundColor: scene.dayOfWeek.includes(1) ? '#30b301' : 'white',
           }}
         >
           Mon
         </p>
         <p
           style={{
-            color: scene.dayOfWeek.includes(2) ? 'black' : '#ccc',
+            color: scene.dayOfWeek.includes(2) ? 'white' : '#ccc',
             borderColor: scene.dayOfWeek.includes(2) ? 'black' : '#ccc',
+            backgroundColor: scene.dayOfWeek.includes(2) ? '#30b301' : 'white',
           }}
         >
           Tue
         </p>
         <p
           style={{
-            color: scene.dayOfWeek.includes(3) ? 'black' : '#ccc',
+            color: scene.dayOfWeek.includes(3) ? 'white' : '#ccc',
             borderColor: scene.dayOfWeek.includes(3) ? 'black' : '#ccc',
+            backgroundColor: scene.dayOfWeek.includes(3) ? '#30b301' : 'white',
           }}
         >
           Wed
         </p>
         <p
           style={{
-            color: scene.dayOfWeek.includes(4) ? 'black' : '#ccc',
+            color: scene.dayOfWeek.includes(4) ? 'white' : '#ccc',
             borderColor: scene.dayOfWeek.includes(4) ? 'black' : '#ccc',
+            backgroundColor: scene.dayOfWeek.includes(4) ? '#30b301' : 'white',
           }}
         >
           Thru
         </p>
         <p
           style={{
-            color: scene.dayOfWeek.includes(5) ? 'black' : '#ccc',
+            color: scene.dayOfWeek.includes(5) ? 'white' : '#ccc',
             borderColor: scene.dayOfWeek.includes(5) ? 'black' : '#ccc',
+            backgroundColor: scene.dayOfWeek.includes(5) ? '#30b301' : 'white',
           }}
         >
           Fri
         </p>
         <p
           style={{
-            color: scene.dayOfWeek.includes(6) ? 'black' : '#ccc',
+            color: scene.dayOfWeek.includes(6) ? 'white' : '#ccc',
             borderColor: scene.dayOfWeek.includes(6) ? 'black' : '#ccc',
+            backgroundColor: scene.dayOfWeek.includes(6) ? '#30b301' : 'white',
           }}
         >
           Sat
         </p>
         <p
           style={{
-            color: scene.dayOfWeek.includes(0) ? 'black' : '#ccc',
+            color: scene.dayOfWeek.includes(0) ? 'white' : '#ccc',
             borderColor: scene.dayOfWeek.includes(0) ? 'black' : '#ccc',
+            backgroundColor: scene.dayOfWeek.includes(0) ? '#30b301' : 'white',
           }}
         >
           Sun

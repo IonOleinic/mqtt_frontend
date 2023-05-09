@@ -58,13 +58,13 @@ function AddDevice() {
     device.iconUrl = iconUrl
     device.props = props
     try {
-      let result = await app.post('/addDevice', device)
+      let result = await app.post('/device', device)
       if (result.data.succes) {
         navigate('/devices')
       } else {
         setIcon(iconError)
         setTextColor('red')
-        setMessage('Server error.Please Try again.')
+        setMessage(result.data.msg)
       }
     } catch (error) {
       console.log(error)

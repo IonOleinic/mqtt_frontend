@@ -8,6 +8,10 @@ import Schedule from './Schedule/Schedule'
 import { app } from '../../api/api'
 import './Scene.css'
 import DeviceScene from './DeviceScene/DeviceScene'
+import wheather_icon from '../SceneTypeImages/wheather_scene_icon.png'
+import location_icon from '../SceneTypeImages/location_scene_icon.png'
+import device_scene_icon from '../SceneTypeImages/device_scene_icon.png'
+import schedule_icon from '../SceneTypeImages/schedule_icon.png'
 
 const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
 const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
@@ -21,6 +25,7 @@ function Scene({ init_scene, handleDeleteScene }) {
   const [visibility, setVisibility] = useState(true)
   const [isActive, setIsActive] = useState(false)
   const [scene, setScene] = useState(init_scene)
+  const [sceneIcon, setSceneIcon] = useState('')
   const get_date_from_str = (date) => {
     const addZero = (i) => {
       if (i <= 9) {
@@ -61,6 +66,22 @@ function Scene({ init_scene, handleDeleteScene }) {
     } else {
       setIsActive(false)
     }
+    switch (scene.scene_type) {
+      case 'wheather':
+        setSceneIcon(wheather_icon)
+        break
+      case 'location':
+        setSceneIcon(location_icon)
+        break
+      case 'deviceScene':
+        setSceneIcon(device_scene_icon)
+        break
+      case 'schedule':
+        setSceneIcon(schedule_icon)
+        break
+      default:
+        break
+    }
   }, [scene])
   let final_scene = <></>
   if (scene.scene_type === 'schedule') {
@@ -86,7 +107,7 @@ function Scene({ init_scene, handleDeleteScene }) {
           />
         </label>
         <img
-          src={scene.img}
+          src={sceneIcon}
           alt='scene-img'
           className='scene-img'
           onClick={() => {

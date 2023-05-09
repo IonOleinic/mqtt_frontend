@@ -50,7 +50,7 @@ const Devices = () => {
   }
   async function get_all_groups() {
     try {
-      let result = await app.get('/mqtt_groups')
+      let result = await app.get('/mqttGroups')
       setFilterList(result.data)
     } catch (error) {
       console.log(error.message)

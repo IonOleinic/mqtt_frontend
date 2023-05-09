@@ -62,13 +62,11 @@ function SmartStrip({ device, visibility }) {
   }
   useEffect(() => {
     sensor_update_req()
-
     let interval = setInterval(async () => {
       if (device.switch_type == 'plug') {
         sensor_update_req()
       }
     }, 3809)
-
     return () => {
       clearInterval(interval)
     }

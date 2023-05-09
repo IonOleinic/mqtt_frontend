@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import Scene from './Scene/Scene'
-import { useNavigate } from 'react-router-dom'
 import { BiRefresh } from 'react-icons/bi'
 import { AiOutlinePlus } from 'react-icons/ai'
 import DropDownMenu from '../DropDownMenu/DropDownMenu'
 import { app } from '../api/api'
 import './Scenes.css'
+import AddScene from './AddScene/AddScene'
 
 const Scenes = () => {
-  const navigate = useNavigate()
   const [scenes, setScenes] = useState([])
+  const [addSceneVisibility, setAddSceneVisibility] = useState(false)
   const get_scenes = async () => {
     try {
       const response = await app.get('scenes')
@@ -35,7 +35,12 @@ const Scenes = () => {
     <>
       <div className='scenes-container'>
         <div className='toolbar-scenes'>
-          <div className='toolbar-scenes-item refresh-icon' onClick={() => {}}>
+          <div
+            className='toolbar-scenes-item refresh-icon'
+            onClick={() => {
+              get_scenes()
+            }}
+          >
             <BiRefresh size={30} />
           </div>
           <div className='toolbar-scenes-item'>
@@ -60,7 +65,7 @@ const Scenes = () => {
               type='button'
               className='btn btn-primary'
               onClick={() => {
-                navigate('/scenes/adddevicescene')
+                setAddSceneVisibility(true)
               }}
             >
               <AiOutlinePlus size={20} color='white' />
@@ -78,6 +83,10 @@ const Scenes = () => {
             )
           })}
         </div>
+        <AddScene
+          toggleVisibility={setAddSceneVisibility}
+          visibility={addSceneVisibility}
+        />
       </div>
     </>
   )

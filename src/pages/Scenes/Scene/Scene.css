@@ -5,7 +5,7 @@
   background-color: white;
   border-radius: 8px;
   padding: 0.5rem;
-  margin: 1rem;
+  margin: 0.6rem;
   box-shadow: 1px 1px 14px 1px #888888;
 }
 .scene-top {
@@ -16,10 +16,7 @@
   height: 110px;
 }
 .scene-img {
-  min-height: 40px;
-  max-height: 80px;
-  max-width: 80px;
-  min-width: 40px;
+  width: 80px;
   margin: 0;
   padding: 0;
   user-select: none;
@@ -51,7 +48,6 @@
   position: absolute;
   top: 0rem;
   left: 0rem;
-  z-index: 1;
   width: 100%;
   height: 100%;
   background-color: #ccc;

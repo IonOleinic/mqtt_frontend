@@ -8,7 +8,10 @@ import CheckMessage from '../../CheckMessage/CheckMessage'
 import UseAnimations from 'react-useanimations'
 import loading from 'react-useanimations/lib/loading'
 import TimePicker from 'react-times'
-
+import SubSceneSmartStrip from '../AddDeviceScene/SubSceneDevice/SubSceneSmartStrip'
+import SubSceneSirenAlarm from '../AddDeviceScene/SubSceneDevice/SubSceneSirenAlarm'
+import SubSceneSmartIR from '../AddDeviceScene/SubSceneDevice/SubSceneSmartIR'
+import SubSceneSmartBulb from '../AddDeviceScene/SubSceneDevice/SubSceneSmartBulb'
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
@@ -19,12 +22,11 @@ function AddSchedule() {
   const [message, setMessage] = useState('Loading...')
   const [textColor, setTextColor] = useState('black')
 
+  //time
   const [time, setTime] = useState('00:00')
   const [name, setName] = useState('')
   const [dayOfWeek, setDayOfWeek] = useState([])
-  const [state, setState] = useState('OFF')
   const [devices, setDevices] = useState([])
-  const [deviceId, setDeviceId] = useState('')
   const [mon, setMon] = useState(false)
   const [tue, setTue] = useState(false)
   const [wed, setWed] = useState(false)
@@ -32,19 +34,49 @@ function AddSchedule() {
   const [fri, setFri] = useState(false)
   const [sat, setSat] = useState(false)
   const [sun, setSun] = useState(false)
+
+  //executable device
+  const [deviceId, setDeviceId] = useState('')
+  const [executableTopic, setExecutableTopic] = useState('')
+  const [executablePayload, setExecutablePayload] = useState('OFF')
+  const [executableText, setExecutableText] = useState('')
+  const [subActionDevice, setSubActionDevice] = useState(<></>)
+
+  const revert_field_style = (field) => {
+    field.style.backgroundColor = '#fff'
+  }
+  const change_field_style = (field) => {
+    field.style.backgroundColor = 'pink'
+  }
+  const check_all_fields = () => {
+    let device = document.getElementById('select-device')
+    if (deviceId == '') {
+      change_field_style(device)
+      return false
+    }
+    return true
+  }
   const create_schedule = async () => {
-    console.log(dayOfWeek)
     setIcon(iconLoading)
     setMessage('Sending..')
     setTextColor('black')
     setCheckmark(true)
+    if (check_all_fields() == false) {
+      setIcon(iconError)
+      setMessage('Please complete all fields !')
+      setTextColor('red')
+      setCheckmark(true)
+      return
+    }
     try {
       let response = await app.post(
         `/schedule?device_id=${deviceId}&name=${name}&dayOfWeek=${dayOfWeek.toString()}&hour=${
           time.split(':')[0]
-        }&minute=${time.split(':')[1]}&state=${state}&socket_nr=1`
+        }&minute=${
+          time.split(':')[1]
+        }&executable_topic=${executableTopic}&executable_payload=${executablePayload}&executable_text=${executableText}`
       )
-      if (response.data.Succes) {
+      if (response.data.succes) {
         setIcon(iconSucces)
         setTextColor('black')
         setMessage('Schedule Added')
@@ -71,6 +103,55 @@ function AddSchedule() {
       console.log(error.message)
     }
   }
+  const choose_sub_device = (device_id, event_or_action) => {
+    let sub_dev = <></>
+    for (let i = 0; i < devices.length; i++) {
+      if (devices[i].id == device_id) {
+        if (devices[i].device_type == 'smartStrip') {
+          sub_dev = (
+            <SubSceneSmartStrip
+              device={devices[i]}
+              setExecutableTopic={setExecutableTopic}
+              setExecutablePayload={setExecutablePayload}
+              setExecutableText={setExecutableText}
+              event_or_action={event_or_action}
+            />
+          )
+        } else if (devices[i].device_type == 'smartSirenAlarm') {
+          sub_dev = (
+            <SubSceneSirenAlarm
+              device={devices[i]}
+              setExecutableTopic={setExecutableTopic}
+              setExecutablePayload={setExecutablePayload}
+              setExecutableText={setExecutableText}
+              event_or_action={event_or_action}
+            />
+          )
+        } else if (devices[i].device_type == 'smartIR') {
+          sub_dev = (
+            <SubSceneSmartIR
+              device={devices[i]}
+              setExecutableTopic={setExecutableTopic}
+              setExecutablePayload={setExecutablePayload}
+              setExecutableText={setExecutableText}
+              event_or_action={event_or_action}
+            />
+          )
+        } else if (devices[i].device_type == 'smartBulb') {
+          sub_dev = (
+            <SubSceneSmartBulb
+              device={devices[i]}
+              setExecutableTopic={setExecutableTopic}
+              setExecutablePayload={setExecutablePayload}
+              setExecutableText={setExecutableText}
+              event_or_action={event_or_action}
+            />
+          )
+        }
+      }
+    }
+    return sub_dev
+  }
   useEffect(() => {
     get_all_devices()
     let dateNow = new Date()
@@ -78,14 +159,7 @@ function AddSchedule() {
   }, [])
   useEffect(() => {
     setCheckmark(false)
-  }, [time, deviceId, dayOfWeek, state, name])
-  useEffect(() => {
-    try {
-      setDeviceId(devices[0].id)
-    } catch (error) {
-      console.log(error)
-    }
-  }, [devices])
+  }, [time, dayOfWeek, deviceId, name])
   return (
     <div className='Add-form-container'>
       <form className='Add-form'>
@@ -113,32 +187,22 @@ function AddSchedule() {
               aria-label='Default select example'
               onChange={(e) => {
                 setDeviceId(e.target.value)
+                setSubActionDevice(choose_sub_device(e.target.value, 'action'))
+                revert_field_style(e.target)
               }}
             >
+              <option value=''>None</option>
               {devices.map((device) => {
-                return (
-                  <option key={device.id} value={device.id}>
-                    {device.name}
-                  </option>
-                )
+                if (device.read_only == false)
+                  return (
+                    <option key={device.id} value={device.id}>
+                      {device.name}
+                    </option>
+                  )
               })}
             </select>
           </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='select-state'>State</label>
-            <select
-              value={state}
-              id='select-state'
-              className='form-select select-type'
-              aria-label='Default select example'
-              onChange={(e) => {
-                setState(e.target.value)
-              }}
-            >
-              <option value='OFF'>OFF</option>
-              <option value='ON'>ON</option>
-            </select>
-          </div>
+          {subActionDevice}
           <div className='form-group mt-3 '>
             <label htmlFor='input-repeat-days'>Repeat</label>
             <div className='weekDays-selector'>

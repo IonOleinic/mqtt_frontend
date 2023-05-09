@@ -55,13 +55,8 @@ function AddSchedule() {
     return true
   }
   const check_all_fields = () => {
-    let scene_name = document.getElementById('device-scene-name')
     let event_device = document.getElementById('select-event-device')
     let action_device = document.getElementById('select-action-device')
-    if (name == '') {
-      change_field_style(scene_name)
-      return false
-    }
     if (eventDeviceId == '') {
       change_field_style(event_device)
       return false
@@ -145,10 +140,7 @@ function AddSchedule() {
     let sub_dev = <></>
     for (let i = 0; i < devices.length; i++) {
       if (devices[i].id == device_id) {
-        if (
-          devices[i].device_type == 'smartStrip' ||
-          devices[i].device_type == 'smartSwitch'
-        ) {
+        if (devices[i].device_type == 'smartStrip') {
           sub_dev = (
             <SubSceneSmartStrip
               device={devices[i]}
@@ -242,7 +234,6 @@ function AddSchedule() {
               value={name}
               onChange={(e) => {
                 setName(e.target.value)
-                revert_field_style(e.target)
               }}
             />
           </div>
