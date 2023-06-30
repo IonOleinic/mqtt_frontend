@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { app } from '../../api/api'
 import './AddDeviceScene.css'
 import { Checkmark } from 'react-checkmark'
@@ -10,13 +11,14 @@ import SubSceneSmartStrip from './SubSceneDevice/SubSceneSmartStrip'
 import SubSceneDoorSensor from './SubSceneDevice/SubSceneDoorSensor'
 import SubSceneSirenAlarm from './SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from './SubSceneDevice/SubSceneSmartIR'
-import SubSceneSmartBulb from './SubSceneDevice/SubSceneSmartBulb'
+import SubSceneSmartLed from './SubSceneDevice/SubSceneSmartLed'
 import SubSceneMotionSensor from './SubSceneDevice/SubSceneMotionSensor'
 
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
 function AddSchedule() {
+  const navigate = useNavigate()
   //validation info
   const [checkmark, setCheckmark] = useState(false)
   const [icon, setIcon] = useState(iconLoading)
@@ -100,6 +102,7 @@ function AddSchedule() {
         setIcon(iconSucces)
         setTextColor('black')
         setMessage('Schedule Added')
+        navigate('/scenes')
       } else {
         setIcon(iconError)
         setTextColor('red')
@@ -188,9 +191,9 @@ function AddSchedule() {
               event_or_action={event_or_action}
             />
           )
-        } else if (devices[i].device_type == 'smartBulb') {
+        } else if (devices[i].device_type == 'smartLed') {
           sub_dev = (
-            <SubSceneSmartBulb
+            <SubSceneSmartLed
               device={devices[i]}
               setConditionalTopic={setConditionalTopic}
               setConditionalPayload={setConditionalPayload}

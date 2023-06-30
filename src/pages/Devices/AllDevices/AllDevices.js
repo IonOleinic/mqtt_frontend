@@ -72,7 +72,7 @@ const Devices = () => {
     get_all_groups()
     if (devices[0]) {
       setSelectedDevice(devices[0])
-      console.log(selectedDevice)
+      // console.log(selectedDevice)
     }
   }, [])
   const toggleInfoBar = () => {

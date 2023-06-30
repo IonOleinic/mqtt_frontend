@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import InputColor from 'react-input-color'
 
-function SubSceneSmartBulb({
+function SubSceneSmartLed({
   device,
   setConditionalTopic,
   setConditionalPayload,
@@ -158,7 +158,7 @@ function SubSceneSmartBulb({
             value='Color'
             style={{
               display:
-                event_or_action == 'action' && device.bulb_type.includes('rgb')
+                event_or_action == 'action' && device.led_type.includes('rgb')
                   ? 'revert'
                   : 'none',
             }}
@@ -190,4 +190,4 @@ function SubSceneSmartBulb({
   )
 }
 
-export default SubSceneSmartBulb
+export default SubSceneSmartLed

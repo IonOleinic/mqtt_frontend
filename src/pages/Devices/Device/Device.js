@@ -21,7 +21,7 @@ import { useEffect } from 'react'
 import { app } from '../../api/api'
 import { socket } from '../../api/io'
 import SmartSirenAlarm from './SmartAlarmSiren/SmartSirenAlarm'
-import SmartBulb from './SmartBulb/SmartBulb'
+import SmartLed from './SmartLed/SmartLed'
 import SmartMotionSensor from './SmartMotionSensor/SmartMotionSensor'
 
 let favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
@@ -115,8 +115,8 @@ function Device({
     final_device = <SmartDoorSensor visibility={visibility} device={device} />
   } else if (init_device.device_type === 'smartSirenAlarm') {
     final_device = <SmartSirenAlarm visibility={visibility} device={device} />
-  } else if (init_device.device_type === 'smartBulb') {
-    final_device = <SmartBulb visibility={visibility} device={device} />
+  } else if (init_device.device_type === 'smartLed') {
+    final_device = <SmartLed visibility={visibility} device={device} />
   } else if (init_device.device_type === 'smartMotionSensor') {
     final_device = <SmartMotionSensor visibility={visibility} device={device} />
   }

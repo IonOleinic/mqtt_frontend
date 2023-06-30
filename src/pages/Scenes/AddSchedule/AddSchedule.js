@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { app } from '../../api/api'
 import 'react-times/css/material/default.css'
 import './AddSchedule.css'
@@ -11,11 +12,12 @@ import TimePicker from 'react-times'
 import SubSceneSmartStrip from '../AddDeviceScene/SubSceneDevice/SubSceneSmartStrip'
 import SubSceneSirenAlarm from '../AddDeviceScene/SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from '../AddDeviceScene/SubSceneDevice/SubSceneSmartIR'
-import SubSceneSmartBulb from '../AddDeviceScene/SubSceneDevice/SubSceneSmartBulb'
+import SubSceneSmartLed from '../AddDeviceScene/SubSceneDevice/SubSceneSmartLed'
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
 function AddSchedule() {
+  const navigate = useNavigate()
   //validation info
   const [checkmark, setCheckmark] = useState(false)
   const [icon, setIcon] = useState(iconLoading)
@@ -80,6 +82,7 @@ function AddSchedule() {
         setIcon(iconSucces)
         setTextColor('black')
         setMessage('Schedule Added')
+        navigate('/scenes')
       } else {
         setIcon(iconError)
         setTextColor('red')
@@ -137,9 +140,9 @@ function AddSchedule() {
               event_or_action={event_or_action}
             />
           )
-        } else if (devices[i].device_type == 'smartBulb') {
+        } else if (devices[i].device_type == 'smartLed') {
           sub_dev = (
-            <SubSceneSmartBulb
+            <SubSceneSmartLed
               device={devices[i]}
               setExecutableTopic={setExecutableTopic}
               setExecutablePayload={setExecutablePayload}
@@ -155,7 +158,7 @@ function AddSchedule() {
   useEffect(() => {
     get_all_devices()
     let dateNow = new Date()
-    setTime(`${dateNow.getHours()}:${dateNow.getMinutes()}`)
+    setTime(`${dateNow.getHours()}:${dateNow.getMinutes() + 1}`)
   }, [])
   useEffect(() => {
     setCheckmark(false)

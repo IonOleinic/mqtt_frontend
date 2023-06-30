@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './AddDevice.css'
 import SubSwitch from './SubSwitch/SubSwitch'
 import SubIR from './SubIR/SubIR'
-import SubBulb from './SubBulb/SubBulb'
+import SubLed from './SubLed/SubLed'
 import { Checkmark } from 'react-checkmark'
 import { VscError } from 'react-icons/vsc'
 import CheckMessage from '../../CheckMessage/CheckMessage'
@@ -74,7 +74,6 @@ function AddDevice() {
     }
   }
   const setSubProps = (props) => {
-    console.log(props)
     setProps(props)
   }
   const choose_sub_device = (type) => {
@@ -113,9 +112,9 @@ function AddDevice() {
       case 'smartMotionSensor':
         subtype = <></>
         break
-      case 'smartBulb':
+      case 'smartLed':
         subtype = (
-          <SubBulb
+          <SubLed
             setSubProps={setSubProps}
             mqtt_name={mqttName}
             manufacter={manufacter}

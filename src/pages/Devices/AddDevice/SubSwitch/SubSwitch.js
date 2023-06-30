@@ -1,8 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './SubSwitch.css'
 function SubSwitch({ setSubProps, disable_add_btn }) {
   const [nrOfSockets, setNrOfSockets] = useState(1)
   const [switchType, setSwitchType] = useState('plug')
+  useEffect(() => {
+    setSubProps({
+      switch_type: switchType,
+      nr_of_sockets: nrOfSockets,
+    })
+  }, [])
   return (
     <>
       <div className='form-group mt-3'>
