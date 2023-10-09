@@ -2,12 +2,14 @@ import React, { useState, useEffect, useReducer } from 'react'
 import { HuePicker } from 'react-color'
 import { AlphaPicker } from 'react-color'
 import { BsLightbulbFill } from 'react-icons/bs'
+import { LedStripIcon } from './Icons/LedStripIcon'
 import { BsPlayCircle } from 'react-icons/bs'
 import { BsStopCircle } from 'react-icons/bs'
 import './SmartLed.css'
 import { app } from '../../../api/api'
 import { RangeStepInput } from 'react-range-step-input'
 import PaletteItem from './PaletteItem/PaletteItem'
+
 function SmartLed({ device, visibility }) {
   const [color, setColor] = useState('#000000')
   const [cold, setCold] = useState(0)
@@ -15,6 +17,26 @@ function SmartLed({ device, visibility }) {
   const [dimmer, setDimmer] = useState(100)
   const [speed, setSpeed] = useState(10)
   const [paletteItems, setPaletteItems] = useState([])
+  const [ledIcon, setLedIcon] = useState(<></>)
+  const set_led_icon = () => {
+    let bulb_icon = (
+      <BsLightbulbFill
+        size={50}
+        color={device.status == 'ON' ? color : '#ccc'}
+      />
+    )
+    let led_strip_icon = (
+      <LedStripIcon size={50} color={device.status == 'ON' ? color : '#ccc'} />
+    )
+    if (device.sub_type == 'ledStrip') {
+      setLedIcon(led_strip_icon)
+    } else {
+      setLedIcon(bulb_icon)
+    }
+  }
+  useEffect(() => {
+    set_led_icon()
+  }, [color, device.status, device.color])
   useEffect(() => {
     if (device.led_type.includes('rgb')) {
       if (device.color.substring(0, 6).toUpperCase() === 'FFFFFF') {
@@ -39,6 +61,7 @@ function SmartLed({ device, visibility }) {
   useEffect(() => {
     set_palette_items(device.palette)
   }, [device.palette])
+
   const set_palette_items = (palette) => {
     let items = []
     for (let i = 0; i < palette.length; i++) {
@@ -172,10 +195,7 @@ function SmartLed({ device, visibility }) {
           }}
           onClick={send_change_power}
         >
-          <BsLightbulbFill
-            size={50}
-            color={device.status == 'ON' ? color : '#ccc'}
-          />
+          {ledIcon}
         </div>
       </div>
       <div
@@ -211,63 +231,65 @@ function SmartLed({ device, visibility }) {
         />
       </div>
       <div
-        className='slider-item palette'
-        style={{ display: device.led_type.includes('rgb') ? 'flex' : 'none' }}
+        className='slider-item pallete-controll'
+        style={{ display: device.manufacter == 'tasmota' ? 'flex' : 'none' }}
       >
-        {paletteItems}
-      </div>
-      <div className='slider-item palette-buttons'>
-        <div
-          className='palette-play-btn'
-          onClick={() => {
-            if (device.scheme == '1' || device.scheme == '0') {
-              send_change_scheme(2)
-            }
-          }}
-        >
-          <BsPlayCircle
-            size={40}
-            color={
-              device.scheme == '1' || device.scheme == '0' ? 'green' : '#ccc'
-            }
-          />
+        <div className='pallete-controll-item palette-colors'>
+          {paletteItems}
         </div>
-        <div
-          className='palette-stop-btn'
-          onClick={() => {
-            if (device.scheme == '2' || device.scheme == '3') {
-              send_change_scheme(1)
-            }
-          }}
-        >
-          <BsStopCircle
-            size={40}
-            color={
-              device.scheme == '2' || device.scheme == '3' ? 'red' : '#ccc'
-            }
-          />
-        </div>
-      </div>
-      <div className='slider-item palette-speed'>
-        <label htmlFor='#'>Speed</label>
-        <button
-          style={{ border: 'none', background: 'none', width: '100%' }}
-          onMouseUp={(e) => {
-            send_change_speed(speed)
-          }}
-          onTouchEnd={(e) => send_change_speed(speed)}
-        >
-          <RangeStepInput
-            min={1}
-            max={40}
-            value={41 - speed}
-            step={1}
-            onChange={(e) => {
-              setSpeed(41 - e.target.value)
+        <div className='pallete-controll-item palette-buttons'>
+          <div
+            className='palette-play-btn'
+            onClick={() => {
+              if (device.scheme == '1' || device.scheme == '0') {
+                send_change_scheme(2)
+              }
             }}
-            style={{ width: '100%' }}
-          />
-        </button>
+          >
+            <BsPlayCircle
+              size={40}
+              color={
+                device.scheme == '1' || device.scheme == '0' ? 'green' : '#ccc'
+              }
+            />
+          </div>
+          <div
+            className='palette-stop-btn'
+            onClick={() => {
+              if (device.scheme == '2' || device.scheme == '3') {
+                send_change_scheme(1)
+              }
+            }}
+          >
+            <BsStopCircle
+              size={40}
+              color={
+                device.scheme == '2' || device.scheme == '3' ? 'red' : '#ccc'
+              }
+            />
+          </div>
+        </div>
+        <div className='pallete-controll-item palette-speed'>
+          <label htmlFor='#'>Speed</label>
+          <button
+            style={{ border: 'none', background: 'none', width: '100%' }}
+            onMouseUp={(e) => {
+              send_change_speed(speed)
+            }}
+            onTouchEnd={(e) => send_change_speed(speed)}
+          >
+            <RangeStepInput
+              min={1}
+              max={40}
+              value={41 - speed}
+              step={1}
+              onChange={(e) => {
+                setSpeed(41 - e.target.value)
+              }}
+              style={{ width: '100%' }}
+            />
+          </button>
+        </div>
       </div>
     </div>
   )

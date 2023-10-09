@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import SideBar from '../../components/SideBar'
 import Navbar from '../../components/NavBar'
-function Menu() {
+function Main() {
   const [isOpen, setIsOpen] = useState(false)
   const toggle = () => {
     setIsOpen(!isOpen)
@@ -14,4 +14,4 @@ function Menu() {
   )
 }
 
-export default Menu
+export default Main

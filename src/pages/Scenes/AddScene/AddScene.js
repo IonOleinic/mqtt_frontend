@@ -23,7 +23,12 @@ function AddScene({ toggleVisibility, visibility }) {
           <p>Add New Scene</p>
         </div>
         <div className='add-scene-menu'>
-          <div className='add-scene-menu-item'>
+          <div
+            className='add-scene-menu-item'
+            onClick={() => {
+              navigate('/scenes/addweatherscene')
+            }}
+          >
             <img src={wheather_icon} alt='wheather icon scene' />
             <p>When Wheather changes</p>
           </div>

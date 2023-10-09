@@ -13,6 +13,7 @@ input {
   position: relative;
   background-color: transparent;
   user-select: none;
+  /* z-index: 0; */
 }
 .vertical-menu-item {
   display: none;
@@ -20,7 +21,7 @@ input {
   left: -4rem;
   margin: 0.3em 1em;
   transition: all 0.5s;
-  z-index: 10;
+  z-index: 2;
   text-align: left;
 }
 .label-sub-menu {
@@ -45,6 +46,7 @@ input {
   border-radius: 50%;
 }
 .vertical-menu ul {
+  /* z-index: 0; */
   position: relative;
   top: 1rem;
   right: 4.5em;
@@ -68,4 +70,21 @@ input {
 .vertical-menu-item li:hover {
   background-color: #ccc;
   cursor: pointer;
+}
+
+.btn-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-set-scene {
+  width: 140px;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+  }
 }

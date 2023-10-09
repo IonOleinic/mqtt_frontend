@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import CurrentWeather from './CurrentWeather/CurrentWeather'
 import {
   Nav,
   NavLink,
@@ -8,20 +9,29 @@ import {
   NavBtnLink,
   Icon,
 } from './NavBarComponents'
+
 const Navbar = ({ toggle, isOpen }) => {
-  useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth > 768 && isOpen === true) {
-        toggle()
-      }
+  function handleResize() {
+    if (window.innerWidth > 768 && isOpen === true) {
+      toggle()
     }
+  }
+  useEffect(() => {
     window.addEventListener('resize', handleResize)
     handleResize()
     return () => window.removeEventListener('resize', handleResize)
   }, [])
   return (
     <Nav>
-      <NavLink to='/'>
+      <NavLink
+        to='/'
+        className='logo'
+        onClick={() => {
+          if (isOpen) {
+            toggle()
+          }
+        }}
+      >
         <img
           src={require('./images/smart_home_png.png')}
           alt='Logo'
@@ -37,11 +47,11 @@ const Navbar = ({ toggle, isOpen }) => {
         <NavLink to='/devices'>Devices</NavLink>
         <NavLink to='/scenes'>Scenes</NavLink>
         <NavLink to='/settings'>Settings</NavLink>
-        <NavLink to='/about'>About</NavLink>
-        <NavBtn>
-          <NavBtnLink to='/signin'>Sign In</NavBtnLink>
-        </NavBtn>
       </NavMenu>
+      <CurrentWeather />
+      <NavBtn>
+        <NavBtnLink to='/signin'>Sign In</NavBtnLink>
+      </NavBtn>
     </Nav>
   )
 }

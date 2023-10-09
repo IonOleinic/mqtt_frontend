@@ -22,7 +22,6 @@ function SideBar({ isOpen, toggle }) {
           <SideBarLink to='/devices'>Devices</SideBarLink>
           <SideBarLink to='/scenes'>Scenes</SideBarLink>
           <SideBarLink to='/settings'>Settings</SideBarLink>
-          <SideBarLink to='/about'>About</SideBarLink>
         </SideBarMenu>
       </SideBarWrapper>
     </SideBarContainer>

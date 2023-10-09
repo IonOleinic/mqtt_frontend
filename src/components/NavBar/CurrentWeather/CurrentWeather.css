@@ -1,0 +1,44 @@
+.current-weather {
+  /* position: absolute;
+  top: 0;
+  right: 0; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.current-weather-icon {
+  width: 70px;
+  margin-right: 0.2rem;
+}
+.current-weather-icon img {
+  width: 100%;
+  border-radius: 6px;
+}
+.current-weather-text {
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+.current-weather-text p {
+  margin: 0;
+}
+.current-weather-text-temp {
+  font-size: 1.4rem;
+}
+.current-weather-text-loc {
+  font-size: 1rem;
+}
+@media (max-width: 1020px) and (min-width: 768px) {
+  .current-weather-text-temp {
+    font-size: 1.1rem;
+  }
+  .current-weather-text-loc {
+    font-size: 0.7rem;
+  }
+  .current-weather-icon {
+    width: 50px;
+  }
+}

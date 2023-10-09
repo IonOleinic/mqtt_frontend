@@ -109,24 +109,22 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
   }
   useEffect(() => {
     setButtons(buttons_init)
-    console.log(buttons)
+    console.log(mqtt_name)
     try {
-      let result = app.post('/tempIR', {
-        mqtt_name,
-        manufacter,
-      })
+      let result = app.post(
+        `/tempIR?mqtt_name=${mqtt_name}&manufacter=${manufacter}`
+      )
     } catch (error) {
       console.log(error)
     }
     if (socket) {
       socket.on('update_temp_ir', (data) => {
         if (data.mqtt_name === mqtt_name) {
-          let buffer = data.received_code.split(' ')
-          setProtocol(buffer[0].replace('IR_', ''))
-          setInitProtocol(buffer[0].replace('IR_', ''))
-          setBits(buffer[1])
-          setInitBits(buffer[1])
-          setCode(buffer[2])
+          setProtocol(data.IR_info.protocol)
+          setInitProtocol(data.IR_info.protocol)
+          setBits(data.IR_info.bits)
+          setInitBits(data.IR_info.bits)
+          setCode(data.IR_info.code)
         }
       })
     }
@@ -204,7 +202,14 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
             type='button'
             className='btn btn-primary '
             onClick={() => {
-              setSubProps({ buttons, protocol, bits })
+              setSubProps({
+                PRESET: {
+                  buttons,
+                  protocol,
+                  tasmotaBits: bits,
+                  openBekenBits: bits,
+                },
+              })
               disable_add_btn(false)
               setButtons(buttons_init)
             }}

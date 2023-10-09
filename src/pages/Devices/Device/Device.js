@@ -57,9 +57,18 @@ function Device({
   const [device, setDevice] = useState(init_device)
   const [favBool, setFavBool] = useState(false)
   const [batteryIcon, setBatteryIcon] = useState(battery_no_data)
+  const [lastAvailable, setLastAvailable] = useState(false)
   const [availableIcon, setAvailableIcon] = useState(icon_offline)
   const toggleSubMenu = () => {
     setOpenSubMenu(!openSubMenu)
+  }
+  const get_inital_state = async () => {
+    console.log('get init state')
+    try {
+      const response = await app.get(`/device/getInitState/${device.id}`)
+    } catch (error) {
+      console.log(error)
+    }
   }
   const set_battery_icon = (battery_level) => {
     if (battery_level == 1) {
@@ -72,7 +81,7 @@ function Device({
       setBatteryIcon(powered_usb)
     }
   }
-  async function update_device() {
+  const update_device = async () => {
     try {
       let result = await app.put(`/device/${device.id}`, device)
       setDevice(result.data)
@@ -81,6 +90,9 @@ function Device({
     }
   }
   useEffect(() => {
+    if (lastAvailable != device.available) {
+      get_inital_state()
+    }
     if (socket) {
       socket.on('update_device', (data) => {
         if (data.device.mqtt_name === device.mqtt_name) {
@@ -89,7 +101,9 @@ function Device({
       })
     }
   }, [])
+
   useEffect(() => {
+    setLastAvailable(device.available)
     if (device.available) {
       setAvailableIcon(icon_online)
     } else {
@@ -120,23 +134,6 @@ function Device({
   } else if (init_device.device_type === 'smartMotionSensor') {
     final_device = <SmartMotionSensor visibility={visibility} device={device} />
   }
-  const get_date_from_str = (date) => {
-    const addZero = (i) => {
-      if (i <= 9) {
-        return '0' + i
-      } else {
-        return i
-      }
-    }
-    let temp_date = new Date(date)
-    return (
-      temp_date.getFullYear() +
-      '-' +
-      addZero(temp_date.getMonth()) +
-      '-' +
-      addZero(temp_date.getDate())
-    )
-  }
   return (
     <div className='device-item' key={device.mqtt_name}>
       <div className='device-top'>
@@ -166,6 +163,9 @@ function Device({
           className='device-info'
           onClick={() => {
             setVisibility(!visibility)
+          }}
+          style={{
+            color: device.available == false ? '#ccc' : 'revert',
           }}
         >
           <h3>{device.name} </h3>

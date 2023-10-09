@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { app } from '../../api/api'
-import 'react-times/css/material/default.css'
-import './AddSchedule.css'
+import './AddWeatherScene.css'
 import { Checkmark } from 'react-checkmark'
 import { VscError } from 'react-icons/vsc'
 import CheckMessage from '../../CheckMessage/CheckMessage'
@@ -16,7 +15,7 @@ import SubSceneSmartLed from '../SubSceneDevice/SubSceneSmartLed'
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
-function AddSchedule() {
+function AddWeatherScene() {
   const navigate = useNavigate()
   //validation info
   const [checkmark, setCheckmark] = useState(false)
@@ -25,18 +24,9 @@ function AddSchedule() {
   const [textColor, setTextColor] = useState('black')
 
   const [name, setName] = useState('')
-  //time
-  const [time, setTime] = useState('00:00')
-  const [dayOfWeek, setDayOfWeek] = useState([])
   const [devices, setDevices] = useState([])
-  const [mon, setMon] = useState(false)
-  const [tue, setTue] = useState(false)
-  const [wed, setWed] = useState(false)
-  const [thu, setThu] = useState(false)
-  const [fri, setFri] = useState(false)
-  const [sat, setSat] = useState(false)
-  const [sun, setSun] = useState(false)
-
+  const [comparisonSign, setComparisonSign] = useState('=')
+  const [targetTemperature, setTargetTemperature] = useState(10)
   //executable device
   const [deviceId, setDeviceId] = useState('')
   const [executableTopic, setExecutableTopic] = useState('')
@@ -58,7 +48,7 @@ function AddSchedule() {
     }
     return true
   }
-  const create_schedule = async () => {
+  const create_weather_scene = async () => {
     setIcon(iconLoading)
     setMessage('Sending..')
     setTextColor('black')
@@ -72,11 +62,7 @@ function AddSchedule() {
     }
     try {
       let response = await app.post(
-        `/schedule?device_id=${deviceId}&name=${name}&dayOfWeek=${dayOfWeek.toString()}&hour=${
-          time.split(':')[0]
-        }&minute=${
-          time.split(':')[1]
-        }&executable_topic=${executableTopic}&executable_payload=${executablePayload}&executable_text=${executableText}`
+        `/weatherScene?exec_device_id=${deviceId}&name=${name}&comparison_sign=${comparisonSign}&target_temperature=${targetTemperature}&executable_topic=${executableTopic}&executable_payload=${executablePayload}&executable_text=${executableText}`
       )
       if (response.data.succes) {
         setIcon(iconSucces)
@@ -157,29 +143,78 @@ function AddSchedule() {
   }
   useEffect(() => {
     get_all_devices()
-    let dateNow = new Date()
-    setTime(`${dateNow.getHours()}:${dateNow.getMinutes() + 1}`)
   }, [])
   useEffect(() => {
     setCheckmark(false)
-  }, [time, dayOfWeek, deviceId, name])
+  }, [deviceId, name])
   return (
     <div className='Add-form-container'>
       <form className='Add-form'>
         <div className='Add-form-content'>
-          <h3 className='Add-form-title'>Add Schedule</h3>
+          <h3 className='Add-form-title'>Add Weather Scene</h3>
           <div className='form-group mt-3'>
-            <label htmlFor='schedule-name'>Name</label>
+            <label htmlFor='wheater-scene-name'>Name</label>
             <input
-              id='schedule-name'
+              id='wheater-scene-name'
               type='text'
               className='form-control mt-1'
-              placeholder='Schedule name'
+              placeholder='Wheater scene name'
               value={name}
               onChange={(e) => {
                 setName(e.target.value)
               }}
             />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            <div
+              className='form-group mt-3'
+              style={{
+                width: '45%',
+              }}
+            >
+              <label htmlFor='select-comparison-sign'>Sign</label>
+              <select
+                id='select-comparison-sign'
+                className='form-select select-type'
+                aria-label='Default select example'
+                onChange={(e) => {
+                  setComparisonSign(e.target.value)
+                }}
+              >
+                <option value='='>{'='}</option>
+                <option value='>'>{'>'}</option>
+                <option value='>='>{'>='}</option>
+                <option value='<'>{'<'}</option>
+                <option value='<='>{'<='}</option>
+              </select>
+            </div>
+            <div
+              className='form-group mt-3'
+              style={{
+                width: '45%',
+              }}
+            >
+              <label htmlFor='wheater-scene-temp'>Temperature</label>
+              <input
+                id='wheater-scene-temp'
+                type='Number'
+                min={-30}
+                max={50}
+                className='form-control mt-1'
+                placeholder='Temperature'
+                value={targetTemperature}
+                onChange={(e) => {
+                  setTargetTemperature(e.target.value)
+                }}
+              />
+            </div>
           </div>
           <div className='form-group mt-3'>
             <label htmlFor='select-device'>Device</label>
@@ -206,150 +241,13 @@ function AddSchedule() {
             </select>
           </div>
           {subActionDevice}
-          <div className='form-group mt-3 '>
-            <label htmlFor='input-repeat-days'>Repeat</label>
-            <div className='weekDays-selector'>
-              <input
-                type='checkbox'
-                id='weekday-mon'
-                className='weekday'
-                checked={mon}
-                onChange={() => {
-                  setMon(!mon)
-                  let temp = dayOfWeek
-                  if (!mon) {
-                    temp.push(1)
-                  } else {
-                    temp = dayOfWeek.filter((day) => day !== 1)
-                  }
-                  setDayOfWeek(temp)
-                }}
-              />
-              <label htmlFor='weekday-mon'>Mon</label>
-              <input
-                type='checkbox'
-                id='weekday-tue'
-                className='weekday'
-                checked={tue}
-                onChange={() => {
-                  setTue(!tue)
-                  let temp = dayOfWeek
-                  if (!tue) {
-                    temp.push(2)
-                  } else {
-                    temp = dayOfWeek.filter((day) => day !== 2)
-                  }
-                  setDayOfWeek(temp)
-                }}
-              />
-              <label htmlFor='weekday-tue'>Tues</label>
-              <input
-                type='checkbox'
-                id='weekday-wed'
-                className='weekday'
-                checked={wed}
-                onChange={() => {
-                  setWed(!wed)
-                  let temp = dayOfWeek
-                  if (!wed) {
-                    temp.push(3)
-                  } else {
-                    temp = dayOfWeek.filter((day) => day !== 3)
-                  }
-                  setDayOfWeek(temp)
-                }}
-              />
-              <label htmlFor='weekday-wed'>Wed</label>
-              <input
-                type='checkbox'
-                id='weekday-thu'
-                className='weekday'
-                checked={thu}
-                onChange={() => {
-                  setThu(!thu)
-                  let temp = dayOfWeek
-                  if (!thu) {
-                    temp.push(4)
-                  } else {
-                    temp = dayOfWeek.filter((day) => day !== 4)
-                  }
-                  setDayOfWeek(temp)
-                }}
-              />
-              <label htmlFor='weekday-thu'>Thurs</label>
-              <input
-                type='checkbox'
-                id='weekday-fri'
-                className='weekday'
-                checked={fri}
-                onChange={(e) => {
-                  setFri(!fri)
-                  let temp = dayOfWeek
-                  if (!fri) {
-                    temp.push(5)
-                  } else {
-                    temp = dayOfWeek.filter((day) => day !== 5)
-                  }
-                  setDayOfWeek(temp)
-                }}
-              />
-              <label htmlFor='weekday-fri'>Fri</label>
-              <input
-                type='checkbox'
-                id='weekday-sat'
-                className='weekday'
-                checked={sat}
-                onChange={() => {
-                  setSat(!sat)
-                  let temp = dayOfWeek
-                  if (!sat) {
-                    temp.push(6)
-                  } else {
-                    temp = dayOfWeek.filter((day) => day !== 6)
-                  }
-                  setDayOfWeek(temp)
-                }}
-              />
-              <label htmlFor='weekday-sat'>Sat</label>
-              <input
-                type='checkbox'
-                id='weekday-sun'
-                className='weekday'
-                checked={sun}
-                onChange={() => {
-                  setSun(!sun)
-                  let temp = dayOfWeek
-                  if (!sun) {
-                    console.log('pushed')
-                    temp.push(0)
-                  } else {
-                    temp = dayOfWeek.filter((day) => day !== 0)
-                    console.log('removed')
-                  }
-                  setDayOfWeek(temp)
-                }}
-              />
-              <label htmlFor='weekday-sun'>Sun</label>
-            </div>
-          </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='select time'>Time</label>
-            <TimePicker
-              onTimeChange={(timeValue) => {
-                setTime(`${timeValue.hour}:${timeValue.minute}`)
-              }}
-              minuteStep={1}
-              time={time}
-            />
-          </div>
           <div className='form-group mt-3 btn-form-container'>
             <button
-              id='btn-set-time-schedule'
+              id='btn-set-scene'
               type='button'
               className='btn btn-primary btn-set-scene'
               onClick={() => {
-                console.log(time)
-                create_schedule()
+                create_weather_scene()
               }}
             >
               Set
@@ -369,4 +267,4 @@ function AddSchedule() {
   )
 }
 
-export default AddSchedule
+export default AddWeatherScene

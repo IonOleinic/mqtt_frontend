@@ -8,6 +8,7 @@ import Schedule from './Schedule/Schedule'
 import { app } from '../../api/api'
 import './Scene.css'
 import DeviceScene from './DeviceScene/DeviceScene'
+import WeatherScene from './WeatherScene/WeatherScene'
 import wheather_icon from '../SceneTypeImages/wheather_scene_icon.png'
 import location_icon from '../SceneTypeImages/location_scene_icon.png'
 import device_scene_icon from '../SceneTypeImages/device_scene_icon.png'
@@ -67,7 +68,7 @@ function Scene({ init_scene, handleDeleteScene }) {
       setIsActive(false)
     }
     switch (scene.scene_type) {
-      case 'wheather':
+      case 'weather':
         setSceneIcon(wheather_icon)
         break
       case 'location':
@@ -88,6 +89,8 @@ function Scene({ init_scene, handleDeleteScene }) {
     final_scene = <Schedule scene={scene} visibility={visibility} />
   } else if (scene.scene_type === 'deviceScene') {
     final_scene = <DeviceScene scene={scene} visibility={visibility} />
+  } else if (scene.scene_type === 'weather') {
+    final_scene = <WeatherScene scene={scene} visibility={visibility} />
   }
   return (
     <div className='scene'>

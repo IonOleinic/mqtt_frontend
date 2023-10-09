@@ -60,7 +60,7 @@ function Schedule({ scene, visibility }) {
           </span>
           <p>{scene.hour}</p>
           <p>:</p>
-          <p>{scene.minute}</p>
+          <p>{addZero(Number(scene.minute))}</p>
           <span
             className='schedule-repeat-once-icon'
             style={{
@@ -138,7 +138,10 @@ function Schedule({ scene, visibility }) {
       </div>
       <span
         className='scene-disabled-mask'
-        style={{ display: scene.active == 'true' ? 'none' : 'revert' }}
+        style={{
+          display:
+            scene.active == 'true' || scene.active == true ? 'none' : 'revert',
+        }}
       ></span>
     </div>
   )

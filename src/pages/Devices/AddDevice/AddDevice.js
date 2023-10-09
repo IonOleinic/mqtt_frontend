@@ -28,10 +28,10 @@ function AddDevice() {
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
   const [manufacter, setManufacter] = useState('tasmota')
-  const [groups, setGroups] = useState('')
-  const [iconUrl, setIconUrl] = useState('')
+  const [mqttGroup, setMqttGroups] = useState('')
+  const [img, setImg] = useState('')
   const [deviceType, setDeviceType] = useState('')
-  const [props, setProps] = useState({})
+  const [attributes, setAttributes] = useState({})
   const [subDevice, setSubDevice] = useState(<></>)
   useEffect(() => {
     const get_all_types = async () => {
@@ -43,7 +43,7 @@ function AddDevice() {
   }, [])
   useEffect(() => {
     setCheckmark(false)
-  }, [deviceTypes, name, mqttName, deviceType, iconUrl, manufacter])
+  }, [deviceTypes, name, mqttName, deviceType, img, manufacter])
   const handleAddDevice = async () => {
     setIcon(iconLoading)
     setMessage('Adding...')
@@ -51,12 +51,16 @@ function AddDevice() {
     setCheckmark(true)
     let device = {}
     device.name = name
-    device.mqttName = mqttName
+    device.mqtt_name = mqttName
     device.manufacter = manufacter
-    device.type = deviceType
-    device.groups = groups
-    device.iconUrl = iconUrl
-    device.props = props
+    device.device_type = deviceType
+    if (mqttGroup) {
+      device.mqtt_group = ['General'].concat(mqttGroup.split(','))
+    } else {
+      device.mqtt_group = ['General']
+    }
+    device.img = img
+    device.attributes = attributes
     try {
       let result = await app.post('/device', device)
       if (result.data.succes) {
@@ -74,7 +78,7 @@ function AddDevice() {
     }
   }
   const setSubProps = (props) => {
-    setProps(props)
+    setAttributes(props)
   }
   const choose_sub_device = (type) => {
     let subtype = <></>
@@ -101,15 +105,19 @@ function AddDevice() {
         )
         break
       case 'smartDoorSensor':
+        disable_add_btn(false)
         subtype = <></>
         break
       case 'smartTempSensor':
+        disable_add_btn(false)
         subtype = <></>
         break
       case 'smartSirenAlarm':
+        disable_add_btn(false)
         subtype = <></>
         break
       case 'smartMotionSensor':
+        disable_add_btn(false)
         subtype = <></>
         break
       case 'smartLed':
@@ -192,9 +200,9 @@ function AddDevice() {
               type='text'
               className='form-control mt-1'
               placeholder='Living Room,etc'
-              value={groups}
+              value={mqttGroup}
               onChange={(e) => {
-                setGroups(e.target.value)
+                setMqttGroups(e.target.value)
               }}
             />
           </div>
@@ -205,9 +213,9 @@ function AddDevice() {
               type='text'
               className='form-control mt-1'
               placeholder='img url'
-              value={iconUrl}
+              value={img}
               onChange={(e) => {
-                setIconUrl(e.target.value)
+                setImg(e.target.value)
               }}
             />
           </div>
@@ -219,9 +227,9 @@ function AddDevice() {
               className='form-select select-type'
               aria-label='Default select example'
               onChange={(e) => {
-                choose_sub_device(e.target.value)
-                setProps({})
                 disable_add_btn(true)
+                setAttributes({})
+                choose_sub_device(e.target.value)
               }}
             >
               <option value='none'>None</option>

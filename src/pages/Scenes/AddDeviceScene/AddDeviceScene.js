@@ -7,12 +7,12 @@ import { VscError } from 'react-icons/vsc'
 import CheckMessage from '../../CheckMessage/CheckMessage'
 import UseAnimations from 'react-useanimations'
 import loading from 'react-useanimations/lib/loading'
-import SubSceneSmartStrip from './SubSceneDevice/SubSceneSmartStrip'
-import SubSceneDoorSensor from './SubSceneDevice/SubSceneDoorSensor'
-import SubSceneSirenAlarm from './SubSceneDevice/SubSceneSirenAlarm'
-import SubSceneSmartIR from './SubSceneDevice/SubSceneSmartIR'
-import SubSceneSmartLed from './SubSceneDevice/SubSceneSmartLed'
-import SubSceneMotionSensor from './SubSceneDevice/SubSceneMotionSensor'
+import SubSceneSmartStrip from '../SubSceneDevice/SubSceneSmartStrip'
+import SubSceneDoorSensor from '../SubSceneDevice/SubSceneDoorSensor'
+import SubSceneSirenAlarm from '../SubSceneDevice/SubSceneSirenAlarm'
+import SubSceneSmartIR from '../SubSceneDevice/SubSceneSmartIR'
+import SubSceneSmartLed from '../SubSceneDevice/SubSceneSmartLed'
+import SubSceneMotionSensor from '../SubSceneDevice/SubSceneMotionSensor'
 
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
@@ -226,7 +226,7 @@ function AddSchedule() {
     <div className='Add-form-container'>
       <form className='Add-form'>
         <div className='Add-form-content'>
-          <h3 className='Add-form-title'>Add Scene</h3>
+          <h3 className='Add-form-title'>Add Device Scene</h3>
           <div className='form-group mt-3'>
             <label htmlFor='device-scene-name'>Name</label>
             <input
@@ -303,7 +303,7 @@ function AddSchedule() {
             <button
               id='btn-set-time-schedule'
               type='button'
-              className='btn btn-primary btn-set-time-schedule'
+              className='btn btn-primary btn-set-scene'
               onClick={() => {
                 create_device_scene()
               }}

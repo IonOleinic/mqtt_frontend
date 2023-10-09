@@ -13,7 +13,7 @@ function EditDevice() {
   const [manufacter, setManufacter] = useState('')
   const [resultMessage, setResultMessage] = useState('')
   const [groups, setGroups] = useState('')
-  const [iconUrl, setIconUrl] = useState('')
+  const [img, setImg] = useState('')
   const get_device = async () => {
     try {
       let result = await app.get(`/device/${id}`)
@@ -22,7 +22,7 @@ function EditDevice() {
       setMqttName(result.data.mqtt_name)
       setManufacter(result.data.manufacter)
       setGroups(result.data.mqtt_group.toString())
-      setIconUrl(result.data.img)
+      setImg(result.data.img)
     } catch (error) {
       console.log(error)
     }
@@ -37,7 +37,7 @@ function EditDevice() {
     new_device.mqttName = mqttName
     new_device.manufacter = manufacter
     new_device.mqtt_group = groups.split(',')
-    new_device.iconUrl = iconUrl
+    new_device.img = img
     try {
       let result = await app.put(`/device/${new_device.id}`, new_device)
       navigate('/devices')
@@ -118,9 +118,9 @@ function EditDevice() {
               type='text'
               className='form-control mt-1'
               placeholder='img url'
-              value={iconUrl}
+              value={img}
               onChange={(e) => {
-                setIconUrl(e.target.value)
+                setImg(e.target.value)
                 setDisabledModifyBtn(false)
               }}
             />

@@ -10,14 +10,17 @@ export const Nav = styled.nav`
   top: 0;
   left: 0;
   display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 3rem;
+  justify-content: space-around;
+  padding: 0.5rem 1rem;
   z-index: 10;
-  @media screen and (min-width: 1070px) {
+  @media (min-width: 1200px) {
+    padding: 0.5rem 4rem;
+  }
+  @media (min-width: 1400px) {
     padding: 0.5rem 6rem;
   }
-  @media screen and (min-width: 1400px) {
-    padding: 0.5rem 10rem;
+  @media (max-width: 768px) {
+    justify-content: center;
   }
 `
 
@@ -48,7 +51,7 @@ export const NavLink = styled(Link)`
 export const Icon = styled.div`
   display: none;
   color: #fff;
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     display: block;
     position: absolute;
     top: 0;
@@ -61,7 +64,8 @@ export const Icon = styled.div`
 
 export const Bars = styled(FaBars)`
   @media (max-width: 768px) {
-    transform: rotate ${({ isOpen }) => (isOpen ? '(90 deg)' : '(0 deg)')};
+    transition: all 0.5s;
+    transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'rotate(0deg)')};
   }
 `
 
@@ -72,7 +76,7 @@ export const NavMenu = styled.div`
   /* Second Nav */
   /* margin-right: 24px; */
   /* Third Nav */
-  width: 100vw;
+  width: 50vw;
   white-space: nowrap;
   @media screen and (max-width: 768px) {
     display: none;
