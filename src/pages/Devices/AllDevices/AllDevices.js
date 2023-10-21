@@ -23,14 +23,14 @@ const initDevice = {
 }
 const Devices = () => {
   const navigate = useNavigate()
-  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0)
   const [devices, setDevices] = useState([])
   const [infoOpen, setInfoOpen] = useState(false)
   const [filterList, setFilterList] = useState([])
   const [selectedGroup, setSelectedGroup] = useState('')
+  const [selectedOrder, setSelectedOrder] = useState('')
   const [selectedDevice, setSelectedDevice] = useState(initDevice)
 
-  async function get_all_devices(filter) {
+  async function getAllDevices(filter) {
     try {
       if (filter === undefined || filter === '') {
         filter = selectedGroup
@@ -42,13 +42,14 @@ const Devices = () => {
       console.log(error.message)
     }
   }
-  const sort_devices_by = (sortval) => {
-    if (sortval === 'Nume') {
+  const sortDevicesBy = (sortval) => {
+    if (sortval.toUpperCase() === 'NAME') {
       setDevices(devices.sort((a, b) => (a.name > b.name ? 1 : -1)))
+    } else {
+      getAllDevices()
     }
-    forceUpdate()
   }
-  async function get_all_groups() {
+  async function getAllGroups() {
     try {
       let result = await app.get('/mqttGroups')
       setFilterList(result.data)
@@ -67,9 +68,12 @@ const Devices = () => {
   const updateSelectedGroup = (filter_name) => {
     setSelectedGroup(filter_name)
   }
+  const updateSelectedOrder = (sortval) => {
+    setSelectedOrder(sortval)
+  }
   useEffect(() => {
-    get_all_devices(selectedGroup)
-    get_all_groups()
+    getAllDevices(selectedGroup)
+    getAllGroups()
     if (devices[0]) {
       setSelectedDevice(devices[0])
       // console.log(selectedDevice)
@@ -87,7 +91,7 @@ const Devices = () => {
         <div
           className='toolbar-devices-item refresh-icon'
           onClick={() => {
-            get_all_devices(selectedGroup)
+            getAllDevices(selectedGroup)
           }}
         >
           <BiRefresh size={30} />
@@ -96,9 +100,9 @@ const Devices = () => {
           <p>Filter by</p>
           <DropDownMenu
             className='drop-down-menu'
-            message={'choose...'}
+            message={'General'}
             items={filterList}
-            action={get_all_devices}
+            action={getAllDevices}
             updateFunc={updateSelectedGroup}
           />
         </div>
@@ -106,9 +110,10 @@ const Devices = () => {
           <p>Order by</p>
           <DropDownMenu
             className='drop-down-menu'
-            message={'choose...'}
-            items={['Nume', 'Data adaugarii']}
-            action={sort_devices_by}
+            message={'Date'}
+            items={['Date', 'Name']}
+            action={sortDevicesBy}
+            updateFunc={updateSelectedOrder}
           />
         </div>
         <div className='toolbar-devices-item'>

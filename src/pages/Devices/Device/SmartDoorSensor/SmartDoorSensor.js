@@ -19,7 +19,7 @@ function SmartDoorSensor({ device, visibility }) {
       setLockImg(unlockedImg)
     }
   }, [device])
-  const send_toggle_direction = async () => {
+  const sendToggleDirection = async () => {
     const response = await app.post(`/smartDoorSensor?device_id=${device.id}`)
   }
 
@@ -48,7 +48,7 @@ function SmartDoorSensor({ device, visibility }) {
           <img src={DoorSecondModule} alt='Door Sensor Second Module' />
         </div>
       </div>
-      <div className='switch-direction-btn' onClick={send_toggle_direction}>
+      <div className='switch-direction-btn' onClick={sendToggleDirection}>
         <HiOutlineSwitchHorizontal size={20} color='black' />
       </div>
     </div>

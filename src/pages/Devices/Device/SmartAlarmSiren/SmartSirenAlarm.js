@@ -42,7 +42,7 @@ function SmartSirenAlarm({ device, visibility }) {
     setSoundDuration(device.sound_duration)
   }, [device])
 
-  const send_change_power = async (pwr_status) => {
+  const sendChangePower = async (pwr_status) => {
     try {
       const response = await app.post(
         `/smartSirenAlarm/power?status=${pwr_status}&device_id=${device.id}`
@@ -93,7 +93,7 @@ function SmartSirenAlarm({ device, visibility }) {
         <div
           className='siren-alarm-btn'
           style={{ borderColor: status == 'ON' ? 'red' : 'black' }}
-          onClick={() => send_change_power('TOGGLE')}
+          onClick={() => sendChangePower('TOGGLE')}
         >
           {volumeIcon}
           <p

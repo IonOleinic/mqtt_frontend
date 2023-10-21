@@ -43,49 +43,49 @@ function AddSchedule() {
     let filtered_devices = devices.filter((device) => device.id == id)
     return filtered_devices[0].mqtt_name
   }
-  const check_choosed_devices = () => {
+  const checkChoosedDevices = () => {
     let event_device = document.getElementById('select-event-device')
     let action_device = document.getElementById('select-action-device')
     if (conditionalTopic == '' || conditionalPayload == '') {
-      change_field_style(event_device)
+      changeFieldStyle(event_device)
       return false
     }
     if (executableTopic == '' || executablePayload == '') {
-      change_field_style(action_device)
+      changeFieldStyle(action_device)
       return false
     }
     return true
   }
-  const check_all_fields = () => {
+  const checkAllFields = () => {
     let event_device = document.getElementById('select-event-device')
     let action_device = document.getElementById('select-action-device')
     if (eventDeviceId == '') {
-      change_field_style(event_device)
+      changeFieldStyle(event_device)
       return false
     }
     if (actionDeviceId == '') {
-      change_field_style(action_device)
+      changeFieldStyle(action_device)
       return false
     }
     return true
   }
-  const revert_field_style = (field) => {
+  const revertFieldStyle = (field) => {
     field.style.backgroundColor = '#fff'
   }
-  const change_field_style = (field) => {
+  const changeFieldStyle = (field) => {
     field.style.backgroundColor = 'pink'
   }
-  const create_device_scene = async () => {
-    if (check_all_fields() == false) {
+  const createDeviceScene = async () => {
+    if (checkAllFields() == false) {
       setIcon(iconError)
-      setMessage('Please complete all fields !')
+      setMessage('Please complete all fields!')
       setTextColor('red')
       setCheckmark(true)
       return
     }
-    if (check_choosed_devices() == false) {
+    if (checkChoosedDevices() == false) {
       setIcon(iconError)
-      setMessage('Device not implemented yet !')
+      setMessage('Device not implemented yet!')
       setTextColor('red')
       setCheckmark(true)
       return
@@ -95,9 +95,21 @@ function AddSchedule() {
     setTextColor('black')
     setCheckmark(true)
     try {
-      let response = await app.post(
-        `/deviceScene?name=${name}&cond_device_mqtt=${eventDeviceMqtt}&cond_device_id=${eventDeviceId}&exec_device_id=${actionDeviceId}&conditional_topic=${conditionalTopic}&conditional_payload=${conditionalPayload}&executable_topic=${executableTopic}&executable_payload=${executablePayload}&conditional_text=${conditionalText}&executable_text=${executableText}`
-      )
+      let scene = {}
+      scene.name = name
+      scene.scene_type = 'deviceScene'
+      scene.exec_device_id = actionDeviceId
+      scene.executable_topic = executableTopic
+      scene.executable_payload = executablePayload
+      scene.executable_text = executableText
+      let attributes = {}
+      attributes.cond_device_mqtt = eventDeviceMqtt
+      attributes.cond_device_id = eventDeviceId
+      attributes.conditional_topic = conditionalTopic
+      attributes.conditional_payload = conditionalPayload
+      attributes.conditional_text = conditionalText
+      scene.attributes = attributes
+      let response = await app.post(`/scene?`, scene)
       if (response.data.succes) {
         setIcon(iconSucces)
         setTextColor('black')
@@ -115,7 +127,7 @@ function AddSchedule() {
       setMessage('Error occured.Please Try again.')
     }
   }
-  async function get_all_devices(filter) {
+  async function getAllDevices(filter) {
     try {
       if (filter === undefined || filter === '') {
         filter = 'General'
@@ -127,7 +139,7 @@ function AddSchedule() {
     }
   }
   useEffect(() => {
-    get_all_devices()
+    getAllDevices()
   }, [])
   useEffect(() => {
     setCheckmark(false)
@@ -139,7 +151,7 @@ function AddSchedule() {
     name,
   ])
 
-  const choose_sub_device = (device_id, event_or_action) => {
+  const chooseSubDevice = (device_id, event_or_action) => {
     let sub_dev = <></>
     for (let i = 0; i < devices.length; i++) {
       if (devices[i].id == device_id) {
@@ -252,8 +264,8 @@ function AddSchedule() {
                 setConditionalPayload('')
                 setEventDeviceId(e.target.value)
                 setEventDeviceMqtt(get_mqtt_name_by_id(e.target.value))
-                setSubEventDevice(choose_sub_device(e.target.value, 'event'))
-                revert_field_style(e.target)
+                setSubEventDevice(chooseSubDevice(e.target.value, 'event'))
+                revertFieldStyle(e.target)
               }}
             >
               <option value=''>None</option>
@@ -278,8 +290,8 @@ function AddSchedule() {
                 setExecutableTopic('')
                 setExecutablePayload('')
                 setActionDeviceId(e.target.value)
-                setSubActionDevice(choose_sub_device(e.target.value, 'action'))
-                revert_field_style(e.target)
+                setSubActionDevice(chooseSubDevice(e.target.value, 'action'))
+                revertFieldStyle(e.target)
               }}
             >
               <option value=''>None</option>
@@ -305,7 +317,7 @@ function AddSchedule() {
               type='button'
               className='btn btn-primary btn-set-scene'
               onClick={() => {
-                create_device_scene()
+                createDeviceScene()
               }}
             >
               Set

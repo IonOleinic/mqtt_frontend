@@ -62,7 +62,7 @@ function Device({
   const toggleSubMenu = () => {
     setOpenSubMenu(!openSubMenu)
   }
-  const get_inital_state = async () => {
+  const getInitalState = async () => {
     console.log('get init state')
     try {
       const response = await app.get(`/device/getInitState/${device.id}`)
@@ -70,7 +70,7 @@ function Device({
       console.log(error)
     }
   }
-  const set_battery_icon = (battery_level) => {
+  const setBatteryIconFunc = (battery_level) => {
     if (battery_level == 1) {
       setBatteryIcon(battery_low)
     } else if (battery_level == 2) {
@@ -81,7 +81,7 @@ function Device({
       setBatteryIcon(powered_usb)
     }
   }
-  const update_device = async () => {
+  const updateDevice = async () => {
     try {
       let result = await app.put(`/device/${device.id}`, device)
       setDevice(result.data)
@@ -91,7 +91,7 @@ function Device({
   }
   useEffect(() => {
     if (lastAvailable != device.available) {
-      get_inital_state()
+      //get_inital_state()
     }
     if (socket) {
       socket.on('update_device', (data) => {
@@ -116,7 +116,8 @@ function Device({
       setFavIcon(favIconDisabled)
       setFavBool(false)
     }
-    set_battery_icon(device.battery_level)
+    setBatteryIconFunc(device.battery_level)
+    // device.mqtt_group = device.mqtt_group.split(',')
   }, [device])
   let final_device = <></>
   if (device.device_type === 'smartStrip') {
@@ -175,7 +176,7 @@ function Device({
           className='fav-icon'
           onClick={() => {
             device.favorite = !favBool
-            update_device()
+            updateDevice()
           }}
         >
           {favIcon}

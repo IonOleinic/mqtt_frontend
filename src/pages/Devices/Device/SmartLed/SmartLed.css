@@ -53,6 +53,6 @@
 .palette-buttons * {
   margin: 0 0.3rem;
 }
-.palette-buttons *:hover {
+.palette-button-cursor {
   cursor: pointer;
 }

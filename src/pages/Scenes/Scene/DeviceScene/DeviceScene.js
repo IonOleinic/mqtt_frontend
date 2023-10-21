@@ -9,7 +9,7 @@ function DeviceScene({ scene, visibility }) {
   const [condDevice, setCondDevice] = useState({})
   const [execDevice, setExecDevice] = useState({})
 
-  const get_cond_device = async () => {
+  const getCondDevice = async () => {
     try {
       const response = await app.get(`/device/${scene.cond_device_id}`)
       setCondDevice(response.data)
@@ -17,7 +17,7 @@ function DeviceScene({ scene, visibility }) {
       console.log(error.message)
     }
   }
-  const get_exec_device = async () => {
+  const getExecDevice = async () => {
     try {
       const response = await app.get(`/device/${scene.exec_device_id}`)
       setExecDevice(response.data)
@@ -26,8 +26,8 @@ function DeviceScene({ scene, visibility }) {
     }
   }
   useEffect(() => {
-    get_cond_device()
-    get_exec_device()
+    getCondDevice()
+    getExecDevice()
   }, [scene])
 
   return (

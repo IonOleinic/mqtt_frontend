@@ -49,7 +49,7 @@ function SmartStrip({ device, visibility }) {
       setSensorData(device.sensor_status)
     }
   }, [device])
-  const sensor_update_req = async () => {
+  const sensorUpdateReq = async () => {
     try {
       if (device.switch_type === 'plug') {
         let response = await app.get(
@@ -61,30 +61,30 @@ function SmartStrip({ device, visibility }) {
     }
   }
   useEffect(() => {
-    sensor_update_req()
+    sensorUpdateReq()
     let interval = setInterval(async () => {
       if (device.switch_type == 'plug') {
-        sensor_update_req()
+        sensorUpdateReq()
       }
     }, 3809)
     return () => {
       clearInterval(interval)
     }
   }, [])
-  const send_change_power = async (socket_nr, pwr_status) => {
+  const sendChangePower = async (socket_nr, pwr_status) => {
     const response = await app.post(
       `/smartStrip?status=${pwr_status}&device_id=${device.id}&socket_nr=${
         socket_nr + 1
       }`
     )
-    sensor_update_req()
+    sensorUpdateReq()
   }
   const handlePower = async (id) => {
     try {
       if (statusList[id] === 'ON') {
-        send_change_power(id, 'OFF')
+        sendChangePower(id, 'OFF')
       } else {
-        send_change_power(id, 'ON')
+        sendChangePower(id, 'ON')
       }
     } catch (err) {
       console.log(err.message)

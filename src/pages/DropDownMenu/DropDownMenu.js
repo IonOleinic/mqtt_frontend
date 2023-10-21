@@ -19,7 +19,7 @@ function DropDownMenu({ message, items, action, updateFunc }) {
         onBlur={() => {
           setTimeout(() => {
             setIsOpen(false)
-          }, 250)
+          }, 100)
         }}
       >
         {title}

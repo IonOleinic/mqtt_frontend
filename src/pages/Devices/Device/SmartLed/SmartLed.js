@@ -18,7 +18,9 @@ function SmartLed({ device, visibility }) {
   const [speed, setSpeed] = useState(10)
   const [paletteItems, setPaletteItems] = useState([])
   const [ledIcon, setLedIcon] = useState(<></>)
-  const set_led_icon = () => {
+  const [cursorStyle, setCursorStyle] = useState({ cursor: 'default' })
+
+  const setLedIconFunc = () => {
     let bulb_icon = (
       <BsLightbulbFill
         size={50}
@@ -34,8 +36,9 @@ function SmartLed({ device, visibility }) {
       setLedIcon(bulb_icon)
     }
   }
+
   useEffect(() => {
-    set_led_icon()
+    setLedIconFunc()
   }, [color, device.status, device.color])
   useEffect(() => {
     if (device.led_type.includes('rgb')) {
@@ -59,10 +62,10 @@ function SmartLed({ device, visibility }) {
     setSpeed(device.speed)
   }, [device])
   useEffect(() => {
-    set_palette_items(device.palette)
+    setPaletteItemsFunc(device.palette)
   }, [device.palette])
 
-  const set_palette_items = (palette) => {
+  const setPaletteItemsFunc = (palette) => {
     let items = []
     for (let i = 0; i < palette.length; i++) {
       items.push(
@@ -78,7 +81,7 @@ function SmartLed({ device, visibility }) {
     }
     setPaletteItems(items)
   }
-  const send_change_color = async (rgb_color, cold, warm) => {
+  const sendChangeColor = async (rgb_color, cold, warm) => {
     let newColor = rgb_color.replace('#', '') + toHex(cold) + toHex(warm)
     try {
       const response = await app.post(
@@ -88,7 +91,7 @@ function SmartLed({ device, visibility }) {
       console.log(error)
     }
   }
-  const send_change_dimmer = async (newValue) => {
+  const sendChangeDimmer = async (newValue) => {
     try {
       const response = await app.post(
         `/SmartLed/dimmer?device_id=${device.id}&dimmer=${newValue}`
@@ -97,7 +100,7 @@ function SmartLed({ device, visibility }) {
       console.log(error)
     }
   }
-  const send_change_power = async () => {
+  const sendChangePower = async () => {
     const newStatus = 'TOGGLE'
     try {
       const response = await app.post(
@@ -111,7 +114,7 @@ function SmartLed({ device, visibility }) {
     let hex = Math.round(val * 255).toString(16)
     return hex.length === 1 ? '0' + hex : hex
   }
-  const send_change_palette = async (palette) => {
+  const sendChangePalette = async (palette) => {
     try {
       const response = await app.post(
         `/SmartLed/palette?device_id=${device.id}&palette=${palette}`
@@ -120,7 +123,7 @@ function SmartLed({ device, visibility }) {
       console.log(error)
     }
   }
-  const send_change_speed = async () => {
+  const sendChangeSpeed = async () => {
     try {
       const response = await app.post(
         `/SmartLed/speed?device_id=${device.id}&speed=${speed}`
@@ -129,7 +132,7 @@ function SmartLed({ device, visibility }) {
       console.log(error)
     }
   }
-  const send_change_scheme = async (scheme) => {
+  const sendChangeScheme = async (scheme) => {
     try {
       const response = await app.post(
         `/SmartLed/scheme?device_id=${device.id}&scheme=${scheme}`
@@ -141,7 +144,7 @@ function SmartLed({ device, visibility }) {
   const handlePaletteChange = async (id, color) => {
     let temp = device.palette
     temp[id] = color.replaceAll('#', '').toUpperCase()
-    send_change_palette(temp)
+    sendChangePalette(temp)
   }
 
   return (
@@ -160,7 +163,7 @@ function SmartLed({ device, visibility }) {
             setColor(e.hex)
           }}
           onChangeComplete={(e) => {
-            send_change_color(e.hex, cold, warm)
+            sendChangeColor(e.hex, cold, warm)
           }}
           width='100%'
         />
@@ -170,9 +173,9 @@ function SmartLed({ device, visibility }) {
         <button
           style={{ border: 'none', background: 'none', width: '100%' }}
           onMouseUp={(e) => {
-            send_change_dimmer(dimmer)
+            sendChangeDimmer(dimmer)
           }}
-          onTouchEnd={(e) => send_change_dimmer(dimmer)}
+          onTouchEnd={(e) => sendChangeDimmer(dimmer)}
         >
           <RangeStepInput
             min={0}
@@ -193,7 +196,7 @@ function SmartLed({ device, visibility }) {
             border:
               device.status == 'ON' ? `4px solid ${color}` : `4px solid #ccc`,
           }}
-          onClick={send_change_power}
+          onClick={sendChangePower}
         >
           {ledIcon}
         </div>
@@ -209,7 +212,7 @@ function SmartLed({ device, visibility }) {
             setCold(e.rgb.a)
           }}
           onChangeComplete={(e) => {
-            send_change_color(color, e.rgb.a, warm)
+            sendChangeColor(color, e.rgb.a, warm)
           }}
           width='100%'
         />
@@ -225,7 +228,7 @@ function SmartLed({ device, visibility }) {
             setWarm(e.rgb.a)
           }}
           onChangeComplete={(e) => {
-            send_change_color(color, cold, e.rgb.a)
+            sendChangeColor(color, cold, e.rgb.a)
           }}
           width='100%'
         />
@@ -242,8 +245,17 @@ function SmartLed({ device, visibility }) {
             className='palette-play-btn'
             onClick={() => {
               if (device.scheme == '1' || device.scheme == '0') {
-                send_change_scheme(2)
+                sendChangeScheme(2)
               }
+            }}
+            style={cursorStyle}
+            onMouseEnter={() => {
+              if (device.scheme == '1' || device.scheme == '0') {
+                setCursorStyle({ cursor: 'pointer' })
+              }
+            }}
+            onMouseLeave={() => {
+              setCursorStyle({ cursor: 'default' })
             }}
           >
             <BsPlayCircle
@@ -257,8 +269,17 @@ function SmartLed({ device, visibility }) {
             className='palette-stop-btn'
             onClick={() => {
               if (device.scheme == '2' || device.scheme == '3') {
-                send_change_scheme(1)
+                sendChangeScheme(1)
               }
+            }}
+            style={cursorStyle}
+            onMouseEnter={() => {
+              if (device.scheme == '2' || device.scheme == '3') {
+                setCursorStyle({ cursor: 'pointer' })
+              }
+            }}
+            onMouseLeave={() => {
+              setCursorStyle({ cursor: 'default' })
             }}
           >
             <BsStopCircle
@@ -274,9 +295,9 @@ function SmartLed({ device, visibility }) {
           <button
             style={{ border: 'none', background: 'none', width: '100%' }}
             onMouseUp={(e) => {
-              send_change_speed(speed)
+              sendChangeSpeed(speed)
             }}
-            onTouchEnd={(e) => send_change_speed(speed)}
+            onTouchEnd={(e) => sendChangeSpeed(speed)}
           >
             <RangeStepInput
               min={1}

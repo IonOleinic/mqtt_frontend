@@ -44,26 +44,26 @@ function AddSchedule() {
   const [executableText, setExecutableText] = useState('')
   const [subActionDevice, setSubActionDevice] = useState(<></>)
 
-  const revert_field_style = (field) => {
+  const revertFieldStyle = (field) => {
     field.style.backgroundColor = '#fff'
   }
-  const change_field_style = (field) => {
+  const changeFieldStyle = (field) => {
     field.style.backgroundColor = 'pink'
   }
-  const check_all_fields = () => {
+  const checkAllFields = () => {
     let device = document.getElementById('select-device')
     if (deviceId == '') {
-      change_field_style(device)
+      changeFieldStyle(device)
       return false
     }
     return true
   }
-  const create_schedule = async () => {
+  const createSchedule = async () => {
     setIcon(iconLoading)
     setMessage('Sending..')
     setTextColor('black')
     setCheckmark(true)
-    if (check_all_fields() == false) {
+    if (checkAllFields() == false) {
       setIcon(iconError)
       setMessage('Please complete all fields !')
       setTextColor('red')
@@ -71,13 +71,19 @@ function AddSchedule() {
       return
     }
     try {
-      let response = await app.post(
-        `/schedule?device_id=${deviceId}&name=${name}&dayOfWeek=${dayOfWeek.toString()}&hour=${
-          time.split(':')[0]
-        }&minute=${
-          time.split(':')[1]
-        }&executable_topic=${executableTopic}&executable_payload=${executablePayload}&executable_text=${executableText}`
-      )
+      let scene = {}
+      scene.name = name
+      scene.scene_type = 'schedule'
+      scene.exec_device_id = deviceId
+      scene.executable_topic = executableTopic
+      scene.executable_payload = executablePayload
+      scene.executable_text = executableText
+      let attributes = {}
+      attributes.dayOfWeek = dayOfWeek.toString()
+      attributes.hour = time.split(':')[0]
+      attributes.minute = time.split(':')[1]
+      scene.attributes = attributes
+      let response = await app.post(`/scene?`, scene)
       if (response.data.succes) {
         setIcon(iconSucces)
         setTextColor('black')
@@ -95,7 +101,7 @@ function AddSchedule() {
       setMessage('Error occured.Please Try again.')
     }
   }
-  async function get_all_devices(filter) {
+  async function getAllDevices(filter) {
     try {
       if (filter === undefined || filter === '') {
         filter = 'General'
@@ -106,7 +112,7 @@ function AddSchedule() {
       console.log(error.message)
     }
   }
-  const choose_sub_device = (device_id, event_or_action) => {
+  const chooseSubDevice = (device_id, event_or_action) => {
     let sub_dev = <></>
     for (let i = 0; i < devices.length; i++) {
       if (devices[i].id == device_id) {
@@ -156,7 +162,7 @@ function AddSchedule() {
     return sub_dev
   }
   useEffect(() => {
-    get_all_devices()
+    getAllDevices()
     let dateNow = new Date()
     setTime(`${dateNow.getHours()}:${dateNow.getMinutes() + 1}`)
   }, [])
@@ -190,8 +196,8 @@ function AddSchedule() {
               aria-label='Default select example'
               onChange={(e) => {
                 setDeviceId(e.target.value)
-                setSubActionDevice(choose_sub_device(e.target.value, 'action'))
-                revert_field_style(e.target)
+                setSubActionDevice(chooseSubDevice(e.target.value, 'action'))
+                revertFieldStyle(e.target)
               }}
             >
               <option value=''>None</option>
@@ -349,7 +355,7 @@ function AddSchedule() {
               className='btn btn-primary btn-set-scene'
               onClick={() => {
                 console.log(time)
-                create_schedule()
+                createSchedule()
               }}
             >
               Set

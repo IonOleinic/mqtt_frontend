@@ -9,7 +9,7 @@ import { GrAction } from 'react-icons/gr'
 
 function WeatherScene({ scene, visibility }) {
   const [execDevice, setExecDevice] = useState({})
-  const get_exec_device = async () => {
+  const getExecDevice = async () => {
     try {
       const response = await app.get(`/device/${scene.exec_device_id}`)
       setExecDevice(response.data)
@@ -18,7 +18,7 @@ function WeatherScene({ scene, visibility }) {
     }
   }
   useEffect(() => {
-    get_exec_device()
+    getExecDevice()
   }, [scene])
 
   return (

@@ -1,10 +1,23 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Schedule.css'
+import { app } from '../../../api/api'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { TbRepeatOnce } from 'react-icons/tb'
 import { BsClock } from 'react-icons/bs'
+import { GrAction } from 'react-icons/gr'
 function Schedule({ scene, visibility }) {
-  useEffect(() => {}, [])
+  const [execDevice, setExecDevice] = useState({})
+  const getExecDevice = async () => {
+    try {
+      const response = await app.get(`/device/${scene.exec_device_id}`)
+      setExecDevice(response.data)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+  useEffect(() => {
+    getExecDevice()
+  }, [scene])
   const addZero = (i) => {
     if (i <= 9) {
       return '0' + i
@@ -19,38 +32,47 @@ function Schedule({ scene, visibility }) {
     >
       <div className='schedule-top'>
         <div className='schedule-device'>
-          <img src={scene.device_img} alt='schedule device img' />
-          <p>{scene.device_name}</p>
+          <p>{execDevice.name}</p>
+          <img src={execDevice.img} alt='schedule device img' />
         </div>
         <div className='arrow-right'>
           <HiOutlineArrowRight size={30} color={'black'} />
         </div>
         <div className='schedule-action'>
-          {scene.executable_text.includes('Color') ? (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <p>{'Color'}</p>
+          <div className='schedule-text'>
+            <GrAction size={20} />
+            {scene.executable_text.includes('Color') ? (
               <div
                 style={{
-                  width: '25px',
-                  height: '25px',
-                  borderRadius: '5px',
-                  marginLeft: '0.3rem',
-                  border:
-                    scene.executable_text.split(' ')[1] == 'ffffff'
-                      ? '1px solid black'
-                      : 'none',
-                  backgroundColor: `#${scene.executable_text.split(' ')[1]}`,
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
-              ></div>
-            </div>
-          ) : (
-            <p>{scene.executable_text}</p>
-          )}
+              >
+                <p
+                  style={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                  }}
+                >
+                  {'Color'}
+                </p>
+                <div
+                  style={{
+                    width: '24px',
+                    height: '25px',
+                    borderRadius: '5px',
+                    border:
+                      scene.executable_text.split(' ')[1] == 'ffffff'
+                        ? '1px solid black'
+                        : 'none',
+                    backgroundColor: `#${scene.executable_text.split(' ')[1]}`,
+                  }}
+                ></div>
+              </div>
+            ) : (
+              <p>{scene.executable_text}</p>
+            )}
+          </div>
         </div>
       </div>
       <div className='schedule-time'>

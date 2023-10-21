@@ -32,7 +32,8 @@
   justify-content: center;
 }
 .weather-scene-item img {
-  width: 60px;
+  max-width: 60px;
+  max-height: 70px;
 }
 .weather-scene-item p {
   font-size: 1rem;

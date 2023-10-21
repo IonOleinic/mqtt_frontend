@@ -3,7 +3,8 @@
   background-color: transparent;
   width: 100%;
   flex-direction: column;
-  padding: 0.7rem;
+  padding: 0.7rem 0;
+  padding-top: 0.3rem;
   position: relative;
   height: 160px;
   margin-top: 0.5rem;
@@ -15,47 +16,64 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
+  height: 120px;
 }
 .schedule-device {
+  width: 160px;
+  height: 100px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
 }
 .schedule-device img {
-  width: 60px;
+  max-width: 60px;
+  max-height: 70px;
 }
 .schedule-device p {
   font-size: 1rem;
   font-weight: 600;
   word-break: break-all;
-  width: 80px;
+  width: 100%;
+  height: 48px;
   margin: 0;
-  margin-left: 0.2rem;
+  text-align: center;
 }
 .arrow-right {
   width: 3rem;
-  height: 100%;
+  height: 65px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .schedule-action {
-  width: 8rem;
-  height: 100%;
+  width: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.schedule-action p {
-  padding: 0;
+.schedule-text {
+  border: 1px solid rgb(173, 173, 173);
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  height: 30px;
+}
+.schedule-text p {
   margin: 0;
-  font-size: 1.1rem;
+  margin-left: 0.3rem;
+  margin-right: 0.1rem;
+  margin-bottom: -0.2rem;
+  height: 30px;
+  color: #6a6a6a;
   font-weight: 600;
 }
 .schedule-time {
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.2rem;
+  margin-top: -1.5rem;
   width: 100%;
   display: flex;
   align-items: center;

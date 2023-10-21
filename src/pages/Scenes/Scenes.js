@@ -10,7 +10,7 @@ import AddScene from './AddScene/AddScene'
 const Scenes = () => {
   const [scenes, setScenes] = useState([])
   const [addSceneVisibility, setAddSceneVisibility] = useState(false)
-  const get_scenes = async () => {
+  const getScenes = async () => {
     try {
       const response = await app.get('scenes')
       setScenes(response.data)
@@ -20,7 +20,7 @@ const Scenes = () => {
     }
   }
   useEffect(() => {
-    get_scenes()
+    getScenes()
   }, [])
 
   const handleDeleteScene = async (selected_scene_id) => {
@@ -38,7 +38,7 @@ const Scenes = () => {
           <div
             className='toolbar-scenes-item refresh-icon'
             onClick={() => {
-              get_scenes()
+              getScenes()
             }}
           >
             <BiRefresh size={30} />

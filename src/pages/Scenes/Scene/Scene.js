@@ -27,7 +27,7 @@ function Scene({ init_scene, handleDeleteScene }) {
   const [isActive, setIsActive] = useState(false)
   const [scene, setScene] = useState(init_scene)
   const [sceneIcon, setSceneIcon] = useState('')
-  const get_date_from_str = (date) => {
+  const getDateFromStr = (date) => {
     const addZero = (i) => {
       if (i <= 9) {
         return '0' + i
@@ -44,7 +44,7 @@ function Scene({ init_scene, handleDeleteScene }) {
       addZero(temp_date.getDate())
     )
   }
-  async function update_scene() {
+  async function updateScene() {
     try {
       let result = await app.put(`/scene/${scene.id}`, scene)
       if (result.data) {
@@ -129,7 +129,7 @@ function Scene({ init_scene, handleDeleteScene }) {
             checked={isActive}
             onChange={() => {
               scene.active = !isActive
-              update_scene()
+              updateScene()
             }}
           />
         </div>
@@ -137,7 +137,7 @@ function Scene({ init_scene, handleDeleteScene }) {
           className='fav-icon'
           onClick={() => {
             scene.favorite = !favBool
-            update_scene()
+            updateScene()
           }}
         >
           {favIcon}
@@ -198,7 +198,7 @@ function Scene({ init_scene, handleDeleteScene }) {
           <AiOutlineEdit size={25} />
         </span>
         <span className='scene-date'>
-          {get_date_from_str(scene.date.toString())}
+          {getDateFromStr(scene.date.toString())}
         </span>
       </div>
       {final_scene}
