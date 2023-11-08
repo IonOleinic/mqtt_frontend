@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import './SmartStrip.css'
 import Switch from './Switch/Switch'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import voltageIcon from './SensorDataIcons/voltage-icon.png'
 import currentIcon from './SensorDataIcons/current-icon.png'
 import powerIcon from './SensorDataIcons/power-icon.png'
 import totalPowerIcon from './SensorDataIcons/total-power-icon.png'
 
-function SmartStrip({ device, visibility }) {
+function SmartStrip({ device }) {
+  const axios = useAxiosPrivate()
   let initStatuses = []
   let initCheckedlist = []
   let sensorPart = <></>
@@ -19,11 +20,11 @@ function SmartStrip({ device, visibility }) {
   const [statusList, setStatusList] = useState(initStatuses)
   const [isCheckedList, setIsCheckedList] = useState(initCheckedlist)
   const [sensorData, setSensorData] = useState({
-    Total: '-:-',
-    Today: '-:-',
-    Power: '-:-',
-    Voltage: '-:-',
-    Current: '-:-',
+    Total: '--',
+    Today: '--',
+    Power: '--',
+    Voltage: '--',
+    Current: '--',
   })
 
   useEffect(() => {
@@ -35,7 +36,7 @@ function SmartStrip({ device, visibility }) {
   const sensorUpdateReq = async () => {
     try {
       if (device.switch_type === 'plug') {
-        let response = await app.get(
+        let response = await axios.get(
           `/smartStrip?device_id=${device.id}&req_topic=STATUS&req_payload=8`
         )
       }
@@ -67,7 +68,7 @@ function SmartStrip({ device, visibility }) {
     }
   }
   const sendChangePower = async (socket_nr, pwr_status) => {
-    const response = await app.post(
+    const response = await axios.post(
       `/smartStrip?status=${pwr_status}&device_id=${device.id}&socket_nr=${
         socket_nr + 1
       }`
@@ -125,10 +126,7 @@ function SmartStrip({ device, visibility }) {
   }
 
   return (
-    <div
-      className='smart-strip'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='smart-strip'>
       <div className='smart-switches'>
         {switches}
         <div

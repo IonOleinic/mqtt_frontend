@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { app } from '../../api/api'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import 'react-times/css/material/default.css'
 import './AddSchedule.css'
 import { Checkmark } from 'react-checkmark'
@@ -17,6 +17,7 @@ let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
 function AddSchedule() {
+  const axios = useAxiosPrivate()
   const navigate = useNavigate()
   //validation info
   const [checkmark, setCheckmark] = useState(false)
@@ -83,7 +84,7 @@ function AddSchedule() {
       attributes.hour = time.split(':')[0]
       attributes.minute = time.split(':')[1]
       scene.attributes = attributes
-      let response = await app.post(`/scene?`, scene)
+      let response = await axios.post(`/scene?`, scene)
       if (response.data.succes) {
         setIcon(iconSucces)
         setTextColor('black')
@@ -106,7 +107,7 @@ function AddSchedule() {
       if (filter === undefined || filter === '') {
         filter = 'General'
       }
-      let result = await app.get(`/devices?filter=${filter}`)
+      let result = await axios.get(`/devices?filter=${filter}`)
       setDevices(result.data)
     } catch (error) {
       console.log(error.message)

@@ -4,7 +4,7 @@ import { FaTemperatureLow } from 'react-icons/fa'
 import { TbTemperatureCelsius } from 'react-icons/tb'
 import { WiHumidity } from 'react-icons/wi'
 
-function SmartTempSensor({ device, visibility }) {
+function SmartTempSensor({ device }) {
   const [temperature, setTemperature] = useState(0)
   const [humidity, setHumidity] = useState(0)
 
@@ -14,10 +14,7 @@ function SmartTempSensor({ device, visibility }) {
   }, [device])
 
   return (
-    <div
-      className='smart-temp-sensor'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='smart-temp-sensor'>
       <div className='smart-temp-sensor-item temp-item'>
         <FaTemperatureLow size={36} color='red' />
         <p>

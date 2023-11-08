@@ -19,6 +19,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
+  transition: all 0.4s ease-in-out;
 }
 .bulb-item-icon:hover {
   cursor: pointer;

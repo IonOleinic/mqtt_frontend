@@ -9,9 +9,9 @@ import {
   SideBtnWrap,
   SideBarMenu,
 } from './SideBarComponents'
-function SideBar({ isOpen, toggle }) {
+function SideBar({ isopen, toggle }) {
   return (
-    <SideBarContainer isOpen={isOpen} onClick={toggle}>
+    <SideBarContainer isopen={isopen} onClick={toggle}>
       <SideBtnWrap>
         <SideBarRoute to='signin'>Sign In</SideBarRoute>
       </SideBtnWrap>

@@ -5,7 +5,7 @@ import { AiFillStar } from 'react-icons/ai'
 import { AiOutlineEdit } from 'react-icons/ai'
 import Switch from 'react-switch'
 import Schedule from './Schedule/Schedule'
-import { app } from '../../api/api'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import './Scene.css'
 import DeviceScene from './DeviceScene/DeviceScene'
 import WeatherScene from './WeatherScene/WeatherScene'
@@ -17,6 +17,7 @@ import schedule_icon from '../SceneTypeImages/schedule_icon.png'
 const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
 const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
 function Scene({ init_scene, handleDeleteScene }) {
+  const axios = useAxiosPrivate()
   const [openSubMenu, setOpenSubMenu] = useState(false)
   const toggleSubMenu = () => {
     setOpenSubMenu(!openSubMenu)
@@ -37,16 +38,16 @@ function Scene({ init_scene, handleDeleteScene }) {
     }
     let temp_date = new Date(date)
     return (
-      temp_date.getFullYear() +
+      addZero(temp_date.getDate()) +
       '-' +
-      addZero(temp_date.getMonth()) +
+      addZero(temp_date.getMonth() + 1) +
       '-' +
-      addZero(temp_date.getDate())
+      temp_date.getFullYear()
     )
   }
   async function updateScene() {
     try {
-      let result = await app.put(`/scene/${scene.id}`, scene)
+      let result = await axios.put(`/scene/${scene.id}`, scene)
       if (result.data) {
         setScene(result.data)
       }
@@ -86,11 +87,11 @@ function Scene({ init_scene, handleDeleteScene }) {
   }, [scene])
   let final_scene = <></>
   if (scene.scene_type === 'schedule') {
-    final_scene = <Schedule scene={scene} visibility={visibility} />
+    final_scene = <Schedule scene={scene} />
   } else if (scene.scene_type === 'deviceScene') {
-    final_scene = <DeviceScene scene={scene} visibility={visibility} />
+    final_scene = <DeviceScene scene={scene} />
   } else if (scene.scene_type === 'weather') {
-    final_scene = <WeatherScene scene={scene} visibility={visibility} />
+    final_scene = <WeatherScene scene={scene} />
   }
   return (
     <div className='scene'>
@@ -201,7 +202,13 @@ function Scene({ init_scene, handleDeleteScene }) {
           {getDateFromStr(scene.date.toString())}
         </span>
       </div>
-      {final_scene}
+      <div
+        className={
+          visibility === true ? 'final-scene' : 'final-scene final-scene-hidden'
+        }
+      >
+        {final_scene}
+      </div>
     </div>
   )
 }

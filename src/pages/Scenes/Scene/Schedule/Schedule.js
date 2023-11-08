@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import './Schedule.css'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { TbRepeatOnce } from 'react-icons/tb'
 import { BsClock } from 'react-icons/bs'
 import { GrAction } from 'react-icons/gr'
-function Schedule({ scene, visibility }) {
+function Schedule({ scene }) {
+  const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
   const getExecDevice = async () => {
     try {
-      const response = await app.get(`/device/${scene.exec_device_id}`)
+      const response = await axios.get(`/device/${scene.exec_device_id}`)
       setExecDevice(response.data)
     } catch (error) {
       console.log(error.message)
@@ -26,10 +27,7 @@ function Schedule({ scene, visibility }) {
     }
   }
   return (
-    <div
-      className='schedule'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='schedule'>
       <div className='schedule-top'>
         <div className='schedule-device'>
           <p>{execDevice.name}</p>

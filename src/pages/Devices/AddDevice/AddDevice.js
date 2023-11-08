@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { app } from '../../api/api'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './AddDevice.css'
 import SubSwitch from './SubSwitch/SubSwitch'
@@ -15,6 +15,7 @@ let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
 function AddDevice() {
+  const axios = useAxiosPrivate()
   //validation info
   const [checkmark, setCheckmark] = useState(false)
   const [icon, setIcon] = useState(iconLoading)
@@ -35,7 +36,7 @@ function AddDevice() {
   const [subDevice, setSubDevice] = useState(<></>)
   useEffect(() => {
     const getAllTypes = async () => {
-      let result = await app.get('/deviceTypes')
+      let result = await axios.get('/deviceTypes')
       console.log(result.data)
       setDeviceTypes(result.data)
     }
@@ -67,7 +68,7 @@ function AddDevice() {
     device.img = img
     device.attributes = attributes
     try {
-      let result = await app.post('/device', device)
+      let result = await axios.post('/device', device)
       if (result.data.succes) {
         navigate('/devices')
       } else {

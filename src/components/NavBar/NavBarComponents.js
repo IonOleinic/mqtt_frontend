@@ -65,7 +65,7 @@ export const Icon = styled.div`
 export const Bars = styled(FaBars)`
   @media (max-width: 768px) {
     transition: all 0.5s;
-    transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'rotate(0deg)')};
+    transform: ${({ isopen }) => (isopen ? 'rotate(90deg)' : 'rotate(0deg)')};
   }
 `
 

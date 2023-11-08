@@ -12,25 +12,22 @@ import { BiVolumeMute } from 'react-icons/bi'
 import { BiInfoCircle } from 'react-icons/bi'
 import { MdInput } from 'react-icons/md'
 import { RiArrowGoBackFill } from 'react-icons/ri'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 
-function SmartIR({ device, visibility }) {
+function SmartIR({ device }) {
+  const axios = useAxiosPrivate()
   const [checkedNumbers, setCheckedNumbers] = useState(false)
   const handlePressBtn = async (btn) => {
     try {
-      let result = await app.post(
+      let response = await axios.post(
         `/smartIR?device_id=${device.id}&btn_code=${btn}`
       )
     } catch (error) {
       console.log(error)
     }
   }
-  useEffect(() => {}, [])
   return (
-    <div
-      className='smart-ir'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='smart-ir'>
       <div className='ir-block power'>
         <div
           className='ir-buttons btn-pow'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './SmartMotionSensor.css'
 import no_motion_img from './MotionSensorImages/no_motion_img.jpg'
 import motion_img from './MotionSensorImages/motion_img.jpg'
-function SmartMotionSensor({ device, visibility }) {
+function SmartMotionSensor({ device }) {
   const [status, setStatus] = useState('No Motion')
   const [statusImg, setStatusImg] = useState(no_motion_img)
   useEffect(() => {
@@ -15,10 +15,7 @@ function SmartMotionSensor({ device, visibility }) {
   }, [device])
 
   return (
-    <div
-      className='smart-motion-sensor'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='smart-motion-sensor'>
       <div className='motion-sensor-image'>
         <img src={statusImg} alt='Motion Sensor Img' />
       </div>

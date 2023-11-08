@@ -1,9 +1,10 @@
 import './EditDevice.css'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { app } from '../../api/api'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import 'bootstrap/dist/css/bootstrap.min.css'
 function EditDevice() {
+  const axios = useAxiosPrivate()
   const { id } = useParams()
   const navigate = useNavigate()
   const [device, setDevice] = useState({})
@@ -16,7 +17,7 @@ function EditDevice() {
   const [img, setImg] = useState('')
   const get_device = async () => {
     try {
-      let result = await app.get(`/device/${id}`)
+      let result = await axios.get(`/device/${id}`)
       setDevice(result.data)
       setName(result.data.name)
       setMqttName(result.data.mqtt_name)
@@ -39,7 +40,7 @@ function EditDevice() {
     new_device.mqtt_group = groups.split(',')
     new_device.img = img
     try {
-      let result = await app.put(`/device/${new_device.id}`, new_device)
+      let result = await axios.put(`/device/${new_device.id}`, new_device)
       navigate('/devices')
     } catch (error) {
       console.log(error)

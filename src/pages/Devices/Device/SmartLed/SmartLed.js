@@ -6,11 +6,13 @@ import { LedStripIcon } from './Icons/LedStripIcon'
 import { BsPlayCircle } from 'react-icons/bs'
 import { BsStopCircle } from 'react-icons/bs'
 import './SmartLed.css'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { RangeStepInput } from 'react-range-step-input'
 import PaletteItem from './PaletteItem/PaletteItem'
-
-function SmartLed({ device, visibility }) {
+let bulb_icon = <BsLightbulbFill size={50} />
+let led_strip_icon = <LedStripIcon size={50} />
+function SmartLed({ device }) {
+  const axios = useAxiosPrivate()
   const [color, setColor] = useState('#000000')
   const [cold, setCold] = useState(0)
   const [warm, setWarm] = useState(0)
@@ -21,15 +23,6 @@ function SmartLed({ device, visibility }) {
   const [cursorStyle, setCursorStyle] = useState({ cursor: 'default' })
 
   const setLedIconFunc = () => {
-    let bulb_icon = (
-      <BsLightbulbFill
-        size={50}
-        color={device.status == 'ON' ? color : '#ccc'}
-      />
-    )
-    let led_strip_icon = (
-      <LedStripIcon size={50} color={device.status == 'ON' ? color : '#ccc'} />
-    )
     if (device.sub_type == 'ledStrip') {
       setLedIcon(led_strip_icon)
     } else {
@@ -84,7 +77,7 @@ function SmartLed({ device, visibility }) {
   const sendChangeColor = async (rgb_color, cold, warm) => {
     let newColor = rgb_color.replace('#', '') + toHex(cold) + toHex(warm)
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/SmartLed/color?device_id=${device.id}&color=${newColor}`
       )
     } catch (error) {
@@ -93,7 +86,7 @@ function SmartLed({ device, visibility }) {
   }
   const sendChangeDimmer = async (newValue) => {
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/SmartLed/dimmer?device_id=${device.id}&dimmer=${newValue}`
       )
     } catch (error) {
@@ -103,7 +96,7 @@ function SmartLed({ device, visibility }) {
   const sendChangePower = async () => {
     const newStatus = 'TOGGLE'
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/SmartLed/power?device_id=${device.id}&status=${newStatus}`
       )
     } catch (error) {
@@ -116,7 +109,7 @@ function SmartLed({ device, visibility }) {
   }
   const sendChangePalette = async (palette) => {
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/SmartLed/palette?device_id=${device.id}&palette=${palette}`
       )
     } catch (error) {
@@ -125,7 +118,7 @@ function SmartLed({ device, visibility }) {
   }
   const sendChangeSpeed = async () => {
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/SmartLed/speed?device_id=${device.id}&speed=${speed}`
       )
     } catch (error) {
@@ -134,7 +127,7 @@ function SmartLed({ device, visibility }) {
   }
   const sendChangeScheme = async (scheme) => {
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/SmartLed/scheme?device_id=${device.id}&scheme=${scheme}`
       )
     } catch (error) {
@@ -148,10 +141,7 @@ function SmartLed({ device, visibility }) {
   }
 
   return (
-    <div
-      className='smart-led'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='smart-led'>
       <div
         className='slider-item'
         style={{ display: device.led_type.includes('rgb') ? 'flex' : 'none' }}
@@ -195,6 +185,7 @@ function SmartLed({ device, visibility }) {
           style={{
             border:
               device.status == 'ON' ? `4px solid ${color}` : `4px solid #ccc`,
+            color: device.status == 'ON' ? color : '#ccc',
           }}
           onClick={sendChangePower}
         >

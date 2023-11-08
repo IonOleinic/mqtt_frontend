@@ -3,20 +3,21 @@ import Scene from './Scene/Scene'
 import { BiRefresh } from 'react-icons/bi'
 import { AiOutlinePlus } from 'react-icons/ai'
 import DropDownMenu from '../DropDownMenu/DropDownMenu'
-import { app } from '../api/api'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import './Scenes.css'
 import AddScene from './AddScene/AddScene'
 
 const Scenes = () => {
   const [scenes, setScenes] = useState([])
   const [addSceneVisibility, setAddSceneVisibility] = useState(false)
+  const axios = useAxiosPrivate()
   const getScenes = async () => {
     try {
-      const response = await app.get('scenes')
+      const response = await axios.get('/scenes')
       setScenes(response.data)
       console.log(response.data)
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
     }
   }
   useEffect(() => {
@@ -25,7 +26,7 @@ const Scenes = () => {
 
   const handleDeleteScene = async (selected_scene_id) => {
     try {
-      const response = await app.delete(`/scene/${selected_scene_id}`)
+      const response = await axios.delete(`/scene/${selected_scene_id}`)
       setScenes(response.data)
     } catch (error) {
       console.log(error.message)

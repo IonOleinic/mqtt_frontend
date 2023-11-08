@@ -8,7 +8,7 @@ import { useState, useEffect, useReducer } from 'react'
 import './AllDevices.css'
 import Device from '../Device/Device'
 import DropDownMenu from '../../DropDownMenu/DropDownMenu'
-import { app } from '../../api/api'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import './AllDevices.css'
 
 const initDevice = {
@@ -27,19 +27,20 @@ const Devices = () => {
   const [infoOpen, setInfoOpen] = useState(false)
   const [filterList, setFilterList] = useState([])
   const [selectedGroup, setSelectedGroup] = useState('')
-  const [selectedOrder, setSelectedOrder] = useState('')
+  const [selectedOrder, setSelectedOrder] = useState('Date')
   const [selectedDevice, setSelectedDevice] = useState(initDevice)
-
-  async function getAllDevices(filter) {
+  const axios = useAxiosPrivate()
+  const getAllDevices = async (filter) => {
     try {
       if (filter === undefined || filter === '') {
         filter = selectedGroup
       }
-      let result = await app.get(`/devices?filter=${filter}`)
+      let result = await axios.get(`/devices?filter=${filter}`)
       setDevices(result.data)
       console.log(result.data)
+      // setSelectedOrder('Date')
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
   }
   const sortDevicesBy = (sortval) => {
@@ -51,7 +52,7 @@ const Devices = () => {
   }
   async function getAllGroups() {
     try {
-      let result = await app.get('/mqttGroups')
+      let result = await axios.get('/mqttGroups')
       setFilterList(result.data)
     } catch (error) {
       console.log(error.message)
@@ -59,7 +60,7 @@ const Devices = () => {
   }
   const handleDeleteDevice = async (selected_device_id) => {
     try {
-      const response = await app.delete(`/device/${selected_device_id}`)
+      const response = await axios.delete(`/device/${selected_device_id}`)
       setDevices(response.data)
     } catch (error) {
       console.log(error.message)
@@ -110,7 +111,7 @@ const Devices = () => {
           <p>Order by</p>
           <DropDownMenu
             className='drop-down-menu'
-            message={'Date'}
+            message={selectedOrder}
             items={['Date', 'Name']}
             action={sortDevicesBy}
             updateFunc={updateSelectedOrder}

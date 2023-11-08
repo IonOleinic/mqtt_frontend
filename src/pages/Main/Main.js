@@ -8,8 +8,8 @@ function Main() {
   }
   return (
     <>
-      <SideBar isOpen={isOpen} toggle={toggle} />
-      <Navbar toggle={toggle} isOpen={isOpen} />
+      <SideBar isopen={isOpen} toggle={toggle} />
+      <Navbar toggle={toggle} isopen={isOpen} />
     </>
   )
 }

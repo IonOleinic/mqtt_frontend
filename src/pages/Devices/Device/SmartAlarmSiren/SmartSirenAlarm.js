@@ -7,11 +7,12 @@ import { WiHumidity } from 'react-icons/wi'
 import { SlVolume2 } from 'react-icons/sl'
 import { SlVolumeOff } from 'react-icons/sl'
 import { GrVolumeControl } from 'react-icons/gr'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 let volume_on = <SlVolume2 size={40} color='red' />
 let volume_off = <SlVolumeOff size={40} color='black' />
 
-function SmartSirenAlarm({ device, visibility }) {
+function SmartSirenAlarm({ device }) {
+  const axios = useAxiosPrivate()
   const [status, setStatus] = useState('OFF')
   const [temperature, setTemperature] = useState(0)
   const [humidity, setHumidity] = useState(0)
@@ -44,7 +45,7 @@ function SmartSirenAlarm({ device, visibility }) {
 
   const sendChangePower = async (pwr_status) => {
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/smartSirenAlarm/power?status=${pwr_status}&device_id=${device.id}`
       )
     } catch (error) {
@@ -54,7 +55,7 @@ function SmartSirenAlarm({ device, visibility }) {
 
   const update_options = async (new_sound, new_volume, new_duration) => {
     try {
-      const response = await app.post(
+      const response = await axios.post(
         `/smartSirenAlarm/options?new_sound=${new_sound}&new_volume=${new_volume}&new_duration=${new_duration}&device_id=${device.id}`
       )
     } catch (error) {
@@ -66,10 +67,7 @@ function SmartSirenAlarm({ device, visibility }) {
     array_types.push(i + 1)
   }
   return (
-    <div
-      className='smart-alarm-siren'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='smart-alarm-siren'>
       <div className='siren-alarm-control'>
         <div className='siren-alarm-sensors'>
           <div className='siren-alarm-sensor-item siren-alarm-temp-item'>

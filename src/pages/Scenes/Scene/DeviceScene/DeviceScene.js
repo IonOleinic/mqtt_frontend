@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { GrAction } from 'react-icons/gr'
 import { MdPendingActions } from 'react-icons/md'
 import './DeviceScene.css'
 
-function DeviceScene({ scene, visibility }) {
+function DeviceScene({ scene }) {
+  const axios = useAxiosPrivate()
   const [condDevice, setCondDevice] = useState({})
   const [execDevice, setExecDevice] = useState({})
 
   const getCondDevice = async () => {
     try {
-      const response = await app.get(`/device/${scene.cond_device_id}`)
+      const response = await axios.get(`/device/${scene.cond_device_id}`)
       setCondDevice(response.data)
     } catch (error) {
       console.log(error.message)
@@ -19,7 +20,7 @@ function DeviceScene({ scene, visibility }) {
   }
   const getExecDevice = async () => {
     try {
-      const response = await app.get(`/device/${scene.exec_device_id}`)
+      const response = await axios.get(`/device/${scene.exec_device_id}`)
       setExecDevice(response.data)
     } catch (error) {
       console.log(error.message)
@@ -31,10 +32,7 @@ function DeviceScene({ scene, visibility }) {
   }, [scene])
 
   return (
-    <div
-      className='device-scene'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='device-scene'>
       <div className='device-scene-top'>
         <div className='device-scene-item'>
           <div className='device-scene-name-img'>

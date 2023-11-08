@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import './WeatherScene.css'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { FaTemperatureLow } from 'react-icons/fa'
@@ -7,11 +7,12 @@ import { ImLocation } from 'react-icons/im'
 import { TbTemperatureCelsius } from 'react-icons/tb'
 import { GrAction } from 'react-icons/gr'
 
-function WeatherScene({ scene, visibility }) {
+function WeatherScene({ scene }) {
+  const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
   const getExecDevice = async () => {
     try {
-      const response = await app.get(`/device/${scene.exec_device_id}`)
+      const response = await axios.get(`/device/${scene.exec_device_id}`)
       setExecDevice(response.data)
     } catch (error) {
       console.log(error.message)
@@ -22,10 +23,7 @@ function WeatherScene({ scene, visibility }) {
   }, [scene])
 
   return (
-    <div
-      className='weather-scene'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='weather-scene'>
       <div className='weather-scene-top'>
         <div className='weather-scene-item'>
           <div className='weather-scene-location'>

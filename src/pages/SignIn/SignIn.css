@@ -1,4 +1,3 @@
-
 .Auth-form-container {
   display: flex;
   justify-content: center;
@@ -34,6 +33,97 @@ label {
   font-weight: 600;
   color: rgb(34, 34, 34);
 }
+.pass-sign-in-div {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.show-pass-btn {
+  position: absolute;
+  top: 25%;
+  right: 0;
+  margin-right: 0.8rem;
+  visibility: visible;
+  opacity: 100%;
+  transition: all 0.4s ease-in-out;
+}
+.show-pass-btn-hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+.show-pass-btn:hover {
+  cursor: pointer;
+}
+.invalid-input {
+  color: #495057;
+  background-color: #fff;
+  border-color: #e60b0b;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(239, 8, 8, 0.25);
+}
+.invalid-input:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #e60b0b;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(239, 8, 8, 0.25);
+}
+.valid-msg-sign-in {
+  display: none;
+}
+.invalid-msg-sign-in * {
+  margin: 0;
+}
+.invalid-msg-sign-in {
+  display: flex;
+  align-items: center;
+  color: #e60b0b;
+  font-size: 0.85rem;
+  padding-left: 0.3rem;
+  padding-top: 0.4rem;
+}
+.fatimes-icon-sign-in {
+  margin-right: 0.2rem;
+}
+.align-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-btn {
+  width: 7rem;
+}
+.no-server-error-sign-in {
+  display: none;
+}
+.server-error-sign-in * {
+  margin: 0;
+}
+.server-error-sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e60b0b;
+  font-size: 1rem;
+  padding-left: 0.3rem;
+  padding-top: 0.4rem;
+}
+.server-error-sign-in p {
+  margin-left: 0.4rem;
+}
+.checkbox-remember-me {
+  margin-top: 0.5rem;
+}
+.form-check-input[type='checkbox'] {
+  width: 14px;
+  height: 14px;
+  margin-top: 5px;
+  margin-left: -1.2rem;
+}
+.form-check-label {
+  font-weight: 300;
+}
+
 @media (max-width: 500px) {
   .Auth-form-container {
     height: 80vh;

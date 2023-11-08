@@ -108,6 +108,14 @@
   border-radius: 4px;
   font-size: 0.4rem;
 }
+.final-device {
+  max-height: 450px;
+  transition: max-height 0.6s ease-in-out;
+  overflow: hidden;
+}
+.final-device-hidden {
+  max-height: 0px;
+}
 .device-available-icon {
   position: absolute;
   bottom: 0rem;

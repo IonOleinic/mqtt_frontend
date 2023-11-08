@@ -16,8 +16,8 @@ export const SideBarContainer = styled.aside`
   left: 0;
   transition: all 0.3s ease-in-out;
   margin-top: 80px;
-  opacity: ${({ isOpen }) => (isOpen ? '100%' : '0')};
-  left: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
+  opacity: ${({ isopen }) => (isopen ? '100%' : '0')};
+  left: ${({ isopen }) => (isopen ? '0' : '-100%')};
 `
 export const CloseIcon = styled(FaTimes)`
   color: #fff;

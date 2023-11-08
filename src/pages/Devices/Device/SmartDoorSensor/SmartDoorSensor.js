@@ -5,10 +5,11 @@ import { AiFillUnlock } from 'react-icons/ai'
 import { HiOutlineSwitchHorizontal } from 'react-icons/hi'
 import DoorMainModule from './DoorSensorImages/door_sensor_main_module.png'
 import DoorSecondModule from './DoorSensorImages/door_sensor_second_module.png'
-import { app } from '../../../api/api'
+import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 let lockedImg = <AiFillLock size={25} color='#46B60A' />
 let unlockedImg = <AiFillUnlock size={25} color='red' />
-function SmartDoorSensor({ device, visibility }) {
+function SmartDoorSensor({ device }) {
+  const axios = useAxiosPrivate()
   const [status, setStatus] = useState('Closed')
   const [lockImg, setLockImg] = useState(lockedImg)
   useEffect(() => {
@@ -20,14 +21,17 @@ function SmartDoorSensor({ device, visibility }) {
     }
   }, [device])
   const sendToggleDirection = async () => {
-    const response = await app.post(`/smartDoorSensor?device_id=${device.id}`)
+    try {
+      const response = await axios.post(
+        `/smartDoorSensor?device_id=${device.id}`
+      )
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
-    <div
-      className='smart-door-sensor'
-      style={{ display: visibility === true ? 'flex' : 'none' }}
-    >
+    <div className='smart-door-sensor'>
       <div className='display-status'>
         {lockImg}
         <p style={{ color: status == 'Closed' ? '#46B60A' : 'red' }}>

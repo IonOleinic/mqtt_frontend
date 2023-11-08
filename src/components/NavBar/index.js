@@ -10,9 +10,9 @@ import {
   Icon,
 } from './NavBarComponents'
 
-const Navbar = ({ toggle, isOpen }) => {
+const Navbar = ({ toggle, isopen }) => {
   function handleResize() {
-    if (window.innerWidth > 768 && isOpen === true) {
+    if (window.innerWidth > 768 && isopen === true) {
       toggle()
     }
   }
@@ -27,7 +27,7 @@ const Navbar = ({ toggle, isOpen }) => {
         to='/'
         className='logo'
         onClick={() => {
-          if (isOpen) {
+          if (isopen) {
             toggle()
           }
         }}
@@ -40,7 +40,7 @@ const Navbar = ({ toggle, isOpen }) => {
         />
       </NavLink>
       <Icon>
-        <Bars isOpen={isOpen} onClick={toggle} />
+        <Bars isopen={isopen} onClick={toggle} />
       </Icon>
       <NavMenu>
         <NavLink to='/home'>Home</NavLink>

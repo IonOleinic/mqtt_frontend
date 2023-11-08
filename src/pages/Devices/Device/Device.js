@@ -18,7 +18,7 @@ import { HiOutlineStatusOnline } from 'react-icons/hi'
 import { HiOutlineStatusOffline } from 'react-icons/hi'
 import { TbUsb } from 'react-icons/tb'
 import { useEffect } from 'react'
-import { app } from '../../api/api'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { socket } from '../../api/io'
 import SmartSirenAlarm from './SmartAlarmSiren/SmartSirenAlarm'
 import SmartLed from './SmartLed/SmartLed'
@@ -50,6 +50,7 @@ function Device({
   handleSelectDevice,
   isOpenInfoBar,
 }) {
+  const axios = useAxiosPrivate()
   const navigate = useNavigate()
   const [openSubMenu, setOpenSubMenu] = useState(false)
   const [visibility, setVisibility] = useState(false)
@@ -65,7 +66,7 @@ function Device({
   const getInitalState = async () => {
     console.log('get init state')
     try {
-      const response = await app.get(`/device/getInitState/${device.id}`)
+      const response = await axios.get(`/device/getInitState/${device.id}`)
     } catch (error) {
       console.log(error)
     }
@@ -83,8 +84,8 @@ function Device({
   }
   const updateDevice = async () => {
     try {
-      let result = await app.put(`/device/${device.id}`, device)
-      setDevice(result.data)
+      let response = await axios.put(`/device/${device.id}`, device)
+      setDevice(response.data)
     } catch (error) {
       console.log(error)
     }
@@ -94,11 +95,26 @@ function Device({
       //get_inital_state()
     }
     if (socket) {
-      socket.on('update_device', (data) => {
+      const updateDeviceHandler = (data) => {
         if (data.device.mqtt_name === device.mqtt_name) {
-          setDevice(data.device)
+          //there are an isssue that multiple device of type smartIR are updating(they have same mqtt_name)
+          if (data.device.device_type === 'smartIR') {
+            setDevice((prev) => {
+              return {
+                ...prev,
+                available: data.device.available,
+              }
+            })
+          } else {
+            setDevice(data.device)
+          }
         }
-      })
+      }
+      socket.on('update_device', updateDeviceHandler)
+      // Cleanup function to remove the listener when the component unmounts
+      return () => {
+        socket.off('update_device', updateDeviceHandler)
+      }
     }
   }, [])
 
@@ -121,19 +137,19 @@ function Device({
   }, [device])
   let final_device = <></>
   if (device.device_type === 'smartStrip') {
-    final_device = <SmartStrip visibility={visibility} device={device} />
+    final_device = <SmartStrip device={device} />
   } else if (init_device.device_type === 'smartIR') {
-    final_device = <SmartIR visibility={visibility} device={device} />
+    final_device = <SmartIR device={device} />
   } else if (init_device.device_type === 'smartTempSensor') {
-    final_device = <SmartTempSensor visibility={visibility} device={device} />
+    final_device = <SmartTempSensor device={device} />
   } else if (init_device.device_type === 'smartDoorSensor') {
-    final_device = <SmartDoorSensor visibility={visibility} device={device} />
+    final_device = <SmartDoorSensor device={device} />
   } else if (init_device.device_type === 'smartSirenAlarm') {
-    final_device = <SmartSirenAlarm visibility={visibility} device={device} />
+    final_device = <SmartSirenAlarm device={device} />
   } else if (init_device.device_type === 'smartLed') {
-    final_device = <SmartLed visibility={visibility} device={device} />
+    final_device = <SmartLed device={device} />
   } else if (init_device.device_type === 'smartMotionSensor') {
-    final_device = <SmartMotionSensor visibility={visibility} device={device} />
+    final_device = <SmartMotionSensor device={device} />
   }
   return (
     <div className='device-item' key={device.mqtt_name}>
@@ -255,7 +271,15 @@ function Device({
         </div>
         <div className='device-available-icon'>{availableIcon}</div>
       </div>
-      {final_device}
+      <div
+        className={
+          visibility === true
+            ? 'final-device'
+            : 'final-device final-device-hidden'
+        }
+      >
+        {final_device}
+      </div>
     </div>
   )
 }
