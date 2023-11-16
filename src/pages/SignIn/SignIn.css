@@ -68,11 +68,13 @@ label {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(239, 8, 8, 0.25);
 }
-.valid-msg-sign-in {
-  display: none;
-}
 .invalid-msg-sign-in * {
   margin: 0;
+}
+.valid-msg-sign-in {
+  visibility: hidden;
+  max-height: 0;
+  opacity: 0;
 }
 .invalid-msg-sign-in {
   display: flex;
@@ -81,7 +83,12 @@ label {
   font-size: 0.85rem;
   padding-left: 0.3rem;
   padding-top: 0.4rem;
+  visibility: visible;
+  max-height: 50px;
+  opacity: 100;
+  transition: opacity 0.5s ease-in-out;
 }
+
 .fatimes-icon-sign-in {
   margin-right: 0.2rem;
 }

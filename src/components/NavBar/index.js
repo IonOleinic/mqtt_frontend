@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import CurrentWeather from './CurrentWeather/CurrentWeather'
+import CurrentWeather from '../CurrentWeather/CurrentWeather'
 import {
   Nav,
   NavLink,
@@ -9,18 +8,11 @@ import {
   NavBtnLink,
   Icon,
 } from './NavBarComponents'
-
+import UserProfile from '../UserProfile/UserProfile'
+import useAuth from '../../hooks/useAuth'
 const Navbar = ({ toggle, isopen }) => {
-  function handleResize() {
-    if (window.innerWidth > 768 && isopen === true) {
-      toggle()
-    }
-  }
-  useEffect(() => {
-    window.addEventListener('resize', handleResize)
-    handleResize()
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  const { auth } = useAuth()
+
   return (
     <Nav>
       <NavLink
@@ -33,10 +25,10 @@ const Navbar = ({ toggle, isopen }) => {
         }}
       >
         <img
-          src={require('./images/smart_home_png.png')}
+          src={require('./images/smart-home-icon.png')}
           alt='Logo'
           const
-          style={{ maxWidth: '80px', paddingTop: '0 rem' }}
+          style={{ maxWidth: '80px', paddingTop: '0.5rem' }}
         />
       </NavLink>
       <Icon>
@@ -50,7 +42,11 @@ const Navbar = ({ toggle, isopen }) => {
       </NavMenu>
       <CurrentWeather />
       <NavBtn>
-        <NavBtnLink to='/signin'>Sign In</NavBtnLink>
+        {auth?.accessToken ? (
+          <UserProfile />
+        ) : (
+          <NavBtnLink to='/signin'>Sign In</NavBtnLink>
+        )}
       </NavBtn>
     </Nav>
   )

@@ -1,12 +1,28 @@
-import axios from '../pages/api/api'
+import axios from '../api/api'
 import { useEffect } from 'react'
 import useAuth from './useAuth'
 import { useNavigate } from 'react-router-dom'
+
 function useAxios() {
-  const { auth } = useAuth()
   const { setAuth } = useAuth()
   const navigate = useNavigate()
   useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use(
+      (config) => {
+        // Retrieve user ID from your authentication logic (replace with your actual logic)
+        const userId = sessionStorage.getItem('userId')
+
+        // Add user ID as a query parameter to the request
+        if (userId) {
+          config.params = { ...config.params, user_id: userId }
+        }
+
+        return config
+      },
+      (error) => {
+        return Promise.reject(error)
+      }
+    )
     const responseIntercept = axios.interceptors.response.use(
       (response) => response,
       (error) => {
@@ -23,6 +39,7 @@ function useAxios() {
     )
 
     return () => {
+      axios.interceptors.response.eject(requestInterceptor)
       axios.interceptors.response.eject(responseIntercept)
     }
   }, [])

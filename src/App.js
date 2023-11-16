@@ -1,17 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import Main from './pages/Main/Main'
+import NavAndSideBar from './components/NavAndSideBar/NavAndSideBar'
 import Home from './pages/Home/Home'
-import Devices from './pages/Devices/AllDevices/AllDevices'
-import Scenes from './pages/Scenes/Scenes'
-import AddSchedule from './pages/Scenes/AddSchedule/AddSchedule'
-import AddDeviceScene from './pages/Scenes/AddDeviceScene/AddDeviceScene'
-import AddWeatherScene from './pages/Scenes/AddWeatherScene/AddWeatherScene'
+import Devices from './pages/DevicePages/Devices/Devices'
+import Scenes from './pages/ScenePages/Scenes/Scenes'
+import AddSchedule from './pages/ScenePages/AddScene/AddSchedule/AddSchedule'
+import AddDeviceScene from './pages/ScenePages/AddScene/AddDeviceScene/AddDeviceScene'
+import AddWeatherScene from './pages/ScenePages/AddScene/AddWeatherScene/AddWeatherScene'
 import Settings from './pages/Settings/Settings'
 import SignIn from './pages/SignIn/SignIn'
-import AddDevice from './pages/Devices/AddDevice/AddDevice'
-import EditDevice from './pages/Devices/EditDevice/EditDevice'
-import Layout from './pages/Layout/Layout'
+import AddDevice from './pages/DevicePages/AddDevice/AddDevice'
+import EditDevice from './pages/DevicePages/EditDevice/EditDevice'
+import Layout from './components/Layout/Layout'
 import RequireAuth from './components/RequireAuth'
 import PersistLogin from './components/PersistLogin'
 import './App.css'
@@ -20,7 +20,7 @@ import './Global.css'
 function App() {
   return (
     <>
-      <Main />
+      <NavAndSideBar />
       <Routes>
         <Route path='/' element={<Layout />}>
           {/*Public Routes */}

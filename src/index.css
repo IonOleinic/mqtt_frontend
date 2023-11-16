@@ -1,3 +1,9 @@
+:root {
+  --hover-color: rgb(28, 69, 253);
+  --bck-hover-color: linear-gradient(to right, #cbcbcba2, #f0f0f069);
+  --box-shadow-default: 1px 1px 14px 1px #888888;
+  --bck-page-default: rgb(227, 227, 227);
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

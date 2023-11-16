@@ -1,0 +1,49 @@
+.scenes-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  min-height: 90vh;
+  width: 100%;
+  background-color: var(--bck-page-default);
+}
+.scenes {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  min-height: 90vh;
+  width: 100%;
+  padding: 1rem;
+}
+.toolbar-scenes {
+  position: sticky;
+  top: 80px;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  width: 100%;
+  max-height: 10rem;
+  margin: 0.5rem 0;
+  box-shadow: var(--box-shadow-default);
+  z-index: 9;
+}
+.toolbar-scenes-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem;
+  margin-left: 3rem;
+}
+.toolbar-scenes-item * {
+  margin: 0;
+}
+.toolbar-scenes-item p {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-right: 0.6rem;
+}

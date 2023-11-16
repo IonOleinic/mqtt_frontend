@@ -6,7 +6,12 @@ label {
 input {
   cursor: revert;
 }
-
+.active-color {
+  color: revert;
+}
+.inactive-color {
+  color: #ccc;
+}
 /* vertical menu*/
 .vertical-menu {
   margin: 0;
