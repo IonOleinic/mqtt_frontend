@@ -7,15 +7,38 @@ import { FiSettings } from 'react-icons/fi'
 import { BiHelpCircle } from 'react-icons/bi'
 import { BiLogOut } from 'react-icons/bi'
 import { useClickOutside } from '../../hooks/useClickOutside'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import userMaleIcon from './images/user_male.png'
+import userFemaleIcon from './images/user_female.png'
 function UserProfile(props) {
+  const axios = useAxiosPrivate()
   const logout = useLogout()
   const { auth } = useAuth()
+  const [user, setUser] = useState({})
   const profileDropDownRef = useRef()
   const [dropDownVisibility, setDropDownVisibility] = useState(false)
+  const [userProfileIcon, setUserProfileIcon] = useState(userMaleIcon)
+
   useClickOutside(profileDropDownRef, () => {
     setDropDownVisibility(false)
   })
+  const getUser = async (userId) => {
+    try {
+      const response = await axios.get(`/user/${userId}`)
+      setUser(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
+  useEffect(() => {
+    getUser(auth.user.id)
+  }, [auth])
+  useEffect(() => {
+    if (user.gender === 'female') {
+      setUserProfileIcon(userFemaleIcon)
+    }
+  }, [user])
   return (
     <div className='user-profile'>
       <div
@@ -25,11 +48,7 @@ function UserProfile(props) {
         }}
         ref={profileDropDownRef}
       >
-        <img
-          src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjVRB7ZmUQnwE-OwQPZyjAsEBOTY4nJQMr652DQ4d8cXqLNz-k7rJNhOywu43nkAsqsPQ&usqp=CAU'
-          alt=''
-          draggable='false'
-        />
+        <img src={userProfileIcon} alt='' draggable='false' />
         <h3>{`Hi, ${auth?.user?.name}`}</h3>
       </div>
       <div
@@ -52,6 +71,7 @@ function UserProfile(props) {
             name='Log out'
             img={<BiLogOut size={20} />}
             onClick={logout}
+            isRed={true}
           />
         </ul>
       </div>
@@ -60,7 +80,14 @@ function UserProfile(props) {
 }
 function DropDownItem(props) {
   return (
-    <li className='user-profile-item' onClick={props.onClick}>
+    <li
+      className={
+        props.isRed
+          ? 'user-profile-item user-profile-item-red'
+          : 'user-profile-item'
+      }
+      onClick={props.onClick}
+    >
       {props.img}
       <span>{props.name}</span>
     </li>

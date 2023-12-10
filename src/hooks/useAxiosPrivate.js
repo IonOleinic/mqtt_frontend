@@ -12,6 +12,10 @@ function useAxiosPrivate() {
         if (!config.headers['Authorization']) {
           config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
         }
+        const userId = JSON.parse(sessionStorage.getItem('userId'))
+        if (userId) {
+          config.params = { ...config.params, user_id: userId }
+        }
         return config
       },
       (error) => Promise.reject(error)

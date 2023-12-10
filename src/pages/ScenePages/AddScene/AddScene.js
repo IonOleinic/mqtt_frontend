@@ -12,7 +12,9 @@ function AddScene({ toggleVisibility, visibility }) {
   return (
     <div
       className={
-        visibility ? 'add-scene-container' : 'add-scene-container-hidden'
+        visibility
+          ? 'add-scene-container'
+          : 'add-scene-container add-scene-container-hidden'
       }
       onClick={() => {
         toggleVisibility(false)

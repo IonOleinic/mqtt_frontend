@@ -1,9 +1,45 @@
 .smart-led {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   padding: 0.5rem;
+}
+.custom-tab-content {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+}
+.smart-led-tab {
+  width: 100%;
+}
+.custom-tabs {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #cccccc7e;
+  width: 100%;
+  padding: 0 0.3rem;
+  padding-bottom: 0.4rem;
+  border-radius: 8px 8px 0 0;
+}
+.custom-tab {
+  font-size: 1rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+.custom-tab:hover {
+  cursor: pointer;
+  color: var(--hover-color);
+}
+.active-tab {
+  background-color: white;
+  color: var(--hover-color);
 }
 .bulb-item {
   width: 100%;
@@ -19,17 +55,23 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  transition: all 0.4s ease-in-out;
-}
-.bulb-item-icon:hover {
   cursor: pointer;
+  transition: all 0.4s ease-in-out;
 }
 .slider-item {
   width: 100%;
-  margin: 0.5rem 0;
+  margin: 0.5rem 0rem;
+  padding: 0 0.2rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: space-around;
+}
+.cold-warm-tab .slider-item {
+  margin: 1.7rem 0;
+}
+.cold-warm-tab label {
+  margin-bottom: 0.3rem;
 }
 .pallete-controll-item {
   display: flex;
@@ -43,13 +85,11 @@
   align-items: center;
   flex-direction: row;
 }
-.palette-speed {
-  margin-top: -0.4rem;
-}
 .palette-buttons {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-top: 1.5rem;
 }
 .palette-buttons * {
   margin: 0 0.3rem;

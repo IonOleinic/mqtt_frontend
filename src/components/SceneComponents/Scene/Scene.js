@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { MdOutlineExpandMore } from 'react-icons/md'
 import { AiOutlineStar } from 'react-icons/ai'
 import { AiFillStar } from 'react-icons/ai'
-import { AiOutlineEdit } from 'react-icons/ai'
+import { AiOutlineDelete } from 'react-icons/ai'
+import { MdOutlineCancel } from 'react-icons/md'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
+import { CiEdit } from 'react-icons/ci'
 import Switch from 'react-switch'
 import Schedule from './Schedule/Schedule'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
+import VerticalMenu from '../../VerticalMenu/VerticalMenu'
 import './Scene.css'
 import DeviceScene from './DeviceScene/DeviceScene'
 import WeatherScene from './WeatherScene/WeatherScene'
@@ -18,10 +22,6 @@ const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
 const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
 function Scene({ init_scene, handleDeleteScene }) {
   const axios = useAxiosPrivate()
-  const [openSubMenu, setOpenSubMenu] = useState(false)
-  const toggleSubMenu = () => {
-    setOpenSubMenu(!openSubMenu)
-  }
   const [favIcon, setFavIcon] = useState(favIconDisabled)
   const [favBool, setFavBool] = useState(false)
   const [visibility, setVisibility] = useState(true)
@@ -143,61 +143,21 @@ function Scene({ init_scene, handleDeleteScene }) {
         >
           {favIcon}
         </span>
-        <span className='vertical-menu'>
-          <label
-            className='label-sub-menu'
-            onClick={() => {
-              setOpenSubMenu(!openSubMenu)
-            }}
-            tabIndex={0}
-            onBlur={() => {
-              setTimeout(() => {
-                setOpenSubMenu(false)
-              }, 250)
-            }}
-          >
-            <img src='https://img.icons8.com/material-rounded/24/null/menu-2.png' />
-          </label>
-          <span
-            className='vertical-menu-item'
-            style={{ display: openSubMenu ? 'block' : 'none' }}
-          >
-            <ul>
-              <li
-                onClick={() => {
-                  toggleSubMenu()
-                }}
-              >
-                Info
-              </li>
-              <li
-                onClick={() => {
-                  toggleSubMenu()
-                }}
-              >
-                blalvla
-              </li>
-
-              <li
-                onClick={() => {
-                  handleDeleteScene(scene.id)
-                }}
-              >
-                Delete
-              </li>
-              <li
-                onClick={() => {
-                  toggleSubMenu()
-                }}
-              >
-                Cancel
-              </li>
-            </ul>
-          </span>
-        </span>
-        <span className='icon-edit' onClick={() => {}}>
-          <AiOutlineEdit size={25} />
-        </span>
+        <VerticalMenu
+          items={[
+            { name: 'Info', icon: <AiOutlineInfoCircle /> },
+            { name: 'Edit', icon: <CiEdit /> },
+            {
+              name: 'Delete',
+              icon: <AiOutlineDelete />,
+              action: () => {
+                handleDeleteScene(scene.id)
+              },
+              isRed: true,
+            },
+            { name: 'Cancel', icon: <MdOutlineCancel /> },
+          ]}
+        />
         <span className='scene-date'>
           {getDateFromStr(scene.date.toString())}
         </span>

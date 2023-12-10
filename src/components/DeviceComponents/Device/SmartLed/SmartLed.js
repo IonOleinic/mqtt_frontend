@@ -9,10 +9,13 @@ import './SmartLed.css'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { RangeStepInput } from 'react-range-step-input'
 import PaletteItem from './PaletteItem/PaletteItem'
+import { TbAlertTriangle } from 'react-icons/tb'
+
 let bulb_icon = <BsLightbulbFill size={50} />
 let led_strip_icon = <LedStripIcon size={50} />
 function SmartLed({ device }) {
   const axios = useAxiosPrivate()
+  const [currentTab, setCurrentTab] = useState(0)
   const [color, setColor] = useState('#000000')
   const [cold, setCold] = useState(0)
   const [warm, setWarm] = useState(0)
@@ -22,6 +25,9 @@ function SmartLed({ device }) {
   const [ledIcon, setLedIcon] = useState(<></>)
   const [cursorStyle, setCursorStyle] = useState({ cursor: 'default' })
 
+  const changeTab = (index) => {
+    setCurrentTab(index)
+  }
   const setLedIconFunc = () => {
     if (device.sub_type == 'ledStrip') {
       setLedIcon(led_strip_icon)
@@ -143,167 +149,251 @@ function SmartLed({ device }) {
 
   return (
     <div className='smart-led'>
-      <div
-        className='slider-item'
-        style={{ display: device.led_type.includes('rgb') ? 'flex' : 'none' }}
-      >
-        <label htmlFor='#'>Color</label>
-        <HuePicker
-          color={color}
-          onChange={(e) => {
-            setColor(e.hex)
-          }}
-          onChangeComplete={(e) => {
-            sendChangeColor(e.hex, cold, warm)
-          }}
-          width='100%'
-        />
-      </div>
-      <div className='slider-item'>
-        <label htmlFor='#'>Dimmer</label>
-        <button
-          style={{ border: 'none', background: 'none', width: '100%' }}
-          onMouseUp={(e) => {
-            sendChangeDimmer(dimmer)
-          }}
-          onTouchEnd={(e) => sendChangeDimmer(dimmer)}
-        >
-          <RangeStepInput
-            min={0}
-            max={100}
-            value={dimmer}
-            step={1}
-            onChange={(e) => {
-              setDimmer(e.target.value)
-            }}
-            style={{ width: '100%' }}
-          />
-        </button>
-      </div>
-      <div className='bulb-item'>
-        <div
-          className='bulb-item-icon'
-          style={{
-            border:
-              device.status == 'ON' ? `4px solid ${color}` : `4px solid #ccc`,
-            color: device.status == 'ON' ? color : '#ccc',
-          }}
-          onClick={sendChangePower}
-        >
-          {ledIcon}
-        </div>
-      </div>
-      <div
-        className='slider-item'
-        style={{ display: device.led_type.includes('c') ? 'flex' : 'none' }}
-      >
-        <label htmlFor='#'>Cold</label>
-        <AlphaPicker
-          color={{ r: 0, g: 0, b: 255, a: cold }}
-          onChange={(e) => {
-            setCold(e.rgb.a)
-          }}
-          onChangeComplete={(e) => {
-            sendChangeColor(color, e.rgb.a, warm)
-          }}
-          width='100%'
-        />
-      </div>
-      <div
-        className='slider-item'
-        style={{ display: device.led_type.includes('w') ? 'flex' : 'none' }}
-      >
-        <label htmlFor='#'>Warm</label>
-        <AlphaPicker
-          color={{ r: 255, g: 193, b: 7, a: warm }}
-          onChange={(e) => {
-            setWarm(e.rgb.a)
-          }}
-          onChangeComplete={(e) => {
-            sendChangeColor(color, cold, e.rgb.a)
-          }}
-          width='100%'
-        />
-      </div>
-      <div
-        className='slider-item pallete-controll'
-        style={{ display: device.manufacter == 'tasmota' ? 'flex' : 'none' }}
-      >
-        <div className='pallete-controll-item palette-colors'>
-          {paletteItems}
-        </div>
-        <div className='pallete-controll-item palette-buttons'>
-          <div
-            className='palette-play-btn'
-            onClick={() => {
-              if (device.scheme == '1' || device.scheme == '0') {
-                sendChangeScheme(2)
-              }
-            }}
-            style={cursorStyle}
-            onMouseEnter={() => {
-              if (device.scheme == '1' || device.scheme == '0') {
-                setCursorStyle({ cursor: 'pointer' })
-              }
-            }}
-            onMouseLeave={() => {
-              setCursorStyle({ cursor: 'default' })
-            }}
-          >
-            <BsPlayCircle
-              size={40}
-              color={
-                device.scheme == '1' || device.scheme == '0' ? 'green' : '#ccc'
-              }
-            />
-          </div>
-          <div
-            className='palette-stop-btn'
-            onClick={() => {
-              if (device.scheme == '2' || device.scheme == '3') {
-                sendChangeScheme(1)
-              }
-            }}
-            style={cursorStyle}
-            onMouseEnter={() => {
-              if (device.scheme == '2' || device.scheme == '3') {
-                setCursorStyle({ cursor: 'pointer' })
-              }
-            }}
-            onMouseLeave={() => {
-              setCursorStyle({ cursor: 'default' })
-            }}
-          >
-            <BsStopCircle
-              size={40}
-              color={
-                device.scheme == '2' || device.scheme == '3' ? 'red' : '#ccc'
-              }
-            />
-          </div>
-        </div>
-        <div className='pallete-controll-item palette-speed'>
-          <label htmlFor='#'>Speed</label>
-          <button
-            style={{ border: 'none', background: 'none', width: '100%' }}
-            onMouseUp={(e) => {
-              sendChangeSpeed(speed)
-            }}
-            onTouchEnd={(e) => sendChangeSpeed(speed)}
-          >
-            <RangeStepInput
-              min={1}
-              max={40}
-              value={41 - speed}
-              step={1}
-              onChange={(e) => {
-                setSpeed(41 - e.target.value)
+      <div className='custom-tab-content'>
+        {currentTab === 0 && (
+          <div className='smart-led-tab colors-tab'>
+            <div
+              className='slider-item'
+              style={{
+                display: device.led_type.includes('rgb') ? 'flex' : 'none',
               }}
-              style={{ width: '100%' }}
-            />
-          </button>
+            >
+              <label htmlFor='#'>Color</label>
+              <HuePicker
+                color={color}
+                onChange={(e) => {
+                  setColor(e.hex)
+                }}
+                onChangeComplete={(e) => {
+                  sendChangeColor(e.hex, cold, warm)
+                }}
+                width='100%'
+              />
+            </div>
+            <div className='slider-item'>
+              <label htmlFor='#'>Dimmer</label>
+              <button
+                style={{ border: 'none', background: 'none', width: '100%' }}
+                onMouseUp={(e) => {
+                  sendChangeDimmer(dimmer)
+                }}
+                onTouchEnd={(e) => sendChangeDimmer(dimmer)}
+              >
+                <RangeStepInput
+                  min={0}
+                  max={100}
+                  value={dimmer}
+                  step={1}
+                  onChange={(e) => {
+                    setDimmer(e.target.value)
+                  }}
+                  style={{ width: '100%' }}
+                />
+              </button>
+            </div>
+            <div className='bulb-item'>
+              <div
+                className='bulb-item-icon'
+                style={{
+                  border:
+                    device.status == 'ON'
+                      ? `4px solid ${color}`
+                      : `4px solid #ccc`,
+                  color: device.status == 'ON' ? color : '#ccc',
+                }}
+                onClick={sendChangePower}
+              >
+                {ledIcon}
+              </div>
+            </div>
+          </div>
+        )}
+        {currentTab === 1 && (
+          <div className='smart-led-tab cold-warm-tab'>
+            {device.led_type.includes('c') || device.led_type.includes('w') ? (
+              <>
+                <div
+                  className='slider-item'
+                  style={{
+                    display: device.led_type.includes('c') ? 'flex' : 'none',
+                  }}
+                >
+                  <label htmlFor='#'>Cold</label>
+                  <AlphaPicker
+                    color={{ r: 0, g: 0, b: 255, a: cold }}
+                    onChange={(e) => {
+                      setCold(e.rgb.a)
+                    }}
+                    onChangeComplete={(e) => {
+                      sendChangeColor(color, e.rgb.a, warm)
+                    }}
+                    width='100%'
+                  />
+                </div>
+                <div
+                  className='slider-item'
+                  style={{
+                    display: device.led_type.includes('w') ? 'flex' : 'none',
+                  }}
+                >
+                  <label htmlFor='#'>Warm</label>
+                  <AlphaPicker
+                    color={{ r: 255, g: 193, b: 7, a: warm }}
+                    onChange={(e) => {
+                      setWarm(e.rgb.a)
+                    }}
+                    onChangeComplete={(e) => {
+                      sendChangeColor(color, cold, e.rgb.a)
+                    }}
+                    width='100%'
+                  />
+                </div>
+              </>
+            ) : (
+              <UnsupportedSmartLedOption
+                additionalMessage={` It doesn't have Cold or Warm chanels.`}
+              />
+            )}
+          </div>
+        )}
+        {currentTab === 2 && (
+          <div className='smart-led-tab pallete-tab'>
+            {device.manufacter == 'tasmota' &&
+            device.led_type.includes('rgb') ? (
+              <div
+                className='slider-item pallete-controll'
+                style={{
+                  display: device.manufacter == 'tasmota' ? 'flex' : 'none',
+                }}
+              >
+                <div className='pallete-controll-item palette-colors'>
+                  {paletteItems}
+                </div>
+                <div className='pallete-controll-item palette-buttons'>
+                  <div
+                    className='palette-play-btn'
+                    onClick={() => {
+                      if (device.scheme == '1' || device.scheme == '0') {
+                        sendChangeScheme(2)
+                      }
+                    }}
+                    style={cursorStyle}
+                    onMouseEnter={() => {
+                      if (device.scheme == '1' || device.scheme == '0') {
+                        setCursorStyle({ cursor: 'pointer' })
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      setCursorStyle({ cursor: 'default' })
+                    }}
+                  >
+                    <BsPlayCircle
+                      size={40}
+                      color={
+                        device.scheme == '1' || device.scheme == '0'
+                          ? 'green'
+                          : '#ccc'
+                      }
+                    />
+                  </div>
+                  <div
+                    className='palette-stop-btn'
+                    onClick={() => {
+                      if (device.scheme == '2' || device.scheme == '3') {
+                        sendChangeScheme(1)
+                      }
+                    }}
+                    style={cursorStyle}
+                    onMouseEnter={() => {
+                      if (device.scheme == '2' || device.scheme == '3') {
+                        setCursorStyle({ cursor: 'pointer' })
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      setCursorStyle({ cursor: 'default' })
+                    }}
+                  >
+                    <BsStopCircle
+                      size={40}
+                      color={
+                        device.scheme == '2' || device.scheme == '3'
+                          ? 'red'
+                          : '#ccc'
+                      }
+                    />
+                  </div>
+                </div>
+                <div className='pallete-controll-item palette-speed'>
+                  <label htmlFor='#'>Speed</label>
+                  <button
+                    style={{
+                      border: 'none',
+                      background: 'none',
+                      width: '100%',
+                    }}
+                    onMouseUp={(e) => {
+                      sendChangeSpeed(speed)
+                    }}
+                    onTouchEnd={(e) => sendChangeSpeed(speed)}
+                  >
+                    <RangeStepInput
+                      min={1}
+                      max={40}
+                      value={41 - speed}
+                      step={1}
+                      onChange={(e) => {
+                        setSpeed(41 - e.target.value)
+                      }}
+                      style={{ width: '100%' }}
+                    />
+                  </button>
+                </div>
+              </div>
+            ) : device.manufacter == 'tasmota' ? (
+              <UnsupportedSmartLedOption
+                additionalMessage={` It is not a RGB one.`}
+              />
+            ) : (
+              <UnsupportedSmartLedOption
+                additionalMessage={
+                  ' Palette is available only for Tasmota devices.'
+                }
+              />
+            )}
+          </div>
+        )}
+      </div>
+      <div className='custom-tabs'>
+        <div
+          className={`custom-tab ${currentTab === 0 ? 'active-tab' : ''}`}
+          onClick={() => changeTab(0)}
+        >
+          Colors
+        </div>
+        <div
+          className={`custom-tab ${currentTab === 1 ? 'active-tab' : ''}`}
+          onClick={() => changeTab(1)}
+        >
+          Cold / Warm
+        </div>
+        <div
+          className={`custom-tab ${currentTab === 2 ? 'active-tab' : ''}`}
+          onClick={() => changeTab(2)}
+        >
+          Palette
         </div>
       </div>
+    </div>
+  )
+}
+
+function UnsupportedSmartLedOption({ additionalMessage }) {
+  return (
+    <div className='smart-led-unsuported-feature'>
+      <TbAlertTriangle size={50} color='gold' />
+      <p>
+        {`This option is unsupported for current device. ${additionalMessage}`}
+      </p>
     </div>
   )
 }

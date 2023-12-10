@@ -9,14 +9,10 @@ function useAxios() {
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
-        // Retrieve user ID from your authentication logic (replace with your actual logic)
-        const userId = sessionStorage.getItem('userId')
-
-        // Add user ID as a query parameter to the request
+        const userId = JSON.parse(sessionStorage.getItem('userId'))
         if (userId) {
           config.params = { ...config.params, user_id: userId }
         }
-
         return config
       },
       (error) => {
@@ -31,7 +27,9 @@ function useAxios() {
           error?.response?.status === 403
         ) {
           //token expired or user has been lost its token
-          setAuth({})
+          if (setAuth) {
+            setAuth({})
+          }
           navigate('/signin')
         }
         return Promise.reject(error)

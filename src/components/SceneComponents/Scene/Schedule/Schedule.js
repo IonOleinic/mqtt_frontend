@@ -5,9 +5,11 @@ import { HiOutlineArrowRight } from 'react-icons/hi'
 import { TbRepeatOnce } from 'react-icons/tb'
 import { BsClock } from 'react-icons/bs'
 import { GrAction } from 'react-icons/gr'
+import useDeviceIcon from '../../../../hooks/useDeviceIcon'
 function Schedule({ scene }) {
   const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
+  const execDeviceIcons = useDeviceIcon(execDevice)
   const getExecDevice = async () => {
     try {
       const response = await axios.get(`/device/${scene.exec_device_id}`)
@@ -31,7 +33,7 @@ function Schedule({ scene }) {
       <div className='schedule-top'>
         <div className='schedule-device'>
           <p>{execDevice.name}</p>
-          <img src={execDevice.img} alt='schedule device img' />
+          {execDeviceIcons.deviceIcon}
         </div>
         <div className='arrow-right'>
           <HiOutlineArrowRight size={30} color={'black'} />

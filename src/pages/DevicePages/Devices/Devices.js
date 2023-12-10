@@ -1,7 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useNavigate } from 'react-router-dom'
-import { BiRefresh } from 'react-icons/bi'
 import { GrClose } from 'react-icons/gr'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { useState, useEffect } from 'react'
@@ -11,7 +10,10 @@ import DropDownMenu from '../../../components/DropDownMenu/DropDownMenu'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { VscTriangleRight } from 'react-icons/vsc'
 import { MdDateRange } from 'react-icons/md'
+import { TbArrowsUpDown } from 'react-icons/tb'
+import { TbFilter } from 'react-icons/tb'
 import { TiSortAlphabetically } from 'react-icons/ti'
+import add_btn_img from './images/add_btn.png'
 
 const initDevice = {
   name: 'unknown',
@@ -28,7 +30,7 @@ const Devices = () => {
   const [devices, setDevices] = useState([])
   const [infoOpen, setInfoOpen] = useState(false)
   const [filterList, setFilterList] = useState([])
-  const [selectedGroup, setSelectedGroup] = useState('')
+  const [selectedGroup, setSelectedGroup] = useState('General')
   const [selectedOrder, setSelectedOrder] = useState('Date')
   const [selectedDevice, setSelectedDevice] = useState(initDevice)
   const axios = useAxiosPrivate()
@@ -38,18 +40,18 @@ const Devices = () => {
         filter = selectedGroup
       }
       let result = await axios.get(`/devices?filter=${filter}`)
-      setDevices(result.data)
+      // setDevices(result.data)
+      sortDevicesBy(selectedOrder, result.data)
       console.log(result.data)
-      // setSelectedOrder('Date')
     } catch (error) {
       console.log(error)
     }
   }
-  const sortDevicesBy = (sortval) => {
+  const sortDevicesBy = (sortval, deviceList = devices) => {
     if (sortval.toUpperCase() === 'NAME') {
-      setDevices(devices.sort((a, b) => (a.name > b.name ? 1 : -1)))
+      setDevices(deviceList.sort((a, b) => (a.name > b.name ? 1 : -1)))
     } else {
-      getAllDevices()
+      setDevices(deviceList.sort((a, b) => (a.date < b.date ? 1 : -1)))
     }
   }
   async function getAllGroups() {
@@ -68,12 +70,6 @@ const Devices = () => {
       console.log(error.message)
     }
   }
-  const updateSelectedGroup = (filter_name) => {
-    setSelectedGroup(filter_name)
-  }
-  const updateSelectedOrder = (sortval) => {
-    setSelectedOrder(sortval)
-  }
   useEffect(() => {
     getAllDevices(selectedGroup)
     getAllGroups()
@@ -89,38 +85,35 @@ const Devices = () => {
     setSelectedDevice(device)
   }
   return (
-    <div className='alldevices-container'>
+    <div className='devices-container'>
       <div className='toolbar-devices'>
-        <div
-          className='toolbar-devices-item refresh-icon'
-          onClick={() => {
-            getAllDevices(selectedGroup)
-          }}
-        >
-          <BiRefresh size={30} />
-        </div>
         <div className='toolbar-devices-item'>
-          <p>Filter by</p>
+          <span>
+            <TbFilter size={30} />
+          </span>
           <DropDownMenu
             className='drop-down-menu'
-            message={'General'}
+            title={selectedGroup}
+            setTitle={setSelectedGroup}
             items={filterList.map((item) => {
               return {
                 name: item,
                 icon: <VscTriangleRight />,
-                action: () => {
-                  getAllDevices(item)
+                action: (filter) => {
+                  getAllDevices(filter)
                 },
               }
             })}
-            updateFunc={updateSelectedGroup}
           />
         </div>
         <div className='toolbar-devices-item'>
-          <p>Order by</p>
+          <span>
+            <TbArrowsUpDown size={25} />
+          </span>
           <DropDownMenu
             className='drop-down-menu'
-            message={selectedOrder}
+            title={selectedOrder}
+            setTitle={setSelectedOrder}
             items={[
               {
                 name: 'Date',
@@ -137,11 +130,11 @@ const Devices = () => {
                 },
               },
             ]}
-            updateFunc={updateSelectedOrder}
+            showTitleIcon={true}
           />
         </div>
         <div className='toolbar-devices-item'>
-          <p>Add</p>
+          <span>Add</span>
           <button
             type='button'
             className='btn btn-primary'
@@ -153,23 +146,37 @@ const Devices = () => {
           </button>
         </div>
       </div>
-      <div
-        className='alldevices'
-        style={{ width: infoOpen === true ? '70%' : '90%' }}
-      >
-        {devices.map((device) => {
-          return (
-            <Device
-              key={device.id}
-              init_device={device}
-              handleDeleteDevice={handleDeleteDevice}
-              toggleInfoBar={toggleInfoBar}
-              handleSelectDevice={updateSelectedDevice}
-              isOpenInfoBar={infoOpen}
-            />
-          )
-        })}
-      </div>
+      {devices.length === 0 ? (
+        <div className='empty-page'>
+          <div
+            className='empty-page-inner'
+            onClick={() => {
+              navigate('/devices/adddevice')
+            }}
+          >
+            <p>Your Device List is Empty. Please click to add one.</p>
+            <img src={add_btn_img} alt='add device button' />
+          </div>
+        </div>
+      ) : (
+        <div
+          className='devices'
+          // style={{ width: infoOpen === true ? '70%' : '90%' }}
+        >
+          {devices.map((device) => {
+            return (
+              <Device
+                key={device.id}
+                initDevice={device}
+                handleDeleteDevice={handleDeleteDevice}
+                toggleInfoBar={toggleInfoBar}
+                handleSelectDevice={updateSelectedDevice}
+                isOpenInfoBar={infoOpen}
+              />
+            )
+          })}
+        </div>
+      )}
       <div
         className='sidebar'
         style={{

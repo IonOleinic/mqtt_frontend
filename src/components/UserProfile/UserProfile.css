@@ -70,7 +70,7 @@
   padding-left: 0.4rem;
   display: flex;
   align-items: center;
-  transition: padding 0.4s ease-in-out, color 0.4s ease-in-out;
+  transition: padding 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 .user-profile-item:hover {
   background: var(--bck-hover-color);
@@ -78,6 +78,10 @@
   color: var(--hover-color);
   padding-left: 1rem;
   border-left: 3px solid var(--hover-color);
+}
+.user-profile-item-red:hover {
+  color: var(--custom-red);
+  border-left: 3px solid var(--custom-red);
 }
 .user-profile-item span {
   margin-left: 0.5rem;

@@ -6,10 +6,11 @@ import { FaTemperatureLow } from 'react-icons/fa'
 import { ImLocation } from 'react-icons/im'
 import { TbTemperatureCelsius } from 'react-icons/tb'
 import { GrAction } from 'react-icons/gr'
-
+import useDeviceIcon from '../../../../hooks/useDeviceIcon'
 function WeatherScene({ scene }) {
   const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
+  const execDeviceIcons = useDeviceIcon(execDevice)
   const getExecDevice = async () => {
     try {
       const response = await axios.get(`/device/${scene.exec_device_id}`)
@@ -54,7 +55,7 @@ function WeatherScene({ scene }) {
         <div className='weather-scene-item'>
           <div className='weather-scene-name-img'>
             <p>{execDevice.name}</p>
-            <img src={execDevice.img} alt='executable device img' />
+            {execDeviceIcons.deviceIcon}
           </div>
           <div className='weather-scene-text'>
             <GrAction size={20} />

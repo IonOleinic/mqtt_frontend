@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import './AddWeatherScene.css'
 import { Checkmark } from 'react-checkmark'
 import { VscError } from 'react-icons/vsc'
 import CheckMessage from '../../../../components/CheckMessage/CheckMessage'
@@ -13,6 +12,7 @@ import SubSceneSirenAlarm from '../../../../components/SceneComponents/AddSceneC
 import SubSceneSmartIR from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartIR'
 import SubSceneSmartLed from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartLed'
 import useWeatherData from '../../../../hooks/useWeatherData'
+import './AddWeatherScene.css'
 let iconSucces = <Checkmark size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
@@ -29,7 +29,7 @@ function AddWeatherScene() {
 
   const [name, setName] = useState('')
   const [devices, setDevices] = useState([])
-  const [comparisonSign, setComparisonSign] = useState('=')
+  const [comparisonSign, setComparisonSign] = useState('>=')
   const [targetTemperature, setTargetTemperature] = useState(10)
   //executable device
   const [deviceId, setDeviceId] = useState('')
@@ -64,35 +64,26 @@ function AddWeatherScene() {
       setCheckmark(true)
       return
     }
+    let scene = {}
+    scene.name = name
+    scene.scene_type = 'weather'
+    scene.exec_device_id = deviceId
+    scene.executable_topic = executableTopic
+    scene.executable_payload = executablePayload
+    scene.executable_text = executableText
+    let attributes = {}
+    attributes.comparison_sign = comparisonSign
+    attributes.target_temperature = targetTemperature
+    attributes.location = userLocation
+    scene.attributes = attributes
     try {
-      let scene = {}
-      scene.name = name
-      scene.scene_type = 'weather'
-      scene.exec_device_id = deviceId
-      scene.executable_topic = executableTopic
-      scene.executable_payload = executablePayload
-      scene.executable_text = executableText
-      let attributes = {}
-      attributes.comparison_sign = comparisonSign
-      attributes.target_temperature = targetTemperature
-      attributes.location = userLocation
-      scene.attributes = attributes
       let response = await axios.post(`/scene`, scene)
-      if (response.data.succes) {
-        setIcon(iconSucces)
-        setTextColor('black')
-        setMessage('Schedule Added')
-        navigate('/scenes')
-      } else {
-        setIcon(iconError)
-        setTextColor('red')
-        setMessage('Server error.Please Try again.')
-      }
+      navigate('/scenes')
     } catch (error) {
       console.log(error)
       setIcon(iconError)
       setTextColor('red')
-      setMessage('Error occured.Please Try again.')
+      setMessage(error.response.data?.msg || 'Server error.Please Try again.')
     }
   }
   async function getAllDevices(filter) {
@@ -202,7 +193,7 @@ function AddWeatherScene() {
                 onChange={(e) => {
                   setComparisonSign(e.target.value)
                 }}
-                defaultValue={'>='}
+                value={comparisonSign}
               >
                 <option value='>'>{'>'}</option>
                 <option value='>='>{'>='}</option>

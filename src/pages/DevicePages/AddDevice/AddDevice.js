@@ -30,21 +30,23 @@ function AddDevice() {
   const [mqttName, setMqttName] = useState('')
   const [manufacter, setManufacter] = useState('tasmota')
   const [mqttGroup, setMqttGroups] = useState('')
-  const [img, setImg] = useState('')
   const [deviceType, setDeviceType] = useState('')
   const [attributes, setAttributes] = useState({})
   const [subDevice, setSubDevice] = useState(<></>)
-  useEffect(() => {
-    const getAllTypes = async () => {
+  const getAllTypes = async () => {
+    try {
       let result = await axios.get('/deviceTypes')
-      console.log(result.data)
       setDeviceTypes(result.data)
+    } catch (error) {
+      console.log(error)
     }
+  }
+  useEffect(() => {
     getAllTypes()
   }, [])
   useEffect(() => {
     setCheckmark(false)
-  }, [deviceTypes, name, mqttName, deviceType, img, manufacter])
+  }, [deviceTypes, name, mqttName, deviceType, manufacter])
   const handleAddDevice = async () => {
     setIcon(iconLoading)
     setMessage('Adding...')
@@ -64,23 +66,19 @@ function AddDevice() {
     } else {
       device.mqtt_group = ['General'].toString()
     }
-    device.user_id = 1
-    device.img = img
+    device.user_id = JSON.parse(sessionStorage.getItem('userId'))
     device.attributes = attributes
+
     try {
-      let result = await axios.post('/device', device)
-      if (result.data.succes) {
-        navigate('/devices')
-      } else {
-        setIcon(iconError)
-        setTextColor('red')
-        setMessage(result.data.msg)
-      }
+      let response = await axios.post('/device', device)
+      navigate('/devices')
     } catch (error) {
       console.log(error)
       setIcon(iconError)
       setTextColor('red')
-      setMessage('Error occured.Please Try again.')
+      setMessage(
+        error.response.data?.msg || 'Error occured!. Please try again.'
+      )
     }
   }
   const setSubProps = (props) => {
@@ -209,19 +207,6 @@ function AddDevice() {
               value={mqttGroup}
               onChange={(e) => {
                 setMqttGroups(e.target.value)
-              }}
-            />
-          </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='input-icon'>Icon URL</label>
-            <input
-              id='input-icon'
-              type='text'
-              className='form-control mt-1'
-              placeholder='img url'
-              value={img}
-              onChange={(e) => {
-                setImg(e.target.value)
               }}
             />
           </div>

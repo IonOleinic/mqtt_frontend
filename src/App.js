@@ -9,6 +9,7 @@ import AddDeviceScene from './pages/ScenePages/AddScene/AddDeviceScene/AddDevice
 import AddWeatherScene from './pages/ScenePages/AddScene/AddWeatherScene/AddWeatherScene'
 import Settings from './pages/Settings/Settings'
 import SignIn from './pages/SignIn/SignIn'
+import SignUp from './pages/SignUp/SignUp'
 import AddDevice from './pages/DevicePages/AddDevice/AddDevice'
 import EditDevice from './pages/DevicePages/EditDevice/EditDevice'
 import Layout from './components/Layout/Layout'
@@ -25,6 +26,7 @@ function App() {
         <Route path='/' element={<Layout />}>
           {/*Public Routes */}
           <Route path='/signin' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
 
           {/*Private Routes */}
           <Route element={<PersistLogin />}>

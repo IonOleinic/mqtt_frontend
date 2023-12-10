@@ -1,86 +1,32 @@
 import React, { useState, useEffect } from 'react'
 import './Device.css'
 import { useNavigate } from 'react-router-dom'
-import SmartStrip from './SmartStrip/SmartStrip'
-import SmartIR from './SmartIR/SmartIR'
-import SmartTempSensor from './SmartTempSensor/SmartTempSensor'
-import SmartDoorSensor from './SmartDoorSensor/SmartDoorSensor'
+import VerticalMenu from '../../VerticalMenu/VerticalMenu'
 import { MdOutlineExpandMore } from 'react-icons/md'
-import { AiOutlineStar } from 'react-icons/ai'
-import { AiFillStar } from 'react-icons/ai'
-import { AiOutlineEdit } from 'react-icons/ai'
-import { FiMoreVertical } from 'react-icons/fi'
-import { CgBatteryFull } from 'react-icons/cg'
-import { CgBattery } from 'react-icons/cg'
-import { CgBatteryEmpty } from 'react-icons/cg'
-import { TbBatteryOff } from 'react-icons/tb'
-import { HiOutlineStatusOnline } from 'react-icons/hi'
-import { HiOutlineStatusOffline } from 'react-icons/hi'
-import { TbUsb } from 'react-icons/tb'
+import { MdOutlineCancel } from 'react-icons/md'
+import { AiOutlineDelete } from 'react-icons/ai'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
+import { CiEdit } from 'react-icons/ci'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { socket } from '../../../api/io'
-import SmartSirenAlarm from './SmartAlarmSiren/SmartSirenAlarm'
-import SmartLed from './SmartLed/SmartLed'
-import SmartMotionSensor from './SmartMotionSensor/SmartMotionSensor'
+import useDeviceIcon from '../../../hooks/useDeviceIcon'
+import useFinalDevice from '../../../hooks/useFinalDevice'
 
-let favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
-let favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
-
-let battery_full = <CgBatteryFull size={20} color='green' />
-let powered_usb = (
-  <div className='battery-icon-usb-powered'>
-    <CgBatteryFull size={20} color='green' />
-    <p>
-      <TbUsb size={8} />
-      USB
-    </p>
-  </div>
-)
-let battery_medium = <CgBattery size={20} color='gold' />
-let battery_low = <CgBatteryEmpty size={20} color='red' />
-let battery_no_data = <TbBatteryOff size={20} color='#ccc' />
-
-let icon_online = <HiOutlineStatusOnline size={20} color='green' />
-let icon_offline = <HiOutlineStatusOffline size={20} color='#ccc' />
 function Device({
   handleDeleteDevice,
-  init_device,
+  initDevice,
   toggleInfoBar,
   handleSelectDevice,
   isOpenInfoBar,
 }) {
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
-  const [openSubMenu, setOpenSubMenu] = useState(false)
   const [visibility, setVisibility] = useState(false)
-  const [favIcon, setFavIcon] = useState(favIconDisabled)
-  const [device, setDevice] = useState(init_device)
-  const [favBool, setFavBool] = useState(false)
-  const [batteryIcon, setBatteryIcon] = useState(battery_no_data)
-  const [lastAvailable, setLastAvailable] = useState(false)
-  const [availableIcon, setAvailableIcon] = useState(icon_offline)
-  const toggleSubMenu = () => {
-    setOpenSubMenu(!openSubMenu)
-  }
-  const getInitalState = async () => {
-    console.log('get init state')
-    try {
-      const response = await axios.get(`/device/getInitState/${device.id}`)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const setBatteryIconFunc = (battery_level) => {
-    if (battery_level == 1) {
-      setBatteryIcon(battery_low)
-    } else if (battery_level == 2) {
-      setBatteryIcon(battery_medium)
-    } else if (battery_level == 3) {
-      setBatteryIcon(battery_full)
-    } else if (battery_level == 4) {
-      setBatteryIcon(powered_usb)
-    }
-  }
+  const [device, setDevice] = useState(initDevice)
+  const { deviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
+    useDeviceIcon(device)
+  const finalDevice = useFinalDevice(device)
+
   const updateDevice = async () => {
     try {
       let response = await axios.put(`/device/${device.id}`, device)
@@ -90,9 +36,6 @@ function Device({
     }
   }
   useEffect(() => {
-    if (lastAvailable != device.available) {
-      //get_inital_state()
-    }
     if (socket) {
       const updateDeviceHandler = (data) => {
         if (data.device.mqtt_name === device.mqtt_name) {
@@ -117,39 +60,6 @@ function Device({
     }
   }, [])
 
-  useEffect(() => {
-    setLastAvailable(device.available)
-    if (device.available) {
-      setAvailableIcon(icon_online)
-    } else {
-      setAvailableIcon(icon_offline)
-    }
-    if (device.favorite) {
-      setFavIcon(favIconEnabled)
-      setFavBool(true)
-    } else {
-      setFavIcon(favIconDisabled)
-      setFavBool(false)
-    }
-    setBatteryIconFunc(device.battery_level)
-    // device.mqtt_group = device.mqtt_group.split(',')
-  }, [device])
-  let final_device = <></>
-  if (device.device_type === 'smartStrip') {
-    final_device = <SmartStrip device={device} />
-  } else if (init_device.device_type === 'smartIR') {
-    final_device = <SmartIR device={device} />
-  } else if (init_device.device_type === 'smartTempSensor') {
-    final_device = <SmartTempSensor device={device} />
-  } else if (init_device.device_type === 'smartDoorSensor') {
-    final_device = <SmartDoorSensor device={device} />
-  } else if (init_device.device_type === 'smartSirenAlarm') {
-    final_device = <SmartSirenAlarm device={device} />
-  } else if (init_device.device_type === 'smartLed') {
-    final_device = <SmartLed device={device} />
-  } else if (init_device.device_type === 'smartMotionSensor') {
-    final_device = <SmartMotionSensor device={device} />
-  }
   return (
     <div className='device-item' key={device.mqtt_name}>
       <div className='device-top'>
@@ -167,14 +77,18 @@ function Device({
             style={{ margin: '0', padding: '0' }}
           />
         </label>
-        <img
-          src={init_device.img}
-          alt='device-img'
-          className='device-img'
+        <div
           onClick={() => {
             setVisibility(!visibility)
           }}
-        />
+          className={
+            device.available
+              ? 'device-img active-color'
+              : 'device-img inactive-color'
+          }
+        >
+          {deviceIcon}
+        </div>
         <div
           className={
             device.available
@@ -197,72 +111,28 @@ function Device({
         >
           {favIcon}
         </span>
-        <span className='vertical-menu'>
-          <label
-            className='label-sub-menu'
-            onClick={() => {
-              setOpenSubMenu(!openSubMenu)
-            }}
-            tabIndex={0}
-            onBlur={() => {
-              setTimeout(() => {
-                setOpenSubMenu(false)
-              }, 250)
-            }}
-          >
-            <img src='https://img.icons8.com/material-rounded/24/null/menu-2.png' />
-            {/* <FiMoreVertical size={25} className='more-vertical' /> */}
-          </label>
-          <span
-            className='vertical-menu-item'
-            style={{ display: openSubMenu ? 'block' : 'none' }}
-          >
-            <ul>
-              <li
-                onClick={() => {
-                  toggleSubMenu()
-                  if (!isOpenInfoBar) {
-                    toggleInfoBar()
-                  }
-                  handleSelectDevice(device)
-                }}
-              >
-                Info
-              </li>
-              <li
-                onClick={() => {
-                  toggleSubMenu()
-                }}
-              >
-                blalvla
-              </li>
-
-              <li
-                onClick={() => {
-                  toggleSubMenu()
-                  handleDeleteDevice(device.id)
-                }}
-              >
-                Delete
-              </li>
-              <li
-                onClick={() => {
-                  toggleSubMenu()
-                }}
-              >
-                Cancel
-              </li>
-            </ul>
-          </span>
-        </span>
-        <span
-          className='icon-edit'
-          onClick={() => {
-            navigate(`/devices/editdevice/${device.id}`)
-          }}
-        >
-          <AiOutlineEdit size={25} />
-        </span>
+        <VerticalMenu
+          items={[
+            { name: 'Info', icon: <AiOutlineInfoCircle /> },
+            {
+              name: 'Edit',
+              icon: <CiEdit />,
+              action: () => {
+                navigate(`/devices/editdevice/${device.id}`)
+              },
+            },
+            { name: 'Blabla', icon: <AiOutlineInfoCircle /> },
+            {
+              name: 'Delete',
+              icon: <AiOutlineDelete />,
+              action: () => {
+                handleDeleteDevice(device.id)
+              },
+              isRed: true,
+            },
+            { name: 'Cancel', icon: <MdOutlineCancel /> },
+          ]}
+        />
         <div
           className='battery-level-icon'
           style={{ display: device.battery == false ? 'none' : 'revert' }}
@@ -278,7 +148,7 @@ function Device({
             : 'final-device final-device-hidden'
         }
       >
-        {final_device}
+        {finalDevice}
       </div>
     </div>
   )

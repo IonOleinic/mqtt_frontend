@@ -14,7 +14,6 @@ function EditDevice() {
   const [manufacter, setManufacter] = useState('')
   const [resultMessage, setResultMessage] = useState('')
   const [groups, setGroups] = useState('')
-  const [img, setImg] = useState('')
   const get_device = async () => {
     try {
       let result = await axios.get(`/device/${id}`)
@@ -23,7 +22,6 @@ function EditDevice() {
       setMqttName(result.data.mqtt_name)
       setManufacter(result.data.manufacter)
       setGroups(result.data.mqtt_group.toString())
-      setImg(result.data.img)
     } catch (error) {
       console.log(error)
     }
@@ -33,14 +31,13 @@ function EditDevice() {
   }, [])
   const handleModifyDevice = async () => {
     setDisabledModifyBtn(true)
-    let new_device = device
-    new_device.name = name
-    new_device.mqttName = mqttName
-    new_device.manufacter = manufacter
-    new_device.mqtt_group = groups.split(',')
-    new_device.img = img
+    let newDevice = device
+    newDevice.name = name
+    newDevice.mqtt_name = mqttName
+    newDevice.manufacter = manufacter
+    newDevice.mqtt_group = groups.split(',')
     try {
-      let result = await axios.put(`/device/${new_device.id}`, new_device)
+      let result = await axios.put(`/device/${newDevice.id}`, newDevice)
       navigate('/devices')
     } catch (error) {
       console.log(error)
@@ -108,20 +105,6 @@ function EditDevice() {
               value={groups}
               onChange={(e) => {
                 setGroups(e.target.value)
-                setDisabledModifyBtn(false)
-              }}
-            />
-          </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='input-icon'>Icon URL</label>
-            <input
-              id='input-icon'
-              type='text'
-              className='form-control mt-1'
-              placeholder='img url'
-              value={img}
-              onChange={(e) => {
-                setImg(e.target.value)
                 setDisabledModifyBtn(false)
               }}
             />

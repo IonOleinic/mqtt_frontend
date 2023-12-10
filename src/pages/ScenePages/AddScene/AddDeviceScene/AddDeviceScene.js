@@ -95,37 +95,29 @@ function AddSchedule() {
     setMessage('Sending..')
     setTextColor('black')
     setCheckmark(true)
+
+    let scene = {}
+    scene.name = name
+    scene.scene_type = 'deviceScene'
+    scene.exec_device_id = actionDeviceId
+    scene.executable_topic = executableTopic
+    scene.executable_payload = executablePayload
+    scene.executable_text = executableText
+    let attributes = {}
+    attributes.cond_device_mqtt = eventDeviceMqtt
+    attributes.cond_device_id = eventDeviceId
+    attributes.conditional_topic = conditionalTopic
+    attributes.conditional_payload = conditionalPayload
+    attributes.conditional_text = conditionalText
+    scene.attributes = attributes
     try {
-      let scene = {}
-      scene.name = name
-      scene.scene_type = 'deviceScene'
-      scene.exec_device_id = actionDeviceId
-      scene.executable_topic = executableTopic
-      scene.executable_payload = executablePayload
-      scene.executable_text = executableText
-      let attributes = {}
-      attributes.cond_device_mqtt = eventDeviceMqtt
-      attributes.cond_device_id = eventDeviceId
-      attributes.conditional_topic = conditionalTopic
-      attributes.conditional_payload = conditionalPayload
-      attributes.conditional_text = conditionalText
-      scene.attributes = attributes
-      let response = await axios.post(`/scene?`, scene)
-      if (response.data.succes) {
-        setIcon(iconSucces)
-        setTextColor('black')
-        setMessage('Schedule Added')
-        navigate('/scenes')
-      } else {
-        setIcon(iconError)
-        setTextColor('red')
-        setMessage('Server error.Please Try again.')
-      }
+      let response = await axios.post(`/scene`, scene)
+      navigate('/scenes')
     } catch (error) {
       console.log(error)
       setIcon(iconError)
       setTextColor('red')
-      setMessage('Error occured.Please Try again.')
+      setMessage(error.response.data?.msg || 'Server error.Please Try again.')
     }
   }
   async function getAllDevices(filter) {
@@ -237,7 +229,7 @@ function AddSchedule() {
   }
   return (
     <div className='Add-form-container'>
-      <form className='Add-form'>
+      <form className='Add-form add-scene-form'>
         <div className='Add-form-content'>
           <h3 className='Add-form-title'>Add Device Scene</h3>
           <div className='form-group mt-3'>

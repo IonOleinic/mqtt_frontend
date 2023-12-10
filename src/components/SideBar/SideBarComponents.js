@@ -1,6 +1,6 @@
 import { FaTimes } from 'react-icons/fa'
 import styled from 'styled-components'
-import { Link as LinkR } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export const SideBarContainer = styled.aside`
   position: fixed;
@@ -45,7 +45,7 @@ export const SideBarMenu = styled.ul`
   }
 `
 
-export const SideBarLink = styled(LinkR)`
+export const SideBarLink = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,11 +55,12 @@ export const SideBarLink = styled(LinkR)`
   trasnsition: 0.5s ease-in-out;
   color: #fff;
   cursor: pointer;
-
-  &:hover,
   &:active {
     color: #4abced;
-    transition: 0.2s ease-in-out;
+  }
+  &:hover {
+    color: #4abced;
+    transition: all 0.3s;
   }
 `
 
@@ -68,7 +69,7 @@ export const SideBtnWrap = styled.div`
   top: 1.5rem;
   right: 1.5rem;
 `
-export const SideBarRoute = styled(LinkR)`
+export const SideBarRoute = styled(Link)`
   border-radius: 4px;
   background: #256ce1;
   padding: 10px 22px;

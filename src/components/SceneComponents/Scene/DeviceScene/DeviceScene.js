@@ -4,11 +4,14 @@ import { HiOutlineArrowRight } from 'react-icons/hi'
 import { GrAction } from 'react-icons/gr'
 import { MdPendingActions } from 'react-icons/md'
 import './DeviceScene.css'
+import useDeviceIcon from '../../../../hooks/useDeviceIcon'
 
 function DeviceScene({ scene }) {
   const axios = useAxiosPrivate()
   const [condDevice, setCondDevice] = useState({})
   const [execDevice, setExecDevice] = useState({})
+  const condDeviceIcons = useDeviceIcon(condDevice)
+  const execDeviceIcons = useDeviceIcon(execDevice)
 
   const getCondDevice = async () => {
     try {
@@ -37,7 +40,7 @@ function DeviceScene({ scene }) {
         <div className='device-scene-item'>
           <div className='device-scene-name-img'>
             <p>{condDevice.name}</p>
-            <img src={condDevice.img} alt='conditional device img' />
+            {condDeviceIcons.deviceIcon}
           </div>
           <div className='device-scene-text'>
             <MdPendingActions size={25} />
@@ -50,7 +53,7 @@ function DeviceScene({ scene }) {
         <div className='device-scene-item'>
           <div className='device-scene-name-img'>
             <p>{execDevice.name}</p>
-            <img src={execDevice.img} alt='executable device img' />
+            {execDeviceIcons.deviceIcon}
           </div>
           <div className='device-scene-text'>
             <GrAction size={20} />

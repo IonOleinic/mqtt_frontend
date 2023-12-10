@@ -4,8 +4,11 @@ function SubLed({ setSubProps, disable_add_btn }) {
   const [subType, setSubType] = useState('bulb')
   const [ledType, setLedType] = useState('rgb')
   useEffect(() => {
-    setSubProps({ led_type: ledType, sub_type: subType })
-  }, [])
+    setSubProps({
+      led_type: ledType,
+      sub_type: subType,
+    })
+  }, [ledType, subType])
 
   return (
     <>
@@ -17,7 +20,6 @@ function SubLed({ setSubProps, disable_add_btn }) {
           aria-label='Default select example'
           onChange={(e) => {
             setSubType(e.target.value)
-            setSubProps({ led_type: ledType, sub_type: e.target.value })
           }}
         >
           <option value='bulb'>Bulb</option>
@@ -36,7 +38,6 @@ function SubLed({ setSubProps, disable_add_btn }) {
             } else {
               disable_add_btn(false)
               setLedType(e.target.value)
-              setSubProps({ led_type: e.target.value, sub_type: subType })
             }
           }}
         >

@@ -52,7 +52,11 @@ function SmartDoorSensor({ device }) {
           <img src={DoorSecondModule} alt='Door Sensor Second Module' />
         </div>
       </div>
-      <div className='switch-direction-btn' onClick={sendToggleDirection}>
+      <div
+        className='switch-direction-btn'
+        onClick={sendToggleDirection}
+        style={{ display: device.manufacter == 'tasmota' ? 'revert' : 'none' }}
+      >
         <HiOutlineSwitchHorizontal size={20} color='black' />
       </div>
     </div>

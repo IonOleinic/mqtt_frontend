@@ -71,35 +71,26 @@ function AddSchedule() {
       setCheckmark(true)
       return
     }
+    let scene = {}
+    scene.name = name
+    scene.scene_type = 'schedule'
+    scene.exec_device_id = deviceId
+    scene.executable_topic = executableTopic
+    scene.executable_payload = executablePayload
+    scene.executable_text = executableText
+    let attributes = {}
+    attributes.dayOfWeek = dayOfWeek.toString()
+    attributes.hour = time.split(':')[0]
+    attributes.minute = time.split(':')[1]
+    scene.attributes = attributes
     try {
-      let scene = {}
-      scene.name = name
-      scene.scene_type = 'schedule'
-      scene.exec_device_id = deviceId
-      scene.executable_topic = executableTopic
-      scene.executable_payload = executablePayload
-      scene.executable_text = executableText
-      let attributes = {}
-      attributes.dayOfWeek = dayOfWeek.toString()
-      attributes.hour = time.split(':')[0]
-      attributes.minute = time.split(':')[1]
-      scene.attributes = attributes
-      let response = await axios.post(`/scene?`, scene)
-      if (response.data.succes) {
-        setIcon(iconSucces)
-        setTextColor('black')
-        setMessage('Schedule Added')
-        navigate('/scenes')
-      } else {
-        setIcon(iconError)
-        setTextColor('red')
-        setMessage('Server error.Please Try again.')
-      }
+      let response = await axios.post(`/scene`, scene)
+      navigate('/scenes')
     } catch (error) {
       console.log(error)
       setIcon(iconError)
       setTextColor('red')
-      setMessage('Error occured.Please Try again.')
+      setMessage(error.response.data?.msg || 'Server error.Please Try again.')
     }
   }
   async function getAllDevices(filter) {

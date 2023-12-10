@@ -16,7 +16,7 @@ function CurrentWeather() {
           <TbTemperatureCelsius
             size={28}
             color='white'
-            className='celsius-icon'
+            className='current-weather-celsius-icon'
           />
         </p>
         <p className='current-weather-text-loc'>{`${userLocation.city}, ${userLocation.country}`}</p>

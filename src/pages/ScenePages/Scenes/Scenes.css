@@ -42,8 +42,18 @@
 .toolbar-scenes-item * {
   margin: 0;
 }
-.toolbar-scenes-item p {
+.toolbar-scenes-item > span {
   font-size: 1.2rem;
-  text-align: center;
-  margin-right: 0.6rem;
+  margin-right: 0.4rem;
+}
+@media (max-width: 568px) {
+  .scenes-container {
+    height: 90%;
+  }
+  .scenes {
+    height: 90%;
+  }
+  .toolbar-scenes-item {
+    margin-left: 1.5rem;
+  }
 }

@@ -34,7 +34,7 @@
 }
 .palette-color-picker {
   position: absolute;
-  top: -200px;
+  top: 25px;
   left: 0px;
   z-index: 2;
 }

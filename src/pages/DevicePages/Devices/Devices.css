@@ -1,6 +1,6 @@
-.alldevices-container {
+.devices-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: flex-start;
   flex-wrap: wrap;
   min-height: 90vh;
@@ -8,7 +8,7 @@
   background-color: var(--bck-page-default);
 }
 
-.alldevices {
+.devices {
   margin: 1rem 0;
   display: flex;
   justify-content: center;
@@ -42,10 +42,9 @@
 .toolbar-devices-item * {
   margin: 0;
 }
-.toolbar-devices-item p {
+.toolbar-devices-item > span {
+  margin-right: 0.4rem;
   font-size: 1.2rem;
-  text-align: center;
-  margin-right: 0.6rem;
 }
 .refresh-icon {
   border-radius: 50%;
@@ -100,11 +99,10 @@
 }
 
 @media (max-width: 568px) {
-  .alldevices-container {
-    height: 90%;
-  }
-  .alldevices {
-    height: 90%;
+  .devices {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
   }
   .sidebar {
     position: fixed;
@@ -123,8 +121,7 @@
     margin-left: 0.5rem;
     flex-direction: column;
   }
-  .toolbar-item p {
-    margin-right: 0.5rem;
-    font-size: 1rem;
+  .toolbar-devices-item {
+    margin-left: 1.5rem;
   }
 }
