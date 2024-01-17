@@ -1,0 +1,52 @@
+.deleted-device * {
+  margin: 0;
+  padding: 0;
+}
+.deleted-device {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.2rem 0;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.deleted-device-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.deleted-device-icon svg {
+  width: 30px;
+  height: 30px;
+}
+.deleted-device-name {
+  margin-left: 0.3rem;
+}
+.deleted-device-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.deleted-device-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+.deleted-device-btn:hover {
+  cursor: pointer;
+  /* background-color: var(--bck-grey-hover-color); */
+}
+.btn-recover-device,
+.btn-destroy-device {
+  margin-left: 0.3rem;
+  padding: 0.1rem;
+}
+.btn-recover-device:hover {
+  color: var(--hover-color);
+}
+.btn-destroy-device:hover {
+  color: var(--custom-red);
+}

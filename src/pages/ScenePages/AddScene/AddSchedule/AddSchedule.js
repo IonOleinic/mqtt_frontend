@@ -73,6 +73,8 @@ function AddSchedule() {
     }
     let scene = {}
     scene.name = name
+      ? name
+      : 'schedule_' + Math.random().toString(16).slice(2, 7)
     scene.scene_type = 'schedule'
     scene.exec_device_id = deviceId
     scene.executable_topic = executableTopic

@@ -1,9 +1,12 @@
 :root {
   --hover-color: rgb(28, 69, 253);
+  --bck-grey-hover-color: #ccccccc7;
+  --bck-grey-active-color: #cccccc87;
   --bck-hover-color: linear-gradient(to right, #cbcbcba2, #f0f0f069);
   --box-shadow-default: 1px 1px 14px 1px #888888;
   --bck-page-default: rgb(227, 227, 227);
   --custom-red: #e60b0b;
+  --transp-grey-bck: #a7a7a7aa;
 }
 body {
   margin: 0;

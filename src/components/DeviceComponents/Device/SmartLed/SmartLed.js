@@ -23,7 +23,7 @@ function SmartLed({ device }) {
   const [speed, setSpeed] = useState(10)
   const [paletteItems, setPaletteItems] = useState([])
   const [ledIcon, setLedIcon] = useState(<></>)
-  const [cursorStyle, setCursorStyle] = useState({ cursor: 'default' })
+  const [paletteColors, setPaletteColors] = useState([])
 
   const changeTab = (index) => {
     setCurrentTab(index)
@@ -39,6 +39,18 @@ function SmartLed({ device }) {
   useEffect(() => {
     setLedIconFunc()
   }, [color, device.status, device.color])
+  useEffect(() => {
+    setPaletteColors(
+      device.palette
+        .map((paletteColor) => {
+          if (paletteColor) {
+            return `#${paletteColor}`
+          }
+        })
+        .filter((item) => item)
+    )
+  }, [device.palette])
+
   useEffect(() => {
     if (device.led_type.includes('rgb')) {
       if (device.color.substring(0, 6).toUpperCase() === 'FFFFFF') {
@@ -271,20 +283,15 @@ function SmartLed({ device }) {
                 </div>
                 <div className='pallete-controll-item palette-buttons'>
                   <div
-                    className='palette-play-btn'
+                    className={
+                      device.scheme == '1' || device.scheme == '0'
+                        ? 'palette-play-btn pallete-btn-hovered'
+                        : 'palette-play-btn'
+                    }
                     onClick={() => {
                       if (device.scheme == '1' || device.scheme == '0') {
                         sendChangeScheme(2)
                       }
-                    }}
-                    style={cursorStyle}
-                    onMouseEnter={() => {
-                      if (device.scheme == '1' || device.scheme == '0') {
-                        setCursorStyle({ cursor: 'pointer' })
-                      }
-                    }}
-                    onMouseLeave={() => {
-                      setCursorStyle({ cursor: 'default' })
                     }}
                   >
                     <BsPlayCircle
@@ -297,20 +304,15 @@ function SmartLed({ device }) {
                     />
                   </div>
                   <div
-                    className='palette-stop-btn'
+                    className={
+                      device.scheme == '1' || device.scheme == '0'
+                        ? 'palette-stop-btn '
+                        : 'palette-stop-btn pallete-btn-hovered'
+                    }
                     onClick={() => {
                       if (device.scheme == '2' || device.scheme == '3') {
                         sendChangeScheme(1)
                       }
-                    }}
-                    style={cursorStyle}
-                    onMouseEnter={() => {
-                      if (device.scheme == '2' || device.scheme == '3') {
-                        setCursorStyle({ cursor: 'pointer' })
-                      }
-                    }}
-                    onMouseLeave={() => {
-                      setCursorStyle({ cursor: 'default' })
                     }}
                   >
                     <BsStopCircle
@@ -367,6 +369,14 @@ function SmartLed({ device }) {
         <div
           className={`custom-tab ${currentTab === 0 ? 'active-tab' : ''}`}
           onClick={() => changeTab(0)}
+          style={{
+            color:
+              device.available && device.status == 'ON' && currentTab === 0
+                ? color
+                : currentTab === 0
+                ? 'blue'
+                : 'revert',
+          }}
         >
           Colors
         </div>
@@ -374,13 +384,31 @@ function SmartLed({ device }) {
           className={`custom-tab ${currentTab === 1 ? 'active-tab' : ''}`}
           onClick={() => changeTab(1)}
         >
-          Cold / Warm
+          <p className='cold-text'>Cold</p>
+          <p>/</p>
+          <p className='warm-text'>Warm</p>
         </div>
         <div
           className={`custom-tab ${currentTab === 2 ? 'active-tab' : ''}`}
           onClick={() => changeTab(2)}
         >
-          Palette
+          {currentTab === 2 ? (
+            <p
+              style={{
+                background:
+                  device.available && paletteColors.length > 1
+                    ? `linear-gradient(90deg,${paletteColors}) text`
+                    : paletteColors.length === 1
+                    ? `${paletteColors} text`
+                    : `blue text`,
+                color: 'transparent',
+              }}
+            >
+              Palette
+            </p>
+          ) : (
+            <p> Palette </p>
+          )}
         </div>
       </div>
     </div>

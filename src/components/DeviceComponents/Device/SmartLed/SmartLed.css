@@ -27,11 +27,17 @@
   border-radius: 8px 8px 0 0;
 }
 .custom-tab {
+  display: flex;
+  align-items: center;
   font-size: 1rem;
   padding: 0.2rem 0.7rem;
   border-radius: 0 0 8px 8px;
   font-weight: 600;
   transition: all 0.2s ease-in-out;
+}
+.custom-tab p {
+  margin: 0 0.1rem;
+  color: black;
 }
 .custom-tab:hover {
   cursor: pointer;
@@ -39,7 +45,16 @@
 }
 .active-tab {
   background-color: white;
-  color: var(--hover-color);
+  color: blue;
+}
+.active-tab .cold-text {
+  color: blue;
+}
+.active-tab .warm-text {
+  color: gold;
+}
+.cold-warm-tab label {
+  margin-bottom: 0.3rem;
 }
 .bulb-item {
   width: 100%;
@@ -70,9 +85,7 @@
 .cold-warm-tab .slider-item {
   margin: 1.7rem 0;
 }
-.cold-warm-tab label {
-  margin-bottom: 0.3rem;
-}
+
 .pallete-controll-item {
   display: flex;
   flex-direction: column;
@@ -94,6 +107,6 @@
 .palette-buttons * {
   margin: 0 0.3rem;
 }
-.palette-button-cursor {
+.pallete-btn-hovered {
   cursor: pointer;
 }

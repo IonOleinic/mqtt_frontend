@@ -8,7 +8,7 @@
   width: 100%;
   min-height: 90vh;
   height: 100%;
-  background-color: #a7a7a78c;
+  background-color: var(--transp-grey-bck);
   display: flex;
   align-items: center;
   justify-content: center;

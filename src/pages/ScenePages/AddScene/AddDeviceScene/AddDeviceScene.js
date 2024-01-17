@@ -97,7 +97,7 @@ function AddSchedule() {
     setCheckmark(true)
 
     let scene = {}
-    scene.name = name
+    scene.name = name ? name : 'scene_' + Math.random().toString(16).slice(2, 7)
     scene.scene_type = 'deviceScene'
     scene.exec_device_id = actionDeviceId
     scene.executable_topic = executableTopic

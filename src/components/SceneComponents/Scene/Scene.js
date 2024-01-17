@@ -159,7 +159,7 @@ function Scene({ init_scene, handleDeleteScene }) {
           ]}
         />
         <span className='scene-date'>
-          {getDateFromStr(scene.date.toString())}
+          {getDateFromStr(scene.createdAt.toString())}
         </span>
       </div>
       <div

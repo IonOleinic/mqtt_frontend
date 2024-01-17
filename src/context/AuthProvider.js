@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
       logout()
     }
   }, [])
+
   return (
     <AuthContext.Provider value={{ auth, setAuth, persist, setPersist }}>
       {children}

@@ -21,15 +21,15 @@ function SubSceneSmartStrip({
       } else if (device.manufacter == 'openBeken') {
         setConditionalPayload('0')
       }
-      if (device.cmnd_power_topics.length == 1) {
+      if (device.nr_of_sockets == 1) {
         setConditionalText(`Power OFF`)
       } else {
         setConditionalText(`Power 1 OFF`)
       }
     } else if (event_or_action == 'action') {
-      setExecutableTopic(device.cmnd_power_topics[0])
+      setExecutableTopic(device.cmnd_power_topic)
       setExecutablePayload('OFF')
-      if (device.cmnd_power_topics.length == 1) {
+      if (device.nr_of_sockets == 1) {
         setExecutableText(`Power OFF`)
       } else {
         setExecutableText(`Power 1 OFF`)
@@ -60,7 +60,7 @@ function SubSceneSmartStrip({
           onChange={(e) => {
             if (event_or_action == 'event') {
               setConditionalTopic(device.stat_power_topics[e.target.value])
-              if (device.cmnd_power_topics.length == 1) {
+              if (device.nr_of_sockets == 1) {
                 setSelectedSocket('')
               } else {
                 setSelectedSocket(` ${Number(e.target.value) + 1} `)
@@ -69,8 +69,8 @@ function SubSceneSmartStrip({
                 )
               }
             } else if (event_or_action == 'action') {
-              setExecutableTopic(device.cmnd_power_topics[e.target.value])
-              if (device.cmnd_power_topics.length == 1) {
+              setExecutableTopic(`${device.cmnd_power_topic}${e.target.value}`)
+              if (device.nr_of_sockets == 1) {
                 setSelectedSocket('')
               } else {
                 setSelectedSocket(` ${Number(e.target.value) + 1} `)

@@ -7,6 +7,7 @@ import { MdOutlineCancel } from 'react-icons/md'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { CiEdit } from 'react-icons/ci'
+import { CgArrowTopRightR } from 'react-icons/cg'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { socket } from '../../../api/io'
 import useDeviceIcon from '../../../hooks/useDeviceIcon'
@@ -140,6 +141,9 @@ function Device({
           {batteryIcon}
         </div>
         <div className='device-available-icon'>{availableIcon}</div>
+        <div className='device-expand'>
+          <CgArrowTopRightR size={20} />
+        </div>
       </div>
       <div
         className={

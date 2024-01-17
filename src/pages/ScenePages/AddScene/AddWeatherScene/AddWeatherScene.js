@@ -66,6 +66,8 @@ function AddWeatherScene() {
     }
     let scene = {}
     scene.name = name
+      ? name
+      : 'weather_' + Math.random().toString(16).slice(2, 7)
     scene.scene_type = 'weather'
     scene.exec_device_id = deviceId
     scene.executable_topic = executableTopic

@@ -54,6 +54,8 @@ function AddDevice() {
     setCheckmark(true)
     let device = {}
     device.name = name
+      ? name
+      : 'device_' + Math.random().toString(16).slice(2, 7)
     device.mqtt_name = mqttName
     device.manufacter = manufacter
     device.device_type = deviceType

@@ -36,9 +36,7 @@ function SmartStrip({ device }) {
   const sensorUpdateReq = async () => {
     try {
       if (device.switch_type === 'plug') {
-        let response = await axios.get(
-          `/smartStrip?device_id=${device.id}&req_topic=STATUS&req_payload=8`
-        )
+        let response = await axios.get(`/smartStrip?device_id=${device.id}`)
       }
     } catch (error) {
       console.log(error)
@@ -47,10 +45,10 @@ function SmartStrip({ device }) {
   useEffect(() => {
     sensorUpdateReq()
     let interval = setInterval(async () => {
-      if (device.switch_type == 'plug') {
+      if (device.switch_type == 'plug' && device.manufacter === 'tasmota') {
         sensorUpdateReq()
       }
-    }, 3809)
+    }, 4809)
     return () => {
       clearInterval(interval)
     }

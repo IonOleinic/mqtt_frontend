@@ -30,15 +30,26 @@ function UserProfile(props) {
       console.log(error)
     }
   }
-
+  const loadDeviceCache = async () => {
+    try {
+      const response = await axios.get(`/load-device-cache`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    getUser(auth.user.id)
-  }, [auth])
+    getUser(auth.user?.id)
+  }, [auth.user.id])
+
   useEffect(() => {
     if (user.gender === 'female') {
       setUserProfileIcon(userFemaleIcon)
     }
   }, [user])
+  useEffect(() => {
+    // console.log('load cache')
+    // loadDeviceCache()
+  }, [auth.accessToken])
   return (
     <div className='user-profile'>
       <div

@@ -94,7 +94,9 @@ const useDeviceIcon = (device) => {
         break
     }
   }, [device.device_type])
-
+  // useEffect(() => {
+  //   console.log(deviceIcon)
+  // }, [deviceIcon])
   useEffect(() => {
     setAvailableIcon(device.available ? iconOnline : iconOffline)
   }, [device.available])

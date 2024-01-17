@@ -13,8 +13,10 @@ import { MdDateRange } from 'react-icons/md'
 import { TbArrowsUpDown } from 'react-icons/tb'
 import { TbFilter } from 'react-icons/tb'
 import { TiSortAlphabetically } from 'react-icons/ti'
-import add_btn_img from './images/add_btn.png'
-
+import AddBtn from '../../../components/AddBtn/AddBtn'
+import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog'
+import { FaTrashAlt } from 'react-icons/fa'
+import DeletedDevices from '../../../components/DeviceComponents/DeletedDevices/DeletedDevices'
 const initDevice = {
   name: 'unknown',
   manufacter: 'unknown',
@@ -33,18 +35,30 @@ const Devices = () => {
   const [selectedGroup, setSelectedGroup] = useState('General')
   const [selectedOrder, setSelectedOrder] = useState('Date')
   const [selectedDevice, setSelectedDevice] = useState(initDevice)
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const [deviceToDelete, setDeviceToDelete] = useState(undefined)
+
   const axios = useAxiosPrivate()
-  const getAllDevices = async (filter) => {
+  const getDevices = async (filter) => {
     try {
       if (filter === undefined || filter === '') {
         filter = selectedGroup
       }
-      let result = await axios.get(`/devices?filter=${filter}`)
+      let response = await axios.get(`/devices?filter=${filter}`)
       // setDevices(result.data)
-      sortDevicesBy(selectedOrder, result.data)
-      console.log(result.data)
+      sortDevicesBy(selectedOrder, response.data)
+      console.log(response.data)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const getDevice = async (deviceId) => {
+    try {
+      const response = await axios.get(`/device/${deviceId}`)
+      setDeviceToDelete(response.data)
+    } catch (error) {
+      console.log(error.message)
     }
   }
   const sortDevicesBy = (sortval, deviceList = devices) => {
@@ -62,27 +76,40 @@ const Devices = () => {
       console.log(error.message)
     }
   }
-  const handleDeleteDevice = async (selected_device_id) => {
-    try {
-      const response = await axios.delete(`/device/${selected_device_id}`)
-      setDevices(response.data)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
   useEffect(() => {
-    getAllDevices(selectedGroup)
+    getDevices(selectedGroup)
+  }, [])
+  useEffect(() => {
     getAllGroups()
     if (devices[0]) {
       setSelectedDevice(devices[0])
       // console.log(selectedDevice)
     }
-  }, [])
+  }, [devices])
+
   const toggleInfoBar = () => {
     setInfoOpen(!infoOpen)
   }
   const updateSelectedDevice = (device) => {
     setSelectedDevice(device)
+  }
+  const handleConfirmDelete = async () => {
+    if (deviceToDelete)
+      try {
+        const response = await axios.delete(`/device/${deviceToDelete.id}`)
+        sortDevicesBy(selectedOrder, response.data)
+      } catch (error) {
+        console.log(error.message)
+      }
+  }
+  const handleCancelDelete = () => {
+    // Cancel the deletion
+    setDeviceToDelete(undefined)
+    setConfirmDialogOpen(false)
+  }
+  const handleDeleteDevice = (sceneId) => {
+    setConfirmDialogOpen(true)
+    getDevice(sceneId)
   }
   return (
     <div className='devices-container'>
@@ -100,7 +127,7 @@ const Devices = () => {
                 name: item,
                 icon: <VscTriangleRight />,
                 action: (filter) => {
-                  getAllDevices(filter)
+                  getDevices(filter)
                 },
               }
             })}
@@ -155,7 +182,7 @@ const Devices = () => {
             }}
           >
             <p>Your Device List is Empty. Please click to add one.</p>
-            <img src={add_btn_img} alt='add device button' />
+            <AddBtn size={150} />
           </div>
         </div>
       ) : (
@@ -229,6 +256,19 @@ const Devices = () => {
           <p>{selectedDevice.battery}</p>
         </div>
       </div>
+      <ConfirmationDialog
+        isOpen={confirmDialogOpen}
+        dialogType={'delete'}
+        icon={<FaTrashAlt size={18} />}
+        title={'Delete device'}
+        message={`delete device "${deviceToDelete?.name}"`}
+        onConfirm={() => {
+          handleConfirmDelete()
+          setConfirmDialogOpen(false)
+        }}
+        onCancel={handleCancelDelete}
+      />
+      <DeletedDevices devices={devices} refreshDevices={getDevices} />
     </div>
   )
 }

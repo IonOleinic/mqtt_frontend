@@ -7,11 +7,15 @@ import { TbArrowsUpDown } from 'react-icons/tb'
 import { TbFilter } from 'react-icons/tb'
 import './Scenes.css'
 import AddScene from '../AddScene/AddScene'
-import add_btn_img from './images/add_btn.png'
+import AddBtn from '../../../components/AddBtn/AddBtn'
+import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog'
+import { FaTrashAlt } from 'react-icons/fa'
 
 const Scenes = () => {
   const [scenes, setScenes] = useState([])
   const [addSceneVisibility, setAddSceneVisibility] = useState(false)
+  const [sceneToDelete, setSceneToDelete] = useState(undefined)
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const axios = useAxiosPrivate()
   const getScenes = async () => {
     try {
@@ -22,18 +26,37 @@ const Scenes = () => {
       console.log(error.message)
     }
   }
-  useEffect(() => {
-    getScenes()
-  }, [])
-
-  const handleDeleteScene = async (selected_scene_id) => {
+  const getScene = async (sceneId) => {
     try {
-      const response = await axios.delete(`/scene/${selected_scene_id}`)
-      setScenes(response.data)
+      const response = await axios.get(`/scene/${sceneId}`)
+      setSceneToDelete(response.data)
     } catch (error) {
       console.log(error.message)
     }
   }
+  useEffect(() => {
+    getScenes()
+  }, [])
+
+  const handleConfirmDelete = async () => {
+    if (sceneToDelete)
+      try {
+        const response = await axios.delete(`/scene/${sceneToDelete.id}`)
+        setScenes(response.data)
+      } catch (error) {
+        console.log(error.message)
+      }
+  }
+  const handleCancelDelete = () => {
+    // Cancel the deletion
+    setSceneToDelete(undefined)
+    setConfirmDialogOpen(false)
+  }
+  const handleDeleteScene = (sceneId) => {
+    setConfirmDialogOpen(true)
+    getScene(sceneId)
+  }
+
   return (
     <>
       <div className='scenes-container'>
@@ -71,18 +94,21 @@ const Scenes = () => {
             </button>
           </div>
         </div>
+
         {scenes.length === 0 ? (
-          <div className='empty-page'>
-            <div
-              className='empty-page-inner'
-              onClick={() => {
-                setAddSceneVisibility((prev) => !prev)
-              }}
-            >
-              <p>Your Scene List is Empty. Please click to add one.</p>
-              <img src={add_btn_img} alt='add scene button' />
+          <>
+            <div className='empty-page'>
+              <div
+                className='empty-page-inner'
+                onClick={() => {
+                  setAddSceneVisibility((prev) => !prev)
+                }}
+              >
+                <p>Your scene list is empty. Please click to add one.</p>
+                <AddBtn size={150} />
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           <div className='scenes'>
             {scenes.map((scene) => {
@@ -99,6 +125,18 @@ const Scenes = () => {
         <AddScene
           toggleVisibility={setAddSceneVisibility}
           visibility={addSceneVisibility}
+        />
+        <ConfirmationDialog
+          isOpen={confirmDialogOpen}
+          dialogType={'delete'}
+          icon={<FaTrashAlt size={18} />}
+          title={'Delete scene'}
+          message={`delete scene "${sceneToDelete?.name}"`}
+          onConfirm={() => {
+            handleConfirmDelete()
+            setConfirmDialogOpen(false)
+          }}
+          onCancel={handleCancelDelete}
         />
       </div>
     </>

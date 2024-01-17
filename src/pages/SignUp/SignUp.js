@@ -31,26 +31,27 @@ function SignUp() {
   const from = location.state?.from?.pathname || '/'
   const handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      const response = await axios.post('/register', {
-        name,
-        email,
-        password,
-        gender,
-      })
-      if (response.status === 201) {
-        login(email, password)
+    if (validEmail && validEmail && validPassword && validConfirmPassword)
+      try {
+        const response = await axios.post('/register', {
+          name,
+          email,
+          password,
+          gender,
+        })
+        if (response.status === 201) {
+          login(email, password)
+        }
+      } catch (error) {
+        console.log(error)
+        if (error.response.status === 409) {
+          setValidEmail(false)
+          emailRef.current.focus()
+        } else if (error.response.status === 500) {
+          setServerErrorMsg('Server Error. Please try again.')
+          setServerErrorVisibility(true)
+        }
       }
-    } catch (error) {
-      console.log(error)
-      if (error.response.status === 409) {
-        setValidEmail(false)
-        emailRef.current.focus()
-      } else if (error.response.status === 500) {
-        setServerErrorMsg('Server Error. Please try again.')
-        setServerErrorVisibility(true)
-      }
-    }
   }
   const login = async (email, password) => {
     try {

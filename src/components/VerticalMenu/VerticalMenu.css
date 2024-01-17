@@ -9,14 +9,14 @@
   transition: background-color 0.3s ease-in-out;
 }
 .vertical-menu-active {
-  background-color: #cccccc87;
+  background-color: var(--bck-grey-active-color);
 }
 .vertical-menu * {
   margin: 0;
   padding: 0;
 }
 .vertical-menu:hover {
-  background-color: #ccccccc7;
+  background-color: var(--bck-grey-hover-color);
   cursor: pointer;
 }
 .vertical-menu-top {

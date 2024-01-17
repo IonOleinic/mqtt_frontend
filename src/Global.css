@@ -27,7 +27,8 @@ input {
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 90vh;
+  min-height: 90vh;
+  padding: 4rem 0;
   transition: all 0.4s ease-in-out;
 }
 .Auth-form {
@@ -178,6 +179,7 @@ input {
   width: 80%;
   max-width: 600px;
   cursor: pointer;
+  color: #007fad;
 }
 .empty-page-inner p {
   text-align: center;
@@ -185,11 +187,8 @@ input {
   font-weight: bold;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin-bottom: 2rem;
-  color: var(--hover-color);
 }
-.empty-page-inner img {
-  width: 150px;
-}
+
 /* others */
 @media (max-width: 768px) {
   .logo {
