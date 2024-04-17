@@ -261,7 +261,7 @@ const Devices = () => {
         dialogType={'delete'}
         icon={<FaTrashAlt size={18} />}
         title={'Delete device'}
-        message={`delete device "${deviceToDelete?.name}"`}
+        message={`move device "${deviceToDelete?.name}" to recycle bin`}
         onConfirm={() => {
           handleConfirmDelete()
           setConfirmDialogOpen(false)
