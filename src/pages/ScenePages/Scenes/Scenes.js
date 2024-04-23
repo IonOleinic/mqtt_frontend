@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Scene from '../../../components/SceneComponents/Scene/Scene'
-import { AiOutlinePlus } from 'react-icons/ai'
 import DropDownMenu from '../../../components/DropDownMenu/DropDownMenu'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { TbArrowsUpDown } from 'react-icons/tb'
 import { TbFilter } from 'react-icons/tb'
-import './Scenes.css'
 import AddScene from '../AddScene/AddScene'
 import AddBtn from '../../../components/AddBtn/AddBtn'
-import ConfirmationDialog from '../../../components/ConfirmationDialog/ConfirmationDialog'
-import { FaTrashAlt } from 'react-icons/fa'
+import { Button } from 'primereact/button'
+
+import './Scenes.css'
 
 const Scenes = () => {
   const [scenes, setScenes] = useState([])
   const [addSceneVisibility, setAddSceneVisibility] = useState(false)
-  const [sceneToDelete, setSceneToDelete] = useState(undefined)
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const axios = useAxiosPrivate()
   const getScenes = async () => {
     try {
@@ -26,42 +23,24 @@ const Scenes = () => {
       console.log(error.message)
     }
   }
-  const getScene = async (sceneId) => {
-    try {
-      const response = await axios.get(`/scene/${sceneId}`)
-      setSceneToDelete(response.data)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
   useEffect(() => {
     getScenes()
   }, [])
 
-  const handleConfirmDelete = async () => {
-    if (sceneToDelete)
-      try {
-        const response = await axios.delete(`/scene/${sceneToDelete.id}`)
-        setScenes(response.data)
-      } catch (error) {
-        console.log(error.message)
-      }
-  }
-  const handleCancelDelete = () => {
-    // Cancel the deletion
-    setSceneToDelete(undefined)
-    setConfirmDialogOpen(false)
-  }
-  const handleDeleteScene = (sceneId) => {
-    setConfirmDialogOpen(true)
-    getScene(sceneId)
+  const handleDeleteScene = async (sceneId) => {
+    try {
+      const response = await axios.delete(`/scene/${sceneId}`)
+      setScenes(response.data)
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   return (
     <>
       <div className='scenes-container'>
-        <div className='toolbar-scenes'>
-          <div className='toolbar-scenes-item'>
+        <div className='toolbar'>
+          <div className='toolbar-item'>
             <span>
               <TbFilter size={30} />
             </span>
@@ -71,7 +50,7 @@ const Scenes = () => {
               items={[]}
             />
           </div>
-          <div className='toolbar-scenes-item'>
+          <div className='toolbar-item'>
             <span>
               <TbArrowsUpDown size={25} />
             </span>
@@ -81,17 +60,15 @@ const Scenes = () => {
               items={[]}
             />
           </div>
-          <div className='toolbar-scenes-item'>
+          <div className='toolbar-item'>
             <span>Add</span>
-            <button
-              type='button'
-              className='btn btn-primary'
+            <Button
+              icon='pi pi-plus'
+              className='mr-2 toolbar-add-btn'
               onClick={() => {
                 setAddSceneVisibility(true)
               }}
-            >
-              <AiOutlinePlus size={20} color='white' />
-            </button>
+            />
           </div>
         </div>
 
@@ -125,18 +102,6 @@ const Scenes = () => {
         <AddScene
           toggleVisibility={setAddSceneVisibility}
           visibility={addSceneVisibility}
-        />
-        <ConfirmationDialog
-          isOpen={confirmDialogOpen}
-          dialogType={'delete'}
-          icon={<FaTrashAlt size={18} />}
-          title={'Delete scene'}
-          message={`delete scene "${sceneToDelete?.name}"`}
-          onConfirm={() => {
-            handleConfirmDelete()
-            setConfirmDialogOpen(false)
-          }}
-          onCancel={handleCancelDelete}
         />
       </div>
     </>

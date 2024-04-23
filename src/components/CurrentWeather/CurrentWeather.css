@@ -1,7 +1,4 @@
 .current-weather {
-  /* position: absolute;
-  top: 0;
-  right: 0; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10,6 +7,7 @@
   text-overflow: ellipsis;
 }
 .current-weather-icon {
+  user-select: none;
   width: 70px;
   margin-right: 0.2rem;
 }
@@ -49,22 +47,5 @@
   }
   .current-weather-celsius-icon {
     width: 25px;
-  }
-}
-@media (max-width: 568px) {
-  .current-weather {
-    margin-left: 1rem;
-  }
-  .current-weather-text-temp {
-    font-size: 1.1rem;
-  }
-  .current-weather-text-loc {
-    font-size: 0.8rem;
-  }
-  .current-weather-icon {
-    width: 50px;
-  }
-  .current-weather-celsius-icon {
-    width: 22px;
   }
 }

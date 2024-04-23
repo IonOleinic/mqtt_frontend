@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import './SubIR.css'
+import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { socket } from '../../../../api/io'
+import './SubIR.css'
 
 function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
   const axios = useAxiosPrivate()

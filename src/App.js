@@ -1,7 +1,6 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import NavAndSideBar from './components/NavAndSideBar/NavAndSideBar'
-import Home from './pages/Home/Home'
+import Navigation from './components/Navigation/Navigation'
+import Dashboard from './pages/Dashboard/Dashboard'
 import Devices from './pages/DevicePages/Devices/Devices'
 import Scenes from './pages/ScenePages/Scenes/Scenes'
 import AddSchedule from './pages/ScenePages/AddScene/AddSchedule/AddSchedule'
@@ -12,18 +11,16 @@ import SignIn from './pages/SignIn/SignIn'
 import SignUp from './pages/SignUp/SignUp'
 import AddDevice from './pages/DevicePages/AddDevice/AddDevice'
 import EditDevice from './pages/DevicePages/EditDevice/EditDevice'
-import Layout from './components/Layout/Layout'
-import RequireAuth from './components/RequireAuth'
-import PersistLogin from './components/PersistLogin'
-import './App.css'
-import './Global.css'
+import AppLayout from './components/Layouts/AppLayout'
+import RequireAuth from './components/Auth/RequireAuth'
+import PersistLogin from './components/Auth/PersistLogin'
 
 function App() {
   return (
     <>
-      <NavAndSideBar />
+      <Navigation />
       <Routes>
-        <Route path='/' element={<Layout />}>
+        <Route path='/' element={<AppLayout />}>
           {/*Public Routes */}
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
@@ -31,20 +28,20 @@ function App() {
           {/*Private Routes */}
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth />}>
-              <Route path='/home' element={<Home />} />
-              <Route path='/' element={<Navigate to='/home' />} />
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/' element={<Navigate to='/dashboard' />} />
               <Route path='/devices' element={<Devices />} />
               <Route path='/scenes' element={<Scenes />} />
               <Route path='/settings' element={<Settings />} />
-              <Route path='/devices/adddevice' element={<AddDevice />} />
-              <Route path='/devices/editdevice/:id' element={<EditDevice />} />
-              <Route path='/scenes/addschedule' element={<AddSchedule />} />
+              <Route path='/devices/add-device' element={<AddDevice />} />
+              <Route path='/devices/edit-device/:id' element={<EditDevice />} />
+              <Route path='/scenes/add-schedule' element={<AddSchedule />} />
               <Route
-                path='/scenes/adddevicescene'
+                path='/scenes/add-device-scene'
                 element={<AddDeviceScene />}
               />
               <Route
-                path='/scenes/addweatherscene'
+                path='/scenes/add-weather-scene'
                 element={<AddWeatherScene />}
               />
             </Route>

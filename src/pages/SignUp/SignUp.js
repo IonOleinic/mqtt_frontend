@@ -1,11 +1,12 @@
-import './SignUp.css'
 import { useState } from 'react'
 import useAxios from '../../hooks/useAxios'
-import React, { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
+import './SignUp.css'
+
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d.@$!%*?&]{8,}$/
 const nameRegex = /^[a-zA-Z' -]+$/
 function SignUp() {

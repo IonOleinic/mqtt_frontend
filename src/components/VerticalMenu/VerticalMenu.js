@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react'
-import './VerticalMenu.css'
+import { useRef, useState } from 'react'
 import { FiMoreVertical } from 'react-icons/fi'
 import { useClickOutside } from '../../hooks/useClickOutside'
+import './VerticalMenu.css'
+
 function VerticalMenu({ items }) {
   const verticalMenuRef = useRef()
   const [isOpen, setIsOpen] = useState(false)

@@ -1,7 +1,7 @@
 .device-item {
   width: 20rem;
   min-height: 6rem;
-  margin: 0.6rem;
+  /* margin: 0.6rem; */
   position: relative;
   background-color: white;
   border-radius: 9px;
@@ -10,6 +10,7 @@
   text-align: center;
   transition: all 0.4s;
 }
+
 .device-top {
   display: flex;
   align-items: flex-start;
@@ -17,11 +18,17 @@
   position: relative;
   height: 110px;
 }
-
+.device-top button {
+  border: none;
+  background-color: transparent;
+}
 .icon-expand {
   transition: all 0.5s;
   padding: 0.2rem;
   margin-left: -0.5rem;
+}
+.icon-expand-rotated {
+  transform: rotate(180deg);
 }
 .device-img {
   min-height: 40px;
@@ -73,17 +80,26 @@
 .fav-icon:hover {
   cursor: pointer;
 }
-.device-date {
+.device-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   position: absolute;
-  font-size: 0.8rem;
   bottom: 0rem;
-  left: 0.5rem;
-  font-style: italic;
+  left: 0rem;
 }
+
+.device-available-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
 .battery-level-icon {
-  position: absolute;
-  bottom: 0rem;
-  left: 1.5rem;
+  display: revert;
+}
+.battery-level-icon-hidden {
+  display: none;
 }
 .battery-icon-usb-powered {
   display: flex;
@@ -101,33 +117,34 @@
   border-radius: 4px;
   font-size: 0.4rem;
 }
+.device-date {
+  position: absolute;
+  font-size: 0.8rem;
+  bottom: 0rem;
+  left: 0.5rem;
+  font-style: italic;
+}
+
+.device-expand {
+  position: absolute;
+  bottom: 0.2rem;
+  right: 0.4rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+.device-expand:hover {
+  color: var(--hover-color);
+}
 
 .final-device {
+  position: relative;
   max-height: 280px;
   transition: max-height 0.5s ease-in-out;
   overflow: hidden;
 }
 .final-device-hidden {
   max-height: 0px;
-}
-.device-available-icon {
-  position: absolute;
-  bottom: 0rem;
-  left: 0rem;
-}
-.device-expand {
-  position: absolute;
-  bottom: 0rem;
-  right: 0rem;
-  padding: 0.4rem;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease-in-out;
-}
-.device-expand:hover {
-  background-color: var(--bck-grey-hover-color);
-  color: var(--hover-color);
-  cursor: pointer;
 }

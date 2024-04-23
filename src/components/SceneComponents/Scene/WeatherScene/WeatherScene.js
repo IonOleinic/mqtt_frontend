@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import './WeatherScene.css'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { FaTemperatureLow } from 'react-icons/fa'
 import { ImLocation } from 'react-icons/im'
 import { TbTemperatureCelsius } from 'react-icons/tb'
 import { GrAction } from 'react-icons/gr'
 import useDeviceIcon from '../../../../hooks/useDeviceIcon'
+import './WeatherScene.css'
+
 function WeatherScene({ scene }) {
   const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
@@ -86,13 +87,6 @@ function WeatherScene({ scene }) {
           </div>
         </div>
       </div>
-      <span
-        className='scene-disabled-mask'
-        style={{
-          display:
-            scene.active == 'true' || scene.active == true ? 'none' : 'revert',
-        }}
-      ></span>
     </div>
   )
 }

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import './SmartMotionSensor.css'
+import { useEffect, useState } from 'react'
 import no_motion_img from './MotionSensorImages/no_motion_img.jpg'
 import motion_img from './MotionSensorImages/motion_img.jpg'
+import './SmartMotionSensor.css'
+
 function SmartMotionSensor({ device }) {
   const [status, setStatus] = useState('No Motion')
   const [statusImg, setStatusImg] = useState(no_motion_img)

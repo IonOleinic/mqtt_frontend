@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
-import './DropDownMenu.css'
+import { useEffect, useRef, useState } from 'react'
 import { useClickOutside } from '../../hooks/useClickOutside'
+import './DropDownMenu.css'
+
 function DropDownMenu({ title, setTitle, items, showTitleIcon }) {
   const [titleIcon, setTitleIcon] = useState(<></>)
   const [isOpen, setIsOpen] = useState(false)

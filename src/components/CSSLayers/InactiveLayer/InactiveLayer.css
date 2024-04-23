@@ -1,0 +1,32 @@
+.inactive-layer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.6);
+  cursor: not-allowed;
+  user-select: none;
+}
+.inactive-layer-hidden {
+  display: none;
+}
+.inactive-layer-message {
+  user-select: none;
+  padding: 0.2rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  color: white;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.605);
+}
+.inactive-layer-message-hidden {
+  display: none;
+}

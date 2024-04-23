@@ -1,8 +1,8 @@
-import './EditDevice.css'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import './EditDevice.css'
+
 function EditDevice() {
   const axios = useAxiosPrivate()
   const { id } = useParams()

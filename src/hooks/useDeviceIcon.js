@@ -22,8 +22,8 @@ import SmartTempSensorIcon from '../components/DeviceComponents/AddDeviceCompone
 import SmartSirenAlarmIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartSirenAlarmIcon'
 
 //available icons
-let iconOnline = <HiOutlineStatusOnline size={20} color='green' />
-let iconOffline = <HiOutlineStatusOffline size={20} color='#ccc' />
+let iconOnline = <HiOutlineStatusOnline size={20} />
+let iconOffline = <HiOutlineStatusOffline size={20} />
 
 //battery icons
 let poweredUsbIcon = (

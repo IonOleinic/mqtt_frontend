@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import EmptyRecycleBin from './images/empty-recycle-bin.png'
 import FullRecycleBin from './images/full-recycle-bin.png'
 import DeletedDevice from '../Device/DeletedDevice/DeletedDevice'
@@ -51,6 +51,14 @@ function DeletedDevices({ devices, refreshDevices }) {
   useEffect(() => {
     getDeletedDevices()
   }, [devices])
+
+  useEffect(() => {
+    if (deletedDevices.length == 0) {
+      setTimeout(() => {
+        setDeletedDevicesVisibility(false)
+      }, 400)
+    }
+  }, [deletedDevices])
   return (
     <div className='deleted-devices-container' ref={deletedDevicesRef}>
       <div

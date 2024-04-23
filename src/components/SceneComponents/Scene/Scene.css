@@ -45,18 +45,8 @@
   left: 0.5rem;
   font-style: italic;
 }
-.scene-disabled-mask {
-  position: absolute;
-  top: 0rem;
-  left: 0rem;
-  width: 100%;
-  height: 100%;
-  background-color: #ccc;
-  opacity: 40%;
-  border-radius: 7px;
-  cursor: not-allowed;
-}
 .final-scene {
+  position: relative;
   max-height: 180px;
   transition: max-height 0.4s ease-in-out;
   overflow: hidden;

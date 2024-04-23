@@ -1,9 +1,9 @@
-import React from 'react'
 import { MdSettingsBackupRestore } from 'react-icons/md'
 import { IoMdTrash } from 'react-icons/io'
 import useDeviceIcon from '../../../../hooks/useDeviceIcon'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import './DeletedDevice.css'
+
 function DeletedDevice({ device, refreshDevices }) {
   const axios = useAxiosPrivate()
   const { deviceIcon } = useDeviceIcon(device)

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import { Checkmark } from 'react-checkmark'
 import { VscError } from 'react-icons/vsc'
 import CheckMessage from '../../../../components/CheckMessage/CheckMessage'
 import UseAnimations from 'react-useanimations'
 import loading from 'react-useanimations/lib/loading'
-import TimePicker from 'react-times'
 import SubSceneSmartStrip from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartStrip'
 import SubSceneSirenAlarm from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartIR'
 import SubSceneSmartLed from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartLed'
 import useWeatherData from '../../../../hooks/useWeatherData'
+import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import './AddWeatherScene.css'
-let iconSucces = <Checkmark size='25px' color='green' />
+
+let iconSucces = <IoIosCheckmarkCircleOutline size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
 

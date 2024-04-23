@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import './PaletteItem.css'
+import { useState, useEffect } from 'react'
 import plusToX from 'react-useanimations/lib/plusToX'
 import UseAnimations from 'react-useanimations'
 import { HexColorPicker } from 'react-colorful'
+import './PaletteItem.css'
+
 function PaletteItem({ initColor, handlePaletteChange, position, id }) {
   const [checked, setChecked] = useState(false)
   const [clear, setClear] = useState(false)

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { GrAction } from 'react-icons/gr'
 import { MdPendingActions } from 'react-icons/md'
-import './DeviceScene.css'
 import useDeviceIcon from '../../../../hooks/useDeviceIcon'
+import './DeviceScene.css'
 
 function DeviceScene({ scene }) {
   const axios = useAxiosPrivate()
@@ -84,13 +84,6 @@ function DeviceScene({ scene }) {
           </div>
         </div>
       </div>
-      <span
-        className='scene-disabled-mask'
-        style={{
-          display:
-            scene.active == 'true' || scene.active == true ? 'none' : 'revert',
-        }}
-      ></span>
     </div>
   )
 }

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import './SmartSirenAlarm.css'
-import { RangeStepInput } from 'react-range-step-input'
+import { useEffect, useState } from 'react'
+import { Slider } from 'primereact/slider'
 import { FaTemperatureLow } from 'react-icons/fa'
 import { TbTemperatureCelsius } from 'react-icons/tb'
 import { WiHumidity } from 'react-icons/wi'
@@ -8,8 +7,11 @@ import { SlVolume2 } from 'react-icons/sl'
 import { SlVolumeOff } from 'react-icons/sl'
 import { GrVolumeControl } from 'react-icons/gr'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-let volume_on = <SlVolume2 size={40} color='red' />
-let volume_off = <SlVolumeOff size={40} color='black' />
+import useDebounce from '../../../../hooks/useDebounce'
+import './SmartSirenAlarm.css'
+
+let volume_on = <SlVolume2 size={40} />
+let volume_off = <SlVolumeOff size={40} />
 
 function SmartSirenAlarm({ device }) {
   const axios = useAxiosPrivate()
@@ -18,8 +20,10 @@ function SmartSirenAlarm({ device }) {
   const [humidity, setHumidity] = useState(0)
   const [sound, setSound] = useState(0)
   const [volume, setVolume] = useState(2)
+  const debouncedVolume = useDebounce(volume, 300)
   const [inversedVolume, setInversedVolume] = useState(1)
   const [soundDuration, setSoundDuration] = useState(0)
+  const debouncedSoundDuration = useDebounce(soundDuration, 300)
   const [volumeIcon, setVolumeIcon] = useState(volume_off)
 
   useEffect(() => {
@@ -43,20 +47,27 @@ function SmartSirenAlarm({ device }) {
     setSoundDuration(device.sound_duration)
   }, [device])
 
-  const sendChangePower = async (pwr_status) => {
+  useEffect(() => {
+    if (debouncedSoundDuration == 0) {
+      return
+    }
+    updateAlarmOptions(sound, debouncedVolume, debouncedSoundDuration)
+  }, [debouncedVolume, debouncedSoundDuration])
+
+  const sendChangePower = async (powerStatus) => {
     try {
       const response = await axios.post(
-        `/smartSirenAlarm/power?status=${pwr_status}&device_id=${device.id}`
+        `/smartSirenAlarm/power?status=${powerStatus}&device_id=${device.id}`
       )
     } catch (error) {
       console.log(error)
     }
   }
 
-  const update_options = async (new_sound, new_volume, new_duration) => {
+  const updateAlarmOptions = async (newSound, newVolume, newDuration) => {
     try {
       const response = await axios.post(
-        `/smartSirenAlarm/options?new_sound=${new_sound}&new_volume=${new_volume}&new_duration=${new_duration}&device_id=${device.id}`
+        `/smartSirenAlarm/options?new_sound=${newSound}&new_volume=${newVolume}&new_duration=${newDuration}&device_id=${device.id}`
       )
     } catch (error) {
       console.log(error)
@@ -89,17 +100,20 @@ function SmartSirenAlarm({ device }) {
           </div>
         </div>
         <div
-          className='siren-alarm-btn'
-          style={{ borderColor: status == 'ON' ? 'red' : 'black' }}
+          className={
+            status == 'ON'
+              ? 'siren-alarm-btn siren-alarm-active'
+              : 'siren-alarm-btn'
+          }
           onClick={() => sendChangePower('TOGGLE')}
         >
           {volumeIcon}
           <p
-            className='siren-alarm-btn-info'
-            style={{
-              borderColor: status == 'ON' ? 'red' : 'black',
-              color: status == 'ON' ? 'red' : 'black',
-            }}
+            className={
+              status == 'ON'
+                ? 'siren-alarm-btn-info siren-alarm-active'
+                : 'siren-alarm-btn-info'
+            }
           >
             Tap To Toggle
           </p>
@@ -114,7 +128,11 @@ function SmartSirenAlarm({ device }) {
               value={sound}
               onChange={(e) => {
                 setSound(e.target.value)
-                update_options(e.target.value, volume, soundDuration)
+                updateAlarmOptions(
+                  e.target.value,
+                  debouncedVolume,
+                  debouncedSoundDuration
+                )
               }}
             >
               {array_types.map((array_type, index) => {
@@ -132,12 +150,13 @@ function SmartSirenAlarm({ device }) {
               id='input-sound-duration'
               pattern='[0-9]{1,5}'
               type='number'
+              min={1}
+              max={120}
               className='form-control mt-1'
               placeholder='Duration'
               value={soundDuration}
               onChange={(e) => {
                 setSoundDuration(e.target.value)
-                update_options(sound, volume, e.target.value)
               }}
             />
           </div>
@@ -147,26 +166,24 @@ function SmartSirenAlarm({ device }) {
         <div className='volume-control-icon'>
           <GrVolumeControl size={30} />
         </div>
-        <RangeStepInput
+        <Slider
           min={0}
           max={3}
           value={inversedVolume}
           step={1}
           onChange={(e) => {
-            if (e.target.value != '0') {
-              setInversedVolume(e.target.value)
+            if (e.value != '0') {
+              setInversedVolume(e.value)
             }
-            if (e.target.value == '3') {
+            if (e.value == '3') {
               setVolume(0)
-              update_options(sound, 0, soundDuration)
-            } else if (e.target.value == '2') {
+            } else if (e.value == '2') {
               setVolume(1)
-              update_options(sound, 1, soundDuration)
-            } else if (e.target.value == '1') {
+            } else if (e.value == '1') {
               setVolume(2)
-              update_options(sound, 2, soundDuration)
             }
           }}
+          style={{ width: '60%' }}
         />
       </div>
     </div>

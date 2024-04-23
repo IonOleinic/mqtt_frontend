@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import './SmartIR.css'
+import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { BiPowerOff } from 'react-icons/bi'
 import { BiPlus } from 'react-icons/bi'
@@ -13,6 +12,7 @@ import { BiInfoCircle } from 'react-icons/bi'
 import { MdInput } from 'react-icons/md'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
+import './SmartIR.css'
 
 function SmartIR({ device }) {
   const axios = useAxiosPrivate()

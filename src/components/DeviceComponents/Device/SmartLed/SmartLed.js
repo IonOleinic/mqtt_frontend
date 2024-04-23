@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import { useState, useEffect } from 'react'
 import { HuePicker } from 'react-color'
 import { AlphaPicker } from 'react-color'
 import { BsLightbulbFill } from 'react-icons/bs'
 import { LedStripIcon } from './Icons/LedStripIcon'
 import { BsPlayCircle } from 'react-icons/bs'
 import { BsStopCircle } from 'react-icons/bs'
-import './SmartLed.css'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import { RangeStepInput } from 'react-range-step-input'
+import { Slider } from 'primereact/slider'
 import PaletteItem from './PaletteItem/PaletteItem'
 import { TbAlertTriangle } from 'react-icons/tb'
+import useDebounce from '../../../../hooks/useDebounce'
+import './SmartLed.css'
 
 let bulb_icon = <BsLightbulbFill size={50} />
 let led_strip_icon = <LedStripIcon size={50} />
+
 function SmartLed({ device }) {
   const axios = useAxiosPrivate()
   const [currentTab, setCurrentTab] = useState(0)
@@ -20,7 +22,9 @@ function SmartLed({ device }) {
   const [cold, setCold] = useState(0)
   const [warm, setWarm] = useState(0)
   const [dimmer, setDimmer] = useState(100)
-  const [speed, setSpeed] = useState(10)
+  const debouncedDimmer = useDebounce(dimmer, 300)
+  const [paletteSpeed, setPaletteSpeed] = useState(10)
+  const debouncedPeletteSpeed = useDebounce(paletteSpeed, 300)
   const [paletteItems, setPaletteItems] = useState([])
   const [ledIcon, setLedIcon] = useState(<></>)
   const [paletteColors, setPaletteColors] = useState([])
@@ -70,7 +74,7 @@ function SmartLed({ device }) {
       setWarm(warm_ch)
     }
     setDimmer(device.dimmer)
-    setSpeed(device.speed)
+    setPaletteSpeed(device.speed)
   }, [device])
   useEffect(() => {
     setPaletteItemsFunc(device.palette)
@@ -135,10 +139,10 @@ function SmartLed({ device }) {
       console.log(error)
     }
   }
-  const sendChangeSpeed = async () => {
+  const sendChangePaletteSpeed = async () => {
     try {
       const response = await axios.post(
-        `/SmartLed/speed?device_id=${device.id}&speed=${speed}`
+        `/SmartLed/speed?device_id=${device.id}&speed=${paletteSpeed}`
       )
     } catch (error) {
       console.log(error)
@@ -158,6 +162,14 @@ function SmartLed({ device }) {
     temp[id] = color.replaceAll('#', '').toUpperCase()
     sendChangePalette(temp)
   }
+
+  useEffect(() => {
+    sendChangeDimmer(debouncedDimmer)
+  }, [debouncedDimmer])
+
+  useEffect(() => {
+    sendChangePaletteSpeed(debouncedPeletteSpeed)
+  }, [debouncedPeletteSpeed])
 
   return (
     <div className='smart-led'>
@@ -186,37 +198,30 @@ function SmartLed({ device }) {
               <label htmlFor='#'>Dimmer</label>
               <button
                 style={{ border: 'none', background: 'none', width: '100%' }}
-                onMouseUp={(e) => {
-                  sendChangeDimmer(dimmer)
-                }}
-                onTouchEnd={(e) => sendChangeDimmer(dimmer)}
               >
-                <RangeStepInput
+                <Slider
                   min={0}
                   max={100}
                   value={dimmer}
                   step={1}
                   onChange={(e) => {
-                    setDimmer(e.target.value)
+                    setDimmer(e.value)
                   }}
                   style={{ width: '100%' }}
                 />
               </button>
             </div>
             <div className='bulb-item'>
-              <div
+              <button
                 className='bulb-item-icon'
                 style={{
-                  border:
-                    device.status == 'ON'
-                      ? `4px solid ${color}`
-                      : `4px solid #ccc`,
+                  borderColor: device.status == 'ON' ? color : `#ccc`,
                   color: device.status == 'ON' ? color : '#ccc',
                 }}
                 onClick={sendChangePower}
               >
                 {ledIcon}
-              </div>
+              </button>
             </div>
           </div>
         )}
@@ -269,23 +274,23 @@ function SmartLed({ device }) {
           </div>
         )}
         {currentTab === 2 && (
-          <div className='smart-led-tab pallete-tab'>
+          <div className='smart-led-tab palette-tab'>
             {device.manufacter == 'tasmota' &&
             device.led_type.includes('rgb') ? (
               <div
-                className='slider-item pallete-controll'
+                className='slider-item palette-controll'
                 style={{
                   display: device.manufacter == 'tasmota' ? 'flex' : 'none',
                 }}
               >
-                <div className='pallete-controll-item palette-colors'>
+                <div className='palette-controll-item palette-colors'>
                   {paletteItems}
                 </div>
-                <div className='pallete-controll-item palette-buttons'>
+                <div className='palette-controll-item palette-buttons'>
                   <div
                     className={
                       device.scheme == '1' || device.scheme == '0'
-                        ? 'palette-play-btn pallete-btn-hovered'
+                        ? 'palette-play-btn palette-btn-hovered'
                         : 'palette-play-btn'
                     }
                     onClick={() => {
@@ -307,7 +312,7 @@ function SmartLed({ device }) {
                     className={
                       device.scheme == '1' || device.scheme == '0'
                         ? 'palette-stop-btn '
-                        : 'palette-stop-btn pallete-btn-hovered'
+                        : 'palette-stop-btn palette-btn-hovered'
                     }
                     onClick={() => {
                       if (device.scheme == '2' || device.scheme == '3') {
@@ -325,7 +330,7 @@ function SmartLed({ device }) {
                     />
                   </div>
                 </div>
-                <div className='pallete-controll-item palette-speed'>
+                <div className='palette-controll-item palette-speed'>
                   <label htmlFor='#'>Speed</label>
                   <button
                     style={{
@@ -333,18 +338,14 @@ function SmartLed({ device }) {
                       background: 'none',
                       width: '100%',
                     }}
-                    onMouseUp={(e) => {
-                      sendChangeSpeed(speed)
-                    }}
-                    onTouchEnd={(e) => sendChangeSpeed(speed)}
                   >
-                    <RangeStepInput
+                    <Slider
                       min={1}
                       max={40}
-                      value={41 - speed}
+                      value={41 - paletteSpeed}
                       step={1}
                       onChange={(e) => {
-                        setSpeed(41 - e.target.value)
+                        setPaletteSpeed(41 - e.value)
                       }}
                       style={{ width: '100%' }}
                     />

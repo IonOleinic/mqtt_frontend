@@ -1,13 +1,8 @@
-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgb(34, 34, 34);
-}
-input {
-  cursor: revert;
-}
 .active-color {
   color: revert;
+}
+.green-active-color {
+  color: green;
 }
 .inactive-color {
   color: #ccc;
@@ -179,7 +174,7 @@ input {
   width: 80%;
   max-width: 600px;
   cursor: pointer;
-  color: #007fad;
+  color: var(--active-color);
 }
 .empty-page-inner p {
   text-align: center;
@@ -189,11 +184,81 @@ input {
   margin-bottom: 2rem;
 }
 
-/* others */
-@media (max-width: 768px) {
-  .logo {
-    position: absolute;
-    top: 0;
-    left: 1rem;
+/* toolbar */
+.toolbar {
+  position: sticky;
+  top: var(--navbar-height);
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  width: 100%;
+  max-height: 10rem;
+  height: var(--toolbar-height);
+  box-shadow: var(--box-shadow-default);
+  z-index: 9;
+  padding: 0 2rem;
+  gap: 3rem;
+}
+
+.toolbar-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem;
+}
+
+.toolbar-item > span {
+  margin-right: 0.4rem;
+  font-size: 1.2rem;
+}
+
+.toolbar-add-btn {
+  background-color: var(--active-color) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-color: var(--active-color) !important;
+}
+.toolbar-add-btn:hover,
+.toolbar-add-btn:active {
+  background-color: var(--hover-color) !important;
+}
+.toolbar-add-btn:focus {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--active-color),
+    0 1px 2px 0 rgb(0, 0, 0);
+}
+
+@media (max-width: 568px) {
+  .toolbar {
+    padding: 0;
+    gap: 0.5rem;
+  }
+}
+
+/* overwrite primerect components css */
+
+/* dialog */
+.p-dialog {
+  min-width: 400px;
+  max-width: 500px;
+}
+
+/* sliders */
+.p-slider-range {
+  background-color: var(--active-color) !important;
+}
+.p-slider-handle {
+  border-color: var(--active-color) !important;
+}
+.p-slider-handle:hover {
+  background-color: var(--active-color) !important;
+}
+
+@media (max-width: 568px) {
+  .p-dialog {
+    min-width: auto;
+    max-width: 90%;
   }
 }

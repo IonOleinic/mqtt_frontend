@@ -1,6 +1,5 @@
-import React from 'react'
 import { useEffect, useState } from 'react'
-import InputColor from 'react-input-color'
+import { ColorPicker } from 'primereact/colorpicker'
 
 function SubSceneSmartLed({
   device,
@@ -12,7 +11,9 @@ function SubSceneSmartLed({
   setExecutableText,
   event_or_action,
 }) {
-  let powerValueType = (
+  const [color, setColor] = useState('1976D2')
+
+  const powerValueType = (
     <select
       id='select-event-state'
       className='form-select select-type'
@@ -52,24 +53,23 @@ function SubSceneSmartLed({
       </option>
     </select>
   )
-  let colorValueType = (
-    <InputColor
-      initialValue='#5e72e4'
-      placement='right'
+  const colorValueType = (
+    <ColorPicker
+      value={color}
       onChange={(e) => {
+        setColor(e.target.value)
         if (event_or_action == 'event') {
           // setConditionalTopic(device.receive_status_topic)
           // setConditionalText(`Color ${payload}`)
         } else if (event_or_action == 'action') {
           setExecutableTopic(`cmnd/${device.mqtt_name}/Color`)
-          setExecutablePayload(e.hex.replace('#', '').substring(0, 6))
-          let color = e.hex.replace('#', '').substring(0, 6)
-          setExecutableText('Color ' + color.toString())
+          setExecutablePayload(e.target.value)
+          setExecutableText('Color ' + e.target.value)
         }
       }}
     />
   )
-  let dimmerValueType = (
+  const dimmerValueType = (
     <input
       id='input-name'
       type='number'
@@ -139,6 +139,9 @@ function SubSceneSmartLed({
                 break
               case 'Color':
                 setValueType(colorValueType)
+                setExecutableTopic(`cmnd/${device.mqtt_name}/Color`)
+                setExecutablePayload(color)
+                setExecutableText(`Color ${color}`)
                 break
               case 'Dimmer':
                 setValueType(dimmerValueType)

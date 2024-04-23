@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
-import './UserProfile.css'
+import { useEffect, useState, useRef } from 'react'
 import useAuth from '../../hooks/useAuth'
 import useLogout from '../../hooks/useLogout'
 import { BiUser } from 'react-icons/bi'
@@ -7,9 +6,12 @@ import { FiSettings } from 'react-icons/fi'
 import { BiHelpCircle } from 'react-icons/bi'
 import { BiLogOut } from 'react-icons/bi'
 import { useClickOutside } from '../../hooks/useClickOutside'
+import { confirmDialog } from 'primereact/confirmdialog'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import userMaleIcon from './images/user_male.png'
 import userFemaleIcon from './images/user_female.png'
+import './UserProfile.css'
+
 function UserProfile(props) {
   const axios = useAxiosPrivate()
   const logout = useLogout()
@@ -51,16 +53,17 @@ function UserProfile(props) {
     // loadDeviceCache()
   }, [auth.accessToken])
   return (
-    <div className='user-profile'>
+    <div className='user-profile-container'>
       <div
-        className='user-img-name'
+        className='user-profile-top'
         onClick={() => {
           setDropDownVisibility((prev) => !prev)
         }}
-        ref={profileDropDownRef}
       >
-        <img src={userProfileIcon} alt='' draggable='false' />
-        <h3>{`Hi, ${auth?.user?.name}`}</h3>
+        <div className='user-img-name' ref={profileDropDownRef}>
+          <img src={userProfileIcon} alt='' draggable='false' />
+          <h3>{`Hi, ${auth?.user?.name}`}</h3>
+        </div>
       </div>
       <div
         className={
@@ -81,7 +84,19 @@ function UserProfile(props) {
           <DropDownItem
             name='Log out'
             img={<BiLogOut size={20} />}
-            onClick={logout}
+            onClick={() => {
+              confirmDialog({
+                message: `Are you sure that want to sign out?`,
+                header: 'Sign out confirmation',
+                icon: 'pi pi-sign-out',
+                defaultfocus: 'reject',
+                acceptClassName: 'p-button-danger',
+                accept: () => {
+                  logout()
+                },
+                reject: () => {},
+              })
+            }}
             isRed={true}
           />
         </ul>

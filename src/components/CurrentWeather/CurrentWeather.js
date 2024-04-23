@@ -1,6 +1,6 @@
 import { TbTemperatureCelsius } from 'react-icons/tb'
-import './CurrentWeather.css'
 import useWeatherData from '../../hooks/useWeatherData'
+import './CurrentWeather.css'
 
 function CurrentWeather() {
   const { weatherData, userLocation } = useWeatherData()

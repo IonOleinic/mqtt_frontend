@@ -1,15 +1,8 @@
-import React from 'react'
+import './Settings.css'
 
 const Settings = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '90vh',
-      }}
-    >
+    <div className='settings-container'>
       <h1>Settings</h1>
     </div>
   )

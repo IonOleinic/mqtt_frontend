@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SmartSirenAlarm from '../components/DeviceComponents/Device/SmartAlarmSiren/SmartSirenAlarm'
 import SmartLed from '../components/DeviceComponents/Device/SmartLed/SmartLed'
 import SmartMotionSensor from '../components/DeviceComponents/Device/SmartMotionSensor/SmartMotionSensor'

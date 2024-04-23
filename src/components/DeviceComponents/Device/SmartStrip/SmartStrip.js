@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import './SmartStrip.css'
+import { useState, useEffect } from 'react'
 import Switch from './Switch/Switch'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import voltageIcon from './SensorDataIcons/voltage-icon.png'
 import currentIcon from './SensorDataIcons/current-icon.png'
 import powerIcon from './SensorDataIcons/power-icon.png'
 import totalPowerIcon from './SensorDataIcons/total-power-icon.png'
+import './SmartStrip.css'
 
 function SmartStrip({ device }) {
   const axios = useAxiosPrivate()

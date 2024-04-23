@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import './SmartTempSensor.css'
+import { useEffect, useState } from 'react'
 import { FaTemperatureLow } from 'react-icons/fa'
 import { TbTemperatureCelsius } from 'react-icons/tb'
 import { WiHumidity } from 'react-icons/wi'
+import './SmartTempSensor.css'
 
 function SmartTempSensor({ device }) {
   const [temperature, setTemperature] = useState(0)

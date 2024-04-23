@@ -37,6 +37,7 @@
   display: flex;
   align-items: center;
 }
+
 .siren-alarm-btn {
   padding: 0.8rem;
   width: 110px;
@@ -47,6 +48,7 @@
   justify-content: center;
   border: 1px solid black;
   border-radius: 50%;
+  color: black;
 }
 .siren-alarm-btn-info {
   border-top: 1px solid black;
@@ -54,6 +56,11 @@
   margin-top: 0.5rem;
   padding-top: 0.4rem;
   font-size: 0.8rem;
+  color: inherit;
+}
+.siren-alarm-active {
+  border-color: var(--active-color);
+  color: var(--active-color);
 }
 .siren-alarm-btn:hover {
   background-color: #efefef;
@@ -75,6 +82,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 200px;
 }
 .volume-control-icon {
   margin-right: 0.4rem;

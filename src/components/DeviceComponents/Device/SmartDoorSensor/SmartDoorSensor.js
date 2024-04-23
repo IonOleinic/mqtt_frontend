@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import './SmartDoorSensor.css'
+import { useEffect, useState } from 'react'
 import { AiFillLock } from 'react-icons/ai'
 import { AiFillUnlock } from 'react-icons/ai'
 import { HiOutlineSwitchHorizontal } from 'react-icons/hi'
 import DoorMainModule from './DoorSensorImages/door_sensor_main_module.png'
 import DoorSecondModule from './DoorSensorImages/door_sensor_second_module.png'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
+import './SmartDoorSensor.css'
+
 let lockedImg = <AiFillLock size={25} color='#46B60A' />
 let unlockedImg = <AiFillUnlock size={25} color='red' />
 function SmartDoorSensor({ device }) {

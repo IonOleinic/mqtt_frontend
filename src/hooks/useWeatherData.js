@@ -11,8 +11,8 @@ const useWeatherData = () => {
   const [userLocation, setUserLocation] = useState({
     latitude: null,
     longitude: null,
-    city: 'NaN',
-    country: 'NaN',
+    city: 'N/A',
+    country: 'N/A',
   })
 
   const getWeatherData = async (latitude, longitude) => {
@@ -42,8 +42,8 @@ const useWeatherData = () => {
       setUserLocation({
         latitude,
         longitude,
-        city: response.data.city || 'NaN',
-        country: response.data.country || 'NaN',
+        city: response.data.city || 'N/A',
+        country: response.data.country || 'N/A',
       })
     } catch (error) {
       console.error('Error fetching user location:', error)

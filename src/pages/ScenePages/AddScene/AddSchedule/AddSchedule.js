@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import 'react-times/css/material/default.css'
-import './AddSchedule.css'
-import { Checkmark } from 'react-checkmark'
 import { VscError } from 'react-icons/vsc'
 import CheckMessage from '../../../../components/CheckMessage/CheckMessage'
 import UseAnimations from 'react-useanimations'
 import loading from 'react-useanimations/lib/loading'
-import TimePicker from 'react-times'
+import { Calendar } from 'primereact/calendar'
 import SubSceneSmartStrip from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartStrip'
 import SubSceneSirenAlarm from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartIR'
 import SubSceneSmartLed from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartLed'
-let iconSucces = <Checkmark size='25px' color='green' />
+import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
+import './AddSchedule.css'
+
+let iconSucces = <IoIosCheckmarkCircleOutline size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
 let iconLoading = <UseAnimations animation={loading} size={40} />
 function AddSchedule() {
@@ -27,7 +27,7 @@ function AddSchedule() {
 
   const [name, setName] = useState('')
   //time
-  const [time, setTime] = useState('00:00')
+  const [time, setTime] = useState(new Date(Date.now() + 60 * 1000))
   const [dayOfWeek, setDayOfWeek] = useState([])
   const [devices, setDevices] = useState([])
   const [mon, setMon] = useState(false)
@@ -82,8 +82,8 @@ function AddSchedule() {
     scene.executable_text = executableText
     let attributes = {}
     attributes.dayOfWeek = dayOfWeek.toString()
-    attributes.hour = time.split(':')[0]
-    attributes.minute = time.split(':')[1]
+    attributes.hour = time.getHours()
+    attributes.minute = time.getMinutes()
     scene.attributes = attributes
     try {
       let response = await axios.post(`/scene`, scene)
@@ -157,8 +157,6 @@ function AddSchedule() {
   }
   useEffect(() => {
     getAllDevices()
-    let dateNow = new Date()
-    setTime(`${dateNow.getHours()}:${dateNow.getMinutes() + 1}`)
   }, [])
   useEffect(() => {
     setCheckmark(false)
@@ -333,13 +331,14 @@ function AddSchedule() {
             </div>
           </div>
           <div className='form-group mt-3'>
-            <label htmlFor='select time'>Time</label>
-            <TimePicker
-              onTimeChange={(timeValue) => {
-                setTime(`${timeValue.hour}:${timeValue.minute}`)
+            <label htmlFor='add-schedule-calendar-timeonly'>Time</label>
+            <Calendar
+              id='add-schedule-calendar-timeonly'
+              value={time}
+              onChange={(e) => {
+                setTime(new Date(e.value))
               }}
-              minuteStep={1}
-              time={time}
+              timeOnly
             />
           </div>
           <div className='form-group mt-3 btn-form-container'>
@@ -348,7 +347,6 @@ function AddSchedule() {
               type='button'
               className='btn btn-primary btn-set-scene'
               onClick={() => {
-                console.log(time)
                 createSchedule()
               }}
             >

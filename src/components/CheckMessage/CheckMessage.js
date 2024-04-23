@@ -1,4 +1,3 @@
-import React from 'react'
 import './CheckMessage.css'
 function CheckMessage({ icon, message, visibility, textColor }) {
   return (

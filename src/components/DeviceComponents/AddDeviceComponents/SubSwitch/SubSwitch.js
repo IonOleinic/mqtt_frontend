@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './SubSwitch.css'
+
 function SubSwitch({ setSubProps, disable_add_btn }) {
   const [nrOfSockets, setNrOfSockets] = useState(1)
   const [switchType, setSwitchType] = useState('plug')

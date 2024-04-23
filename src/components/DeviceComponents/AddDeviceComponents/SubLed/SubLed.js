@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './SubLed.css'
+
 function SubLed({ setSubProps, disable_add_btn }) {
   const [subType, setSubType] = useState('bulb')
   const [ledType, setLedType] = useState('rgb')

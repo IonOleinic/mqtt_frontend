@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import './Device.css'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import VerticalMenu from '../../VerticalMenu/VerticalMenu'
 import { MdOutlineExpandMore } from 'react-icons/md'
@@ -12,6 +11,10 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { socket } from '../../../api/io'
 import useDeviceIcon from '../../../hooks/useDeviceIcon'
 import useFinalDevice from '../../../hooks/useFinalDevice'
+import { confirmDialog } from 'primereact/confirmdialog'
+import { CiWarning } from 'react-icons/ci'
+import './Device.css'
+import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
 
 function Device({
   handleDeleteDevice,
@@ -64,20 +67,19 @@ function Device({
   return (
     <div className='device-item' key={device.mqtt_name}>
       <div className='device-top'>
-        <label
-          className='icon-expand'
+        <button
+          className={
+            visibility ? 'icon-expand icon-expand-rotated' : 'icon-expand'
+          }
           onClick={() => {
             setVisibility(!visibility)
-          }}
-          style={{
-            transform: visibility ? 'rotate(180deg)' : 'rotate(0)',
           }}
         >
           <MdOutlineExpandMore
             size={30}
             style={{ margin: '0', padding: '0' }}
           />
-        </label>
+        </button>
         <div
           onClick={() => {
             setVisibility(!visibility)
@@ -103,7 +105,7 @@ function Device({
           <h3>{device.name} </h3>
           <span>{device.mqtt_group.toString().slice(0, 20)}</span>
         </div>
-        <span
+        <button
           className='fav-icon'
           onClick={() => {
             device.favorite = !favBool
@@ -111,7 +113,7 @@ function Device({
           }}
         >
           {favIcon}
-        </span>
+        </button>
         <VerticalMenu
           items={[
             { name: 'Info', icon: <AiOutlineInfoCircle /> },
@@ -119,30 +121,53 @@ function Device({
               name: 'Edit',
               icon: <CiEdit />,
               action: () => {
-                navigate(`/devices/editdevice/${device.id}`)
+                navigate(`/devices/edit-device/${device.id}`)
               },
             },
-            { name: 'Blabla', icon: <AiOutlineInfoCircle /> },
             {
               name: 'Delete',
               icon: <AiOutlineDelete />,
               action: () => {
-                handleDeleteDevice(device.id)
+                confirmDialog({
+                  message: `Do you want to delete device ${device.name}?`,
+                  header: 'Delete Confirmation',
+                  icon: 'pi pi-trash',
+                  defaultfocus: 'reject',
+                  acceptClassName: 'p-button-danger',
+                  accept: () => {
+                    handleDeleteDevice(device.id)
+                  },
+                  reject: () => {},
+                })
               },
               isRed: true,
             },
             { name: 'Cancel', icon: <MdOutlineCancel /> },
           ]}
         />
-        <div
-          className='battery-level-icon'
-          style={{ display: device.battery == false ? 'none' : 'revert' }}
-        >
-          {batteryIcon}
-        </div>
-        <div className='device-available-icon'>{availableIcon}</div>
-        <div className='device-expand'>
+        <button className='device-expand'>
           <CgArrowTopRightR size={20} />
+        </button>
+        <div className='device-status-icons'>
+          <div
+            className={
+              device.available
+                ? 'device-available-icon green-active-color'
+                : 'device-available-icon inactive-color'
+            }
+          >
+            {availableIcon}
+            <p>{device.available ? 'online' : 'offline'}</p>
+          </div>
+          <div
+            className={
+              device.battery && device.available
+                ? 'battery-level-icon'
+                : 'battery-level-icon-hidden'
+            }
+          >
+            {batteryIcon}
+          </div>
         </div>
       </div>
       <div
@@ -153,6 +178,11 @@ function Device({
         }
       >
         {finalDevice}
+        <InactiveLayer
+          visibility={!device.available}
+          // message='Device is offline.'
+          // icon={<CiWarning color='gold' />}
+        />
       </div>
     </div>
   )

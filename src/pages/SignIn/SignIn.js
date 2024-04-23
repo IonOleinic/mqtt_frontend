@@ -1,14 +1,13 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './SignIn.css'
 import { useState } from 'react'
 import useAxios from '../../hooks/useAxios'
-import React, { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { BsEye } from 'react-icons/bs'
 import { BsEyeSlash } from 'react-icons/bs'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
+import './SignIn.css'
 
 const viewPasswordIconSimple = <BsEye size={18} />
 const viewPasswordIconSlash = <BsEyeSlash size={18} />

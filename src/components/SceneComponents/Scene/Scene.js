@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { MdOutlineExpandMore } from 'react-icons/md'
 import { AiOutlineStar } from 'react-icons/ai'
 import { AiFillStar } from 'react-icons/ai'
@@ -6,17 +6,19 @@ import { AiOutlineDelete } from 'react-icons/ai'
 import { MdOutlineCancel } from 'react-icons/md'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { CiEdit } from 'react-icons/ci'
+import { confirmDialog } from 'primereact/confirmdialog'
 import Switch from 'react-switch'
 import Schedule from './Schedule/Schedule'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import VerticalMenu from '../../VerticalMenu/VerticalMenu'
-import './Scene.css'
 import DeviceScene from './DeviceScene/DeviceScene'
 import WeatherScene from './WeatherScene/WeatherScene'
 import wheather_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/wheather_scene_icon.png'
 import location_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/location_scene_icon.png'
 import device_scene_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/device_scene_icon.png'
 import schedule_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/schedule_icon.png'
+import './Scene.css'
+import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
 
 const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
 const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
@@ -151,7 +153,17 @@ function Scene({ init_scene, handleDeleteScene }) {
               name: 'Delete',
               icon: <AiOutlineDelete />,
               action: () => {
-                handleDeleteScene(scene.id)
+                confirmDialog({
+                  message: `Do you want to delete scene ${scene.name}?`,
+                  header: 'Delete Confirmation',
+                  icon: 'pi pi-trash',
+                  defaultfocus: 'reject',
+                  acceptClassName: 'p-button-danger',
+                  accept: () => {
+                    handleDeleteScene(scene.id)
+                  },
+                  reject: () => {},
+                })
               },
               isRed: true,
             },
@@ -168,6 +180,9 @@ function Scene({ init_scene, handleDeleteScene }) {
         }
       >
         {final_scene}
+        <InactiveLayer
+          visibility={!(scene.active === true || scene.active === 'true')}
+        />
       </div>
     </div>
   )

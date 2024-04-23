@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import './Schedule.css'
+import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { HiOutlineArrowRight } from 'react-icons/hi'
 import { TbRepeatOnce } from 'react-icons/tb'
 import { BsClock } from 'react-icons/bs'
 import { GrAction } from 'react-icons/gr'
 import useDeviceIcon from '../../../../hooks/useDeviceIcon'
+import './Schedule.css'
+
 function Schedule({ scene }) {
   const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
@@ -158,13 +159,6 @@ function Schedule({ scene }) {
           Sun
         </p>
       </div>
-      <span
-        className='scene-disabled-mask'
-        style={{
-          display:
-            scene.active == 'true' || scene.active == true ? 'none' : 'revert',
-        }}
-      ></span>
     </div>
   )
 }
