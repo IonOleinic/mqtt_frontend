@@ -141,7 +141,12 @@
 
 .final-device {
   position: relative;
-  max-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 260px;
+  width: 100%;
+  height: 260px;
   transition: max-height 0.5s ease-in-out;
   overflow: hidden;
 }

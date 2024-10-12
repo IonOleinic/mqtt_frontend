@@ -9,17 +9,18 @@ import { TbUsb } from 'react-icons/tb'
 import { AiOutlineStar } from 'react-icons/ai'
 import { AiFillStar } from 'react-icons/ai'
 //device icons
-import SmartIrIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartIRIcon'
-import SmartDoorIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartDoorSensorIcon'
-import SmartBulbIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartBulbIcon'
-import SmartRGBControllerIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartRGBControllerIcon'
-import SmartMotionIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartMotionSensorIcon'
-import SmartStripIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartStripIcon'
-import SmartPlugIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartPlugIcon'
-import SmartSwitchIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartSwitchIcon'
-import SmartWallSwitchIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartWallSwitchIcon'
-import SmartTempSensorIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartThermometerIcon'
-import SmartSirenAlarmIcon from '../components/DeviceComponents/AddDeviceComponents/DeviceTypeImages/SmartSirenAlarmIcon'
+import SmartIrIcon from '../components/DeviceComponents/DeviceTypeImages/SmartIRIcon'
+import SmartDoorIcon from '../components/DeviceComponents/DeviceTypeImages/SmartDoorSensorIcon'
+import SmartBulbIcon from '../components/DeviceComponents/DeviceTypeImages/SmartBulbIcon'
+import SmartRGBControllerIcon from '../components/DeviceComponents/DeviceTypeImages/SmartRGBControllerIcon'
+import SmartMotionIcon from '../components/DeviceComponents/DeviceTypeImages/SmartMotionSensorIcon'
+import SmartStripIcon from '../components/DeviceComponents/DeviceTypeImages/SmartStripIcon'
+import SmartPlugIcon from '../components/DeviceComponents/DeviceTypeImages/SmartPlugIcon'
+import SmartSwitchIcon from '../components/DeviceComponents/DeviceTypeImages/SmartSwitchIcon'
+import SmartWallSwitchIcon from '../components/DeviceComponents/DeviceTypeImages/SmartWallSwitchIcon'
+import SmartTempSensorIcon from '../components/DeviceComponents/DeviceTypeImages/SmartThermometerIcon'
+import SmartSirenAlarmIcon from '../components/DeviceComponents/DeviceTypeImages/SmartSirenAlarmIcon'
+import SmartValveIcon from '../components/DeviceComponents/DeviceTypeImages/SmartValveIcon'
 
 //available icons
 let iconOnline = <HiOutlineStatusOnline size={20} />
@@ -75,6 +76,9 @@ const useDeviceIcon = (device) => {
         break
       case 'smartSirenAlarm':
         setDeviceIcon(<SmartSirenAlarmIcon />)
+        break
+      case 'smartValve':
+        setDeviceIcon(<SmartValveIcon />)
         break
       case 'smartLed':
         setDeviceIcon(

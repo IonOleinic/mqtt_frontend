@@ -4,7 +4,8 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 0.5rem;
+  padding: 0 0.5rem;
+  width: 100%;
 }
 .custom-tab-content {
   width: 100%;

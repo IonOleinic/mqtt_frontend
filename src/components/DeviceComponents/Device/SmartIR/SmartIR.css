@@ -5,83 +5,56 @@
   flex-wrap: wrap;
   position: relative;
   overflow: hidden;
-  padding: 0.5rem 0;
+  padding: 0;
   user-select: none;
-}
-.ir-buttons {
-  padding: 0.7rem;
-  border-radius: 50%;
-  transition: all 0.8s;
-}
-.simple-button {
-  border: 1px solid #ccc;
-  max-width: 4rem;
-  border-radius: 6px;
-  margin: 0 0.7rem;
-}
-.number {
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  margin: 0.6rem 1.5rem;
-}
-
-.back,
-.exit {
-  border-radius: 6px;
 }
 .ir-block {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
-.power {
+.ir-block-top,
+.ir-block-center,
+.ir-block-bottom {
   display: flex;
   flex-direction: row;
   width: 100%;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5rem;
 }
-.power .btn-pow {
+.ir-block-vol,
+.ir-block-chanel {
+  flex-direction: column;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 5px;
 }
-.power .ir-buttons {
-  margin: 0 auto;
-}
-.numbers {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  top: -200%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  transition: all 0.5s ease-in-out;
-}
-.ok-menu {
-  width: 10rem;
+.ir-block-ok-menu {
+  width: 150px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
 }
 
-.ok-up {
-  margin: 0 2rem;
+.ir-block-ok-menu .ir-buttons {
+  border: none;
+  border-radius: 50%;
 }
-.vol {
-  margin-right: 0.35rem;
+.ir-block-vol .ir-buttons,
+.ir-block-chanel .ir-buttons {
+  border: none;
 }
-.chanel {
-  margin-left: 0.35rem;
-}
-.vol,
-.chanel {
+.ir-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  width: 50px;
+  height: 50px;
+  transition: all 0.8s;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 .ir-buttons:hover {
   cursor: pointer;
@@ -90,6 +63,51 @@
   background-color: #ccc;
   color: #4abced;
 }
+.ok-up-container,
+.ok-down-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back,
+.exit {
+  border-radius: 6px;
+}
+
+.btn-pow {
+  border-radius: 6px;
+}
 .btn-pow:active {
   color: red;
+}
+.numbers {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  top: -200%;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  height: 100%;
+  background-color: white;
+  transition: all 0.5s ease-in-out;
+}
+.numbers-top,
+.numbers-center,
+.numbers-bottom,
+.numbers-last {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.numbers-last {
+  justify-content: center;
+  gap: 60px;
+}
+.number {
+  border-radius: 50%;
 }

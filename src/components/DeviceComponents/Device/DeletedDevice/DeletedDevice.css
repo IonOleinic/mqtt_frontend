@@ -10,6 +10,7 @@
   margin: 0.2rem 0;
   border: 1px solid black;
   border-radius: 5px;
+  height: 35px;
 }
 
 .deleted-device-info {
@@ -23,17 +24,22 @@
 }
 .deleted-device-name {
   margin-left: 0.3rem;
+  font-size: 1rem;
 }
 .deleted-device-btns {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  margin-right: 0.3rem;
 }
 .deleted-device-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease-in-out;
+  background-color: transparent;
+  border: none;
 }
 .deleted-device-btn:hover {
   cursor: pointer;
@@ -41,7 +47,7 @@
 }
 .btn-recover-device,
 .btn-destroy-device {
-  margin-left: 0.3rem;
+  /* margin-left: 0.7rem; */
   padding: 0.1rem;
 }
 .btn-recover-device:hover {

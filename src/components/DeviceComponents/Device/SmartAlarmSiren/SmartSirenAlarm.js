@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Slider } from 'primereact/slider'
 import { FaTemperatureLow } from 'react-icons/fa'
-import { TbTemperatureCelsius } from 'react-icons/tb'
 import { WiHumidity } from 'react-icons/wi'
 import { SlVolume2 } from 'react-icons/sl'
 import { SlVolumeOff } from 'react-icons/sl'
 import { GrVolumeControl } from 'react-icons/gr'
+import { AiOutlinePercentage } from 'react-icons/ai'
+import { RiCelsiusLine } from 'react-icons/ri'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import useDebounce from '../../../../hooks/useDebounce'
 import './SmartSirenAlarm.css'
@@ -78,25 +79,18 @@ function SmartSirenAlarm({ device }) {
     array_types.push(i + 1)
   }
   return (
-    <div className='smart-alarm-siren'>
+    <div className='smart-siren-alarm'>
       <div className='siren-alarm-control'>
         <div className='siren-alarm-sensors'>
           <div className='siren-alarm-sensor-item siren-alarm-temp-item'>
             <FaTemperatureLow size={26} color='red' />
-            <p>
-              {temperature}{' '}
-              <TbTemperatureCelsius
-                size={24}
-                color='black'
-                className='celsius-icon'
-              />
-            </p>
+            <p>{temperature} </p>
+            <RiCelsiusLine size={20} color='black' className='celsius-icon' />
           </div>
           <div className='siren-alarm-sensor-item'>
             <WiHumidity size={35} color='blue' />
-            <p>
-              {humidity} <b>%</b>
-            </p>
+            <p>{humidity}</p>
+            <AiOutlinePercentage size={20} />
           </div>
         </div>
         <div

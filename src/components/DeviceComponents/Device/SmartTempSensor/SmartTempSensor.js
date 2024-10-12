@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { FaTemperatureLow } from 'react-icons/fa'
-import { TbTemperatureCelsius } from 'react-icons/tb'
+import { RiCelsiusLine } from 'react-icons/ri'
 import { WiHumidity } from 'react-icons/wi'
+import { AiOutlinePercentage } from 'react-icons/ai'
 import './SmartTempSensor.css'
 
 function SmartTempSensor({ device }) {
@@ -15,20 +16,15 @@ function SmartTempSensor({ device }) {
 
   return (
     <div className='smart-temp-sensor'>
-      <div className='smart-temp-sensor-item temp-item'>
-        <FaTemperatureLow size={36} color='red' />
-        <p>
-          {temperature}{' '}
-          <TbTemperatureCelsius
-            size={36}
-            color='black'
-            className='celsius-icon'
-          />
-        </p>
+      <div className='temp-sensor-item temp-item'>
+        <FaTemperatureLow size={45} color='red' />
+        <p className='temp-sensor-item-value'>{temperature} </p>
+        <RiCelsiusLine size={36} color='black' />
       </div>
-      <div className='smart-temp-sensor-item'>
-        <WiHumidity size={45} color='blue' />
-        <p>{humidity} %</p>
+      <div className='temp-sensor-item'>
+        <WiHumidity size={60} color='blue' />
+        <p>{humidity}</p>
+        <AiOutlinePercentage size={36} />
       </div>
     </div>
   )

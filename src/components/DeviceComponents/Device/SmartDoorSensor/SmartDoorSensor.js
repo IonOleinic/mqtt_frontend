@@ -56,7 +56,7 @@ function SmartDoorSensor({ device }) {
       <div
         className='switch-direction-btn'
         onClick={sendToggleDirection}
-        style={{ display: device.manufacter == 'tasmota' ? 'revert' : 'none' }}
+        style={{ display: device.manufacter == 'tasmota' ? 'flex' : 'none' }}
       >
         <HiOutlineSwitchHorizontal size={20} color='black' />
       </div>

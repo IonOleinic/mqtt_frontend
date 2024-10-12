@@ -43,7 +43,7 @@ function Device({
     if (socket) {
       const updateDeviceHandler = (data) => {
         if (data.device.mqtt_name === device.mqtt_name) {
-          //there are an isssue that multiple device of type smartIR are updating(they have same mqtt_name)
+          //there are an isssue that multiple devices of type smartIR are updating(they have same mqtt_name)
           if (data.device.device_type === 'smartIR') {
             setDevice((prev) => {
               return {
@@ -129,10 +129,10 @@ function Device({
               icon: <AiOutlineDelete />,
               action: () => {
                 confirmDialog({
-                  message: `Do you want to delete device ${device.name}?`,
+                  message: `Do you want to move to trash device ${device.name}?`,
                   header: 'Delete Confirmation',
                   icon: 'pi pi-trash',
-                  defaultfocus: 'reject',
+                  // defaultFocus: 'reject',
                   acceptClassName: 'p-button-danger',
                   accept: () => {
                     handleDeleteDevice(device.id)

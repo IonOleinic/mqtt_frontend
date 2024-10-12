@@ -1,0 +1,14 @@
+.power-btn {
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  transition: all 0.4s ease-in-out;
+  color: #ccc;
+}
+
+.power-btn-checked {
+  color: var(--active-color);
+}

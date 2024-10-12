@@ -28,7 +28,7 @@ function SmartIR({ device }) {
   }
   return (
     <div className='smart-ir'>
-      <div className='ir-block power'>
+      <div className='ir-block ir-block-top'>
         <div
           className='ir-buttons btn-pow'
           aria-disabled={true}
@@ -47,7 +47,7 @@ function SmartIR({ device }) {
           123
         </div>
         <div
-          className='ir-buttons number exit'
+          className='ir-buttons exit'
           onClick={() => {
             handlePressBtn(device.buttons.btn_exit.code)
           }}
@@ -55,7 +55,7 @@ function SmartIR({ device }) {
           Exit
         </div>
         <div
-          className='ir-buttons number back'
+          className='ir-buttons back'
           onClick={() => {
             handlePressBtn(device.buttons.btn_back.code)
           }}
@@ -63,207 +63,222 @@ function SmartIR({ device }) {
           <RiArrowGoBackFill size={25} />
         </div>
       </div>
-      <div className='ir-block vol'>
-        <div
-          className='ir-buttons'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_volUp.code)
-          }}
-        >
-          <BiPlus size={30} />
+      <div className='.ir-block ir-block-center'>
+        <div className='ir-block ir-block-vol'>
+          <div
+            className='ir-buttons'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_volUp.code)
+            }}
+          >
+            <BiPlus size={30} />
+          </div>
+          <div>Vol</div>
+          <div
+            className='ir-buttons'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_volDown.code)
+            }}
+          >
+            <BiMinus size={30} />
+          </div>
         </div>
-        <div>Vol</div>
-        <div
-          className='ir-buttons'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_volDown.code)
-          }}
-        >
-          <BiMinus size={30} />
+        <div className='ir-block ir-block-ok-menu'>
+          <div className='ok-up-container'>
+            <div
+              className='ir-buttons ok-up'
+              onClick={() => {
+                handlePressBtn(device.buttons.btn_up.code)
+              }}
+            >
+              <BiChevronUp size={30} />
+            </div>
+          </div>
+          <div
+            className='ir-buttons ok-left'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_left.code)
+            }}
+          >
+            <BiChevronLeft size={30} />
+          </div>
+          <div
+            className='ir-buttons ok-enter'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_ok.code)
+            }}
+          >
+            OK
+          </div>
+          <div
+            className='ir-buttons ok-right'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_right.code)
+            }}
+          >
+            <BiChevronRight size={30} />
+          </div>
+          <div className='ok-down-container'>
+            <div
+              className='ir-buttons ok-down'
+              onClick={() => {
+                handlePressBtn(device.buttons.btn_down.code)
+              }}
+            >
+              <BiChevronDown size={30} />
+            </div>
+          </div>
+        </div>
+        <div className='ir-block ir-block-chanel'>
+          <div
+            className='ir-buttons up'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_chnUp.code)
+            }}
+          >
+            <BiPlus size={30} />
+          </div>
+          <div>CH</div>
+          <div
+            className='ir-buttons down'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_chnDown.code)
+            }}
+          >
+            <BiMinus size={30} />
+          </div>
         </div>
       </div>
-      <div className='ir-block ok-menu'>
+      <div className='ir-block ir-block-bottom'>
         <div
-          className='ir-buttons ok-up'
+          className='ir-buttons mute'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_up.code)
+            handlePressBtn(device.buttons.btn_mute.code)
           }}
         >
-          <BiChevronUp size={30} />
+          <BiVolumeMute size={25} />
         </div>
         <div
-          className='ir-buttons ok-left'
+          className='ir-buttons menu'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_left.code)
+            handlePressBtn(device.buttons.btn_home.code)
           }}
         >
-          <BiChevronLeft size={30} />
+          Menu
         </div>
         <div
-          className='ir-buttons ok-enter'
+          className='ir-buttons input'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_ok.code)
+            handlePressBtn(device.buttons.btn_input.code)
           }}
         >
-          OK
+          <MdInput size={25} />
         </div>
         <div
-          className='ir-buttons ok-right'
+          className='ir-buttons info'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_right.code)
+            handlePressBtn(device.buttons.btn_info.code)
           }}
         >
-          <BiChevronRight size={30} />
+          <BiInfoCircle size={25} />
         </div>
-        <div
-          className='ir-buttons ok-down'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_down.code)
-          }}
-        >
-          <BiChevronDown size={30} />
-        </div>
-      </div>
-      <div className='ir-block chanel'>
-        <div
-          className='ir-buttons up'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_chnUp.code)
-          }}
-        >
-          <BiPlus size={30} />
-        </div>
-        <div>CH</div>
-        <div
-          className='ir-buttons down'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_chnDown.code)
-          }}
-        >
-          <BiMinus size={30} />
-        </div>
-      </div>
-      <div
-        className='ir-buttons simple-button mute'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_mute.code)
-        }}
-      >
-        <BiVolumeMute size={25} />
-      </div>
-      <div
-        className='ir-buttons simple-button menu'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_home.code)
-        }}
-      >
-        Menu
-      </div>
-      <div
-        className='ir-buttons simple-button input'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_input.code)
-        }}
-      >
-        <MdInput size={25} />
-      </div>
-      <div
-        className='ir-buttons simple-button info'
-        onClick={() => {
-          handlePressBtn(device.buttons.btn_info.code)
-        }}
-      >
-        <BiInfoCircle size={25} />
       </div>
       <div className='numbers' style={{ top: checkedNumbers ? '0' : '200%' }}>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_1.code)
-          }}
-        >
-          1
+        <div className='numbers-top'>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_1.code)
+            }}
+          >
+            1
+          </div>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_2.code)
+            }}
+          >
+            2
+          </div>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_3.code)
+            }}
+          >
+            3
+          </div>
         </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_2.code)
-          }}
-        >
-          2
+        <div className='numbers-center'>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_4.code)
+            }}
+          >
+            4
+          </div>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_5.code)
+            }}
+          >
+            5
+          </div>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_6.code)
+            }}
+          >
+            6
+          </div>
         </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_3.code)
-          }}
-        >
-          3
+        <div className='numbers-bottom'>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_7.code)
+            }}
+          >
+            7
+          </div>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_8.code)
+            }}
+          >
+            8
+          </div>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_9.code)
+            }}
+          >
+            9
+          </div>
         </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_4.code)
-          }}
-        >
-          4
-        </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_5.code)
-          }}
-        >
-          5
-        </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_6.code)
-          }}
-        >
-          6
-        </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_7.code)
-          }}
-        >
-          7
-        </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_8.code)
-          }}
-        >
-          8
-        </div>
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_9.code)
-          }}
-        >
-          9
-        </div>
-
-        <div
-          className='ir-buttons number'
-          onClick={() => {
-            handlePressBtn(device.buttons.btn_0.code)
-          }}
-        >
-          0
-        </div>
-        <div
-          className='ir-buttons number div-close'
-          onClick={() => {
-            setCheckedNumbers(!checkedNumbers)
-          }}
-        >
-          <b>X</b>
+        <div className='numbers-last'>
+          <div
+            className='ir-buttons number'
+            onClick={() => {
+              handlePressBtn(device.buttons.btn_0.code)
+            }}
+          >
+            0
+          </div>
+          <div
+            className='ir-buttons number div-close'
+            onClick={() => {
+              setCheckedNumbers(!checkedNumbers)
+            }}
+          >
+            <b>X</b>
+          </div>
         </div>
       </div>
     </div>

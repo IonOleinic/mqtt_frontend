@@ -38,7 +38,7 @@ function SubSwitch({ setSubProps, disable_add_btn }) {
           placeholder='Enter number of sockets'
           onChange={(e) => {
             setNrOfSockets(e.target.value)
-            if (Number(e.target.value) > 0 && e.target.value < 10) {
+            if (Number(e.target.value) > 0 && e.target.value <= 6) {
               disable_add_btn(false)
             } else {
               disable_add_btn(true)

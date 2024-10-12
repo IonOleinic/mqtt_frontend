@@ -4,8 +4,9 @@ import FullRecycleBin from './images/full-recycle-bin.png'
 import DeletedDevice from '../Device/DeletedDevice/DeletedDevice'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { useClickOutside } from '../../../hooks/useClickOutside'
-import { MdSettingsBackupRestore } from 'react-icons/md'
+import { CgUndo } from 'react-icons/cg'
 import { IoMdTrash } from 'react-icons/io'
+import { confirmDialog } from 'primereact/confirmdialog'
 import './DeletedDevices.css'
 
 function DeletedDevices({ devices, refreshDevices }) {
@@ -29,7 +30,7 @@ function DeletedDevices({ devices, refreshDevices }) {
     try {
       const destroyList = deletedDevices.map((device) => device.id)
       const response = await axios.delete(
-        `/destroy-all-devices-recycle?destroyList=${destroyList}`
+        `/destroy-all-devices?destroyList=${destroyList}`
       )
       refreshDevices()
     } catch (error) {
@@ -37,16 +38,15 @@ function DeletedDevices({ devices, refreshDevices }) {
     }
   }
   const recoverAll = async () => {
-    const recoverList = deletedDevices.map((device) => device.id)
-    recoverList.forEach(async (deviceId) => {
-      try {
-        const response = await axios.post(`/recover-device/${deviceId}`)
-        console.log(response.data)
-        refreshDevices()
-      } catch (error) {
-        console.log(error)
-      }
-    })
+    try {
+      const recoverList = deletedDevices.map((device) => device.id)
+      const response = await axios.delete(
+        `/recover-all-devices?recoverList=${recoverList}`
+      )
+      refreshDevices()
+    } catch (error) {
+      console.log(error)
+    }
   }
   useEffect(() => {
     getDeletedDevices()
@@ -103,20 +103,47 @@ function DeletedDevices({ devices, refreshDevices }) {
               : 'deleted-devices-toolbar deleted-devices-toolbar-hidden'
           }
         >
-          <div
+          <button
             className='recover-all-devices-btn deleted-devices-toolbar-item'
-            onClick={recoverAll}
+            onClick={() => {
+              confirmDialog({
+                message:
+                  deletedDevices.length === 1
+                    ? `Do you want to recover device ${deletedDevices[0].name}?`
+                    : `Do you want to recover ${deletedDevices.length} devices?`,
+                header: 'Recover Confirmation',
+                icon: 'pi pi-undo',
+                accept: () => {
+                  recoverAll()
+                },
+                reject: () => {},
+              })
+            }}
           >
-            <MdSettingsBackupRestore size={20} />
+            <CgUndo size={25} />
             <p>Recover all</p>
-          </div>
-          <div
+          </button>
+          <button
             className='destroy-all-devices-btn deleted-devices-toolbar-item'
-            onClick={destroyAll}
+            onClick={() => {
+              confirmDialog({
+                message:
+                  deletedDevices.length === 1
+                    ? `Do you want to destroy device ${deletedDevices[0].name}?`
+                    : `Do you want to destroy ${deletedDevices.length} devices?`,
+                header: 'Destroy Confirmation',
+                icon: 'pi pi-trash',
+                acceptClassName: 'p-button-danger',
+                accept: () => {
+                  destroyAll()
+                },
+                reject: () => {},
+              })
+            }}
           >
-            <IoMdTrash size={20} />
+            <IoMdTrash size={22} />
             <p>Destroy all</p>
-          </div>
+          </button>
         </div>
       </div>
 

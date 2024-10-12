@@ -18,6 +18,7 @@ let led_strip_icon = <LedStripIcon size={50} />
 function SmartLed({ device }) {
   const axios = useAxiosPrivate()
   const [currentTab, setCurrentTab] = useState(0)
+  const [started, setStarted] = useState(false) //used to delay send change dimmer (change dimmer cause forced power ON)
   const [color, setColor] = useState('#000000')
   const [cold, setCold] = useState(0)
   const [warm, setWarm] = useState(0)
@@ -43,6 +44,7 @@ function SmartLed({ device }) {
   useEffect(() => {
     setLedIconFunc()
   }, [color, device.status, device.color])
+
   useEffect(() => {
     setPaletteColors(
       device.palette
@@ -75,7 +77,11 @@ function SmartLed({ device }) {
     }
     setDimmer(device.dimmer)
     setPaletteSpeed(device.speed)
+    setTimeout(() => {
+      setStarted(true) //used to delay send change dimmer (change dimmer cause forced power ON)
+    }, 1500)
   }, [device])
+
   useEffect(() => {
     setPaletteItemsFunc(device.palette)
   }, [device.palette])
@@ -164,11 +170,17 @@ function SmartLed({ device }) {
   }
 
   useEffect(() => {
-    sendChangeDimmer(debouncedDimmer)
+    //used to delay send change dimmer (because dimmer was changed before device init by debouncedDimmer )
+    if (started) {
+      sendChangeDimmer(debouncedDimmer)
+    }
   }, [debouncedDimmer])
 
   useEffect(() => {
-    sendChangePaletteSpeed(debouncedPeletteSpeed)
+    //used to delay send change speed (because palette speed was changed before device init by debouncedPeletteSpeed)
+    if (started) {
+      sendChangePaletteSpeed(debouncedPeletteSpeed)
+    }
   }, [debouncedPeletteSpeed])
 
   return (

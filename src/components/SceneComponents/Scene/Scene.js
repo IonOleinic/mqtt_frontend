@@ -154,10 +154,10 @@ function Scene({ init_scene, handleDeleteScene }) {
               icon: <AiOutlineDelete />,
               action: () => {
                 confirmDialog({
-                  message: `Do you want to delete scene ${scene.name}?`,
-                  header: 'Delete Confirmation',
+                  message: `Do you want to destroy scene ${scene.name}?`,
+                  header: 'Destroy Confirmation',
                   icon: 'pi pi-trash',
-                  defaultfocus: 'reject',
+                  // defaultFocus: 'reject',
                   acceptClassName: 'p-button-danger',
                   accept: () => {
                     handleDeleteScene(scene.id)

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import Switch from './Switch/Switch'
+import PowerBtn from './PowerBtn/PowerBtn'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import voltageIcon from './SensorDataIcons/voltage-icon.png'
 import currentIcon from './SensorDataIcons/current-icon.png'
@@ -13,6 +13,19 @@ function SmartStrip({ device }) {
   let initCheckedlist = []
   let sensorPart = <></>
   let switches = []
+  let switchSize = 100
+
+  if (device.nr_of_sockets > 1 && device.nr_of_sockets <= 2) {
+    switchSize = 70
+  } else if (device.nr_of_sockets > 2 && device.nr_of_sockets <= 3) {
+    switchSize = 60
+  } else if (device.nr_of_sockets > 3) {
+    switchSize = 50
+  }
+  if (device.switch_type === 'plug') {
+    switchSize -= 10
+  }
+
   for (let i = 0; i < device.nr_of_sockets; i++) {
     initStatuses.push('OFF')
     initCheckedlist.push(false)
@@ -33,26 +46,7 @@ function SmartStrip({ device }) {
       setSensorData(device.sensor_data)
     }
   }, [device])
-  const sensorUpdateReq = async () => {
-    try {
-      if (device.switch_type === 'plug') {
-        let response = await axios.get(`/smartStrip?device_id=${device.id}`)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  useEffect(() => {
-    sensorUpdateReq()
-    let interval = setInterval(async () => {
-      if (device.switch_type == 'plug' && device.manufacter === 'tasmota') {
-        sensorUpdateReq()
-      }
-    }, 4809)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
+
   const updateStatuses = (power_status) => {
     setStatusList(power_status)
     for (let i = 0; i < power_status.length; i++) {
@@ -71,7 +65,6 @@ function SmartStrip({ device }) {
         socket_nr + 1
       }`
     )
-    sensorUpdateReq()
   }
   const handlePower = async (id) => {
     try {
@@ -88,24 +81,28 @@ function SmartStrip({ device }) {
   if (device.switch_type === 'plug') {
     sensorPart = (
       <div
-        className='sensor'
-        style={{ display: sensorData === undefined ? 'none' : 'flex' }}
+        className='sensor-container'
+        style={{
+          display: sensorData === undefined ? 'none' : 'flex',
+        }}
       >
-        <div className='sensor-item'>
-          <img src={voltageIcon} />
-          <p>{sensorData.Voltage} V</p>
-        </div>
-        <div className='sensor-item' style={{ marginLeft: '-0.5em' }}>
-          <img src={currentIcon} />
-          <p>{sensorData.Current} A</p>
-        </div>
-        <div className='sensor-item'>
-          <img src={powerIcon} />
-          <p>{sensorData.Power} W</p>
-        </div>
-        <div className='sensor-item' style={{ width: '50%' }}>
-          <img src={totalPowerIcon} />
-          <p>{sensorData.Total} kW</p>
+        <div className='sensor'>
+          <div className='sensor-item'>
+            <img src={voltageIcon} />
+            <p style={{ marginLeft: '0.2rem' }}>{sensorData.Voltage} V</p>
+          </div>
+          <div className='sensor-item'>
+            <img src={currentIcon} />
+            <p>{sensorData.Current} A</p>
+          </div>
+          <div className='sensor-item'>
+            <img src={powerIcon} />
+            <p style={{ marginLeft: '0.2rem' }}>{sensorData.Power} W</p>
+          </div>
+          <div className='sensor-item' style={{ width: '140px' }}>
+            <img src={totalPowerIcon} />
+            <p>{sensorData.Total} kW</p>
+          </div>
         </div>
       </div>
     )
@@ -114,9 +111,16 @@ function SmartStrip({ device }) {
   //init switches
   for (let i = 0; i < device.nr_of_sockets; i++) {
     switches.push(
-      <Switch
+      // <Switch
+      //   key={i}
+      //   id={i}
+      //   isChecked={isCheckedList[i]}
+      //   handlePower={handlePower}
+      // />
+      <PowerBtn
         key={i}
         id={i}
+        size={switchSize}
         isChecked={isCheckedList[i]}
         handlePower={handlePower}
       />
@@ -125,8 +129,13 @@ function SmartStrip({ device }) {
 
   return (
     <div className='smart-strip'>
-      <div className='smart-switches'>
-        {switches}
+      <div className='smart-switches-container'>
+        <div
+          className='smart-switches'
+          style={{ padding: device.nr_of_sockets == 4 ? '0 3rem' : '0 1rem' }}
+        >
+          {switches}
+        </div>
         <div
           className='energy-today'
           style={{
