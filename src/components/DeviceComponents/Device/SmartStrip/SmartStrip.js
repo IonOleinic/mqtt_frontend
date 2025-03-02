@@ -12,18 +12,18 @@ function SmartStrip({ device }) {
   let initStatuses = []
   let initCheckedlist = []
   let sensorPart = <></>
-  let switches = []
-  let switchSize = 100
+  let powerButtons = []
+  let powerBtnSize = 100
 
   if (device.nr_of_sockets > 1 && device.nr_of_sockets <= 2) {
-    switchSize = 70
+    powerBtnSize = 70
   } else if (device.nr_of_sockets > 2 && device.nr_of_sockets <= 3) {
-    switchSize = 60
+    powerBtnSize = 60
   } else if (device.nr_of_sockets > 3) {
-    switchSize = 50
+    powerBtnSize = 50
   }
   if (device.switch_type === 'plug') {
-    switchSize -= 10
+    powerBtnSize -= 10
   }
 
   for (let i = 0; i < device.nr_of_sockets; i++) {
@@ -108,19 +108,13 @@ function SmartStrip({ device }) {
     )
   }
 
-  //init switches
+  //init power buttons
   for (let i = 0; i < device.nr_of_sockets; i++) {
-    switches.push(
-      // <Switch
-      //   key={i}
-      //   id={i}
-      //   isChecked={isCheckedList[i]}
-      //   handlePower={handlePower}
-      // />
+    powerButtons.push(
       <PowerBtn
         key={i}
         id={i}
-        size={switchSize}
+        size={powerBtnSize}
         isChecked={isCheckedList[i]}
         handlePower={handlePower}
       />
@@ -129,12 +123,12 @@ function SmartStrip({ device }) {
 
   return (
     <div className='smart-strip'>
-      <div className='smart-switches-container'>
+      <div className='power-buttons-container'>
         <div
-          className='smart-switches'
+          className='power-buttons'
           style={{ padding: device.nr_of_sockets == 4 ? '0 3rem' : '0 1rem' }}
         >
-          {switches}
+          {powerButtons}
         </div>
         <div
           className='energy-today'

@@ -26,7 +26,7 @@ function SubSceneSmartStrip({
         setConditionalText(`Power 1 OFF`)
       }
     } else if (event_or_action == 'action') {
-      setExecutableTopic(device.cmnd_power_topic)
+      setExecutableTopic(device.cmnd_power_topics[0])
       setExecutablePayload('OFF')
       if (device.nr_of_sockets == 1) {
         setExecutableText(`Power OFF`)
@@ -68,7 +68,7 @@ function SubSceneSmartStrip({
                 )
               }
             } else if (event_or_action == 'action') {
-              setExecutableTopic(`${device.cmnd_power_topic}${e.target.value}`)
+              setExecutableTopic(device.cmnd_power_topics[e.target.value])
               if (device.nr_of_sockets == 1) {
                 setSelectedSocket('')
               } else {
@@ -78,9 +78,12 @@ function SubSceneSmartStrip({
                 )
               }
             }
+            if (state == 'TOGGLE') {
+              setExecutableText(`${state} ${Number(e.target.value) + 1}`)
+            }
           }}
         >
-          {device.stat_power_topics.map((topic, index) => {
+          {device.cmnd_power_topics.map((topic, index) => {
             return (
               <option key={topic} value={index}>
                 {index + 1}
@@ -121,7 +124,7 @@ function SubSceneSmartStrip({
               setExecutablePayload(e.target.value)
               setExecutableText(`Power${selectedSocket} ${e.target.value}`)
               if (e.target.value == 'TOGGLE') {
-                setExecutableText(`${e.target.value}${selectedSocket}`)
+                setExecutableText(`${e.target.value} ${selectedSocket}`)
               }
             }
           }}

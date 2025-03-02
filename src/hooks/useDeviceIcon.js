@@ -63,6 +63,8 @@ const useDeviceIcon = (device) => {
           setDeviceIcon(<SmartSwitchIcon />)
         } else if (device.switch_type === 'wall_switch') {
           setDeviceIcon(<SmartWallSwitchIcon />)
+        } else if (device.switch_type === 'valve') {
+          setDeviceIcon(<SmartValveIcon />)
         }
         break
       case 'smartIR':
@@ -76,9 +78,6 @@ const useDeviceIcon = (device) => {
         break
       case 'smartSirenAlarm':
         setDeviceIcon(<SmartSirenAlarmIcon />)
-        break
-      case 'smartValve':
-        setDeviceIcon(<SmartValveIcon />)
         break
       case 'smartLed':
         setDeviceIcon(

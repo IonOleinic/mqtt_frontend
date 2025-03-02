@@ -93,6 +93,7 @@ function AddDevice() {
       case 'smartPlug':
       case 'smartStrip':
       case 'smartSwitch':
+      case 'smartValve':
         subtype = (
           <SubSwitch
             setSubProps={setSubProps}

@@ -11,7 +11,7 @@
   padding: 0.5rem 0;
 }
 /* =====================================================*/
-.smart-switches-container {
+.power-buttons-container {
   background-color: transparent;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
   width: 100%;
   height: 200px;
 }
-.smart-switches {
+.power-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

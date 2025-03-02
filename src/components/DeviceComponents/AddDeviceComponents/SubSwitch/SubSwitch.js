@@ -20,11 +20,14 @@ function SubSwitch({ setSubProps, disable_add_btn }) {
           aria-label='Default select example'
           onChange={(e) => {
             setSwitchType(e.target.value)
+            setNrOfSockets(1)
+            disable_add_btn(false)
           }}
         >
           <option value='plug'>{'Plug (Power Monitor)'}</option>
           <option value='switch'>{'Switch (No Power Monitor)'}</option>
           <option value='wall_switch'>Wall Switch</option>
+          <option value='valve'>Valve Switch</option>
         </select>
       </div>
       <div className='form-group mt-3'>
@@ -34,6 +37,7 @@ function SubSwitch({ setSubProps, disable_add_btn }) {
           pattern='[0-9]{1,5}'
           maxLength={1}
           type='number'
+          value={nrOfSockets}
           className='form-control mt-1'
           placeholder='Enter number of sockets'
           onChange={(e) => {
