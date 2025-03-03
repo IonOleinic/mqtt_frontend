@@ -7,6 +7,7 @@
   background-color: transparent;
   transition: all 0.4s ease-in-out;
   color: #ccc;
+  cursor: pointer;
 }
 
 .power-btn-checked {

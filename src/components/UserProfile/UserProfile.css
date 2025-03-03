@@ -33,7 +33,7 @@
   border-radius: 50%;
   overflow: hidden;
 }
-.user-img-name h3 {
+.user-img-name p {
   font-size: 1.1rem;
   margin-left: 0.5rem;
   color: white;

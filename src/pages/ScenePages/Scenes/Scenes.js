@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
 import Scene from '../../../components/SceneComponents/Scene/Scene'
-import DropDownMenu from '../../../components/DropDownMenu/DropDownMenu'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { TbArrowsUpDown } from 'react-icons/tb'
 import { TbFilter } from 'react-icons/tb'
 import AddScene from '../AddScene/AddScene'
 import AddBtn from '../../../components/AddBtn/AddBtn'
 import { Button } from 'primereact/button'
-
+import { Dropdown } from 'primereact/dropdown'
 import './Scenes.css'
 
 const Scenes = () => {
   const [scenes, setScenes] = useState([])
+  const [selectedGroup, setSelectedGroup] = useState('')
+  const [selectedOrder, setSelectedOrder] = useState('')
   const [addSceneVisibility, setAddSceneVisibility] = useState(false)
   const axios = useAxiosPrivate()
   const getScenes = async () => {
@@ -44,20 +45,30 @@ const Scenes = () => {
             <span>
               <TbFilter size={30} />
             </span>
-            <DropDownMenu
-              className='drop-down-menu'
-              title={'Choose...'}
-              items={[]}
+            <Dropdown
+              value={selectedGroup}
+              onChange={(e) => {
+                setSelectedGroup(e.value)
+              }}
+              options={['General', 'Favorites']}
+              optionLabel='name'
+              placeholder='Select a group'
+              className='w-full md:w-14rem'
             />
           </div>
           <div className='toolbar-item'>
             <span>
               <TbArrowsUpDown size={25} />
             </span>
-            <DropDownMenu
-              className='drop-down-menu'
-              title={'Choose...'}
-              items={[]}
+            <Dropdown
+              value={selectedOrder}
+              onChange={(e) => {
+                setSelectedOrder(e.value)
+              }}
+              options={['Date', 'Name']}
+              optionLabel='name'
+              placeholder='Select a order'
+              className='w-full md:w-14rem'
             />
           </div>
           <div className='toolbar-item'>

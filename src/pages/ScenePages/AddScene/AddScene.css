@@ -41,6 +41,7 @@
 .add-scene-menu-item:hover {
   border: 1px solid var(--hover-color);
   background-color: var(--very-light-purple);
+  cursor: pointer;
 }
 .add-scene-menu-item:focus {
   background-color: var(--very-light-purple);

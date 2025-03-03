@@ -8,6 +8,17 @@
   color: #ccc;
 }
 
+.page-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: calc(100% - var(--navbar-height));
+  width: 100%;
+  background-color: var(--bck-page-default);
+}
+
 .btn-form-container {
   display: flex;
   justify-content: center;
@@ -219,6 +230,7 @@
   background-color: var(--active-color) !important;
   width: 40px !important;
   height: 40px !important;
+  border-radius: 6px;
   border-color: var(--active-color) !important;
 }
 .toolbar-add-btn:hover,
@@ -234,31 +246,5 @@
   .toolbar {
     padding: 0;
     gap: 0.5rem;
-  }
-}
-
-/* overwrite primerect components css */
-
-/* dialog */
-.p-dialog {
-  min-width: 400px;
-  max-width: 500px;
-}
-
-/* sliders */
-.p-slider-range {
-  background-color: var(--active-color) !important;
-}
-.p-slider-handle {
-  border-color: var(--active-color) !important;
-}
-.p-slider-handle:hover {
-  background-color: var(--active-color) !important;
-}
-
-@media (max-width: 568px) {
-  .p-dialog {
-    min-width: auto;
-    max-width: 90%;
   }
 }

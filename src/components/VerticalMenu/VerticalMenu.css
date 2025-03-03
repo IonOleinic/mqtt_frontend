@@ -50,6 +50,7 @@
   display: flex;
   align-items: center;
   list-style-type: none;
+  gap: 0.3rem;
   background-color: white;
   width: 150px;
   padding: 0.1rem 0.4rem;
@@ -74,8 +75,9 @@
   border-left: 3px solid var(--custom-red);
 }
 .vertical-menu-item-img {
-  margin-bottom: 0.2rem;
-  margin-right: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 568px) {

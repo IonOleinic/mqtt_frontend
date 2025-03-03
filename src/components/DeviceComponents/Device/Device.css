@@ -72,6 +72,7 @@
   height: 3.4rem;
   width: 100%;
   word-wrap: break-word;
+  font-weight: 400;
 }
 .fav-icon {
   margin-top: 0.3rem;
@@ -96,7 +97,9 @@
 }
 
 .battery-level-icon {
-  display: revert;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .battery-level-icon-hidden {
   display: none;

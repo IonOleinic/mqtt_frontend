@@ -62,7 +62,7 @@ function UserProfile(props) {
       >
         <div className='user-img-name' ref={profileDropDownRef}>
           <img src={userProfileIcon} alt='' draggable='false' />
-          <h3>{`Hi, ${auth?.user?.name}`}</h3>
+          <p>{`Hi, ${auth?.user?.name}`}</p>
         </div>
       </div>
       <div
