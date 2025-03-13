@@ -56,6 +56,7 @@ function DeletedDevice({ device, refreshDevices }) {
               header: 'Destroy Confirmation',
               icon: 'pi pi-trash',
               acceptClassName: 'p-button-danger',
+              defaultFocus: 'reject',
               accept: () => {
                 destroyDevice()
               },

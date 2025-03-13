@@ -20,7 +20,7 @@ function DeletedDevices({ devices, refreshDevices }) {
   })
   const getDeletedDevices = async () => {
     try {
-      let response = await axios.get(`/deleted-devices`)
+      const response = await axios.get(`/deleted-devices`)
       setDeletedDevices(response.data)
     } catch (error) {
       console.log(error)

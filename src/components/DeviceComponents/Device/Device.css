@@ -1,7 +1,6 @@
-.device-item {
-  width: 20rem;
+.device {
+  width: 340px;
   min-height: 6rem;
-  /* margin: 0.6rem; */
   position: relative;
   background-color: white;
   border-radius: 9px;

@@ -1,11 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import VerticalMenu from '../../VerticalMenu/VerticalMenu'
 import { MdOutlineExpandMore } from 'react-icons/md'
-import { MdOutlineCancel } from 'react-icons/md'
-import { AiOutlineDelete } from 'react-icons/ai'
-import { AiOutlineInfoCircle } from 'react-icons/ai'
-import { CiEdit } from 'react-icons/ci'
 import { CgArrowTopRightR } from 'react-icons/cg'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { socket } from '../../../api/io'
@@ -13,8 +8,10 @@ import useDeviceIcon from '../../../hooks/useDeviceIcon'
 import useFinalDevice from '../../../hooks/useFinalDevice'
 import { confirmDialog } from 'primereact/confirmdialog'
 import { CiWarning } from 'react-icons/ci'
-import './Device.css'
 import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
+import { Menu } from 'primereact/menu'
+import { FiMoreVertical } from 'react-icons/fi'
+import './Device.css'
 
 function Device({
   handleDeleteDevice,
@@ -23,6 +20,7 @@ function Device({
   handleSelectDevice,
   isOpenInfoBar,
 }) {
+  const menuRight = useRef(null)
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
   const [visibility, setVisibility] = useState(false)
@@ -64,8 +62,37 @@ function Device({
     }
   }, [])
 
+  const menuItems = [
+    { label: 'Info', icon: 'pi pi-info-circle' },
+    {
+      label: 'Edit',
+      icon: 'pi pi-pencil',
+      command: () => {
+        navigate(`/devices/edit-device/${device.id}`)
+      },
+    },
+    {
+      label: 'Delete',
+      icon: 'pi pi-trash',
+      command: () => {
+        confirmDialog({
+          message: `Do you want to move to trash device ${device.name}?`,
+          header: 'Delete Confirmation',
+          icon: 'pi pi-trash',
+          defaultFocus: 'reject',
+          acceptClassName: 'p-button-danger',
+          accept: () => {
+            handleDeleteDevice(device.id)
+          },
+          reject: () => {},
+        })
+      },
+    },
+    { label: 'Cancel', icon: 'pi pi-times-circle' },
+  ]
+
   return (
-    <div className='device-item' key={device.mqtt_name}>
+    <div className='device' key={device.mqtt_name}>
       <div className='device-top'>
         <button
           className={
@@ -114,37 +141,22 @@ function Device({
         >
           {favIcon}
         </button>
-        <VerticalMenu
-          items={[
-            { name: 'Info', icon: <AiOutlineInfoCircle /> },
-            {
-              name: 'Edit',
-              icon: <CiEdit />,
-              action: () => {
-                navigate(`/devices/edit-device/${device.id}`)
-              },
-            },
-            {
-              name: 'Delete',
-              icon: <AiOutlineDelete />,
-              action: () => {
-                confirmDialog({
-                  message: `Do you want to move to trash device ${device.name}?`,
-                  header: 'Delete Confirmation',
-                  icon: 'pi pi-trash',
-                  // defaultFocus: 'reject',
-                  acceptClassName: 'p-button-danger',
-                  accept: () => {
-                    handleDeleteDevice(device.id)
-                  },
-                  reject: () => {},
-                })
-              },
-              isRed: true,
-            },
-            { name: 'Cancel', icon: <MdOutlineCancel /> },
-          ]}
-        />
+        <div className='vertical-menu'>
+          <Menu
+            model={menuItems}
+            popup
+            ref={menuRight}
+            id='popup_menu_right'
+            aria-controls='popup_menu_right'
+            aria-haspopup
+          />
+          <span
+            onClick={(e) => menuRight.current.toggle(e)}
+            className='vertical-menu-dots'
+          >
+            <FiMoreVertical size={25} />
+          </span>
+        </div>
         <button className='device-expand'>
           <CgArrowTopRightR size={20} />
         </button>

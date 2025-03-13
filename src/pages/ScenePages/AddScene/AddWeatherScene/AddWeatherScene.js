@@ -32,7 +32,7 @@ function AddWeatherScene() {
   const [comparisonSign, setComparisonSign] = useState('>=')
   const [targetTemperature, setTargetTemperature] = useState(10)
   //executable device
-  const [deviceId, setDeviceId] = useState('')
+  const [deviceId, setDeviceId] = useState(undefined)
   const [executableTopic, setExecutableTopic] = useState('')
   const [executablePayload, setExecutablePayload] = useState('OFF')
   const [executableText, setExecutableText] = useState('')
@@ -46,7 +46,7 @@ function AddWeatherScene() {
   }
   const checkAllFields = () => {
     let device = document.getElementById('select-device')
-    if (deviceId == '') {
+    if (!deviceId) {
       changeFieldStyle(device)
       return false
     }
@@ -69,7 +69,7 @@ function AddWeatherScene() {
       ? name
       : 'weather_' + Math.random().toString(16).slice(2, 7)
     scene.scene_type = 'weather'
-    scene.exec_device_id = deviceId
+    scene.exec_device_id = Number(deviceId)
     scene.executable_topic = executableTopic
     scene.executable_payload = executablePayload
     scene.executable_text = executableText
@@ -88,12 +88,9 @@ function AddWeatherScene() {
       setMessage(error.response.data?.msg || 'Server error.Please Try again.')
     }
   }
-  async function getAllDevices(filter) {
+  async function getAllDevices() {
     try {
-      if (filter === undefined || filter === '') {
-        filter = 'General'
-      }
-      let result = await axios.get(`/devices?filter=${filter}`)
+      let result = await axios.get(`/devices`)
       setDevices(result.data)
     } catch (error) {
       console.log(error.message)
@@ -238,7 +235,7 @@ function AddWeatherScene() {
                 revertFieldStyle(e.target)
               }}
             >
-              <option value=''>None</option>
+              <option value={undefined}>None</option>
               {devices.map((device) => {
                 if (device.read_only == false)
                   return (

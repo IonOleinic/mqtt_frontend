@@ -26,12 +26,13 @@
   --light-grey: rgb(84, 84, 84);
   --bck-page-default: rgb(227, 227, 227);
   --bck-grey-hover-color: #ccccccc7;
+  --bck-grey-light-hover-color: #cccccc5f;
   --bck-grey-active-color: #cccccc87;
   --transp-grey-bck: #a7a7a7aa;
   --bck-hover-color: linear-gradient(to right, #cbcbcba2, #f0f0f069);
 
   /* heights */
-  --toolbar-height: 60px;
+  --toolbar-height: 68px;
   --navbar-height: 100px;
 
   /* shadow */

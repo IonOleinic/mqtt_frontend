@@ -28,9 +28,9 @@ function AddSchedule() {
 
   const [name, setName] = useState('')
   const [devices, setDevices] = useState([])
-  const [eventDeviceId, setEventDeviceId] = useState('')
+  const [eventDeviceId, setEventDeviceId] = useState(undefined)
   const [eventDeviceMqtt, setEventDeviceMqtt] = useState('')
-  const [actionDeviceId, setActionDeviceId] = useState('')
+  const [actionDeviceId, setActionDeviceId] = useState(undefined)
   const [conditionalPayload, setConditionalPayload] = useState('OFF')
   const [executablePayload, setExecutablePayload] = useState('OFF')
   const [conditionalTopic, setConditionalTopic] = useState('')
@@ -60,11 +60,11 @@ function AddSchedule() {
   const checkAllFields = () => {
     let event_device = document.getElementById('select-event-device')
     let action_device = document.getElementById('select-action-device')
-    if (eventDeviceId == '') {
+    if (!eventDeviceId) {
       changeFieldStyle(event_device)
       return false
     }
-    if (actionDeviceId == '') {
+    if (!actionDeviceId) {
       changeFieldStyle(action_device)
       return false
     }
@@ -99,13 +99,13 @@ function AddSchedule() {
     let scene = {}
     scene.name = name ? name : 'scene_' + Math.random().toString(16).slice(2, 7)
     scene.scene_type = 'deviceScene'
-    scene.exec_device_id = actionDeviceId
+    scene.exec_device_id = Number(actionDeviceId)
     scene.executable_topic = executableTopic
     scene.executable_payload = executablePayload
     scene.executable_text = executableText
     let attributes = {}
     attributes.cond_device_mqtt = eventDeviceMqtt
-    attributes.cond_device_id = eventDeviceId
+    attributes.cond_device_id = Number(eventDeviceId)
     attributes.conditional_topic = conditionalTopic
     attributes.conditional_payload = conditionalPayload
     attributes.conditional_text = conditionalText
@@ -120,12 +120,11 @@ function AddSchedule() {
       setMessage(error.response.data?.msg || 'Server error.Please Try again.')
     }
   }
-  async function getAllDevices(filter) {
+  async function getAllDevices() {
     try {
-      if (filter === undefined || filter === '') {
-        filter = 'General'
-      }
-      let result = await axios.get(`/devices?filter=${filter}`)
+      let result = await axios.get(`/devices`)
+      console.log(result.data)
+
       setDevices(result.data)
     } catch (error) {
       console.log(error.message)
@@ -261,7 +260,7 @@ function AddSchedule() {
                 revertFieldStyle(e.target)
               }}
             >
-              <option value=''>None</option>
+              <option value={undefined}>None</option>
               {devices.map((device) => {
                 return (
                   <option key={device.id} value={device.id}>
@@ -287,7 +286,7 @@ function AddSchedule() {
                 revertFieldStyle(e.target)
               }}
             >
-              <option value=''>None</option>
+              <option value={undefined}>None</option>
               {devices.map((device) => {
                 if (
                   device.read_only == false &&

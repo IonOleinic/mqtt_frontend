@@ -7,14 +7,21 @@ import './Global.css'
 import App from './App'
 import { AuthProvider } from './context/AuthProvider'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { PrimeReactProvider } from 'primereact/api'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
   <BrowserRouter>
-    <AuthProvider>
-      <Routes>
-        <Route path='/*' element={<App />} />
-      </Routes>
-    </AuthProvider>
+    <PrimeReactProvider
+      value={{
+        ripple: true,
+      }}
+    >
+      <AuthProvider>
+        <Routes>
+          <Route path='/*' element={<App />} />
+        </Routes>
+      </AuthProvider>
+    </PrimeReactProvider>
   </BrowserRouter>
 )

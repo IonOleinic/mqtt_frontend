@@ -10,7 +10,6 @@
 }
 .device-scene-top {
   width: 100%;
-  /* margin-top: 0.4rem; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -20,7 +19,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 160px;
+  width: 140px;
 }
 .device-scene-name-img {
   width: 100%;
@@ -56,8 +55,7 @@
 }
 .device-scene-text p {
   margin: 0;
-  height: 30px;
+  height: auto;
   margin-left: 0.3rem;
-  margin-bottom: -0.2rem;
   color: #6a6a6a;
 }

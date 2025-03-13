@@ -6,8 +6,8 @@ import { TbBatteryOff } from 'react-icons/tb'
 import { HiOutlineStatusOnline } from 'react-icons/hi'
 import { HiOutlineStatusOffline } from 'react-icons/hi'
 import { TbUsb } from 'react-icons/tb'
-import { AiOutlineStar } from 'react-icons/ai'
-import { AiFillStar } from 'react-icons/ai'
+import { TiStarFullOutline } from 'react-icons/ti'
+import { TiStarOutline } from 'react-icons/ti'
 //device icons
 import SmartIrIcon from '../components/DeviceComponents/DeviceTypeImages/SmartIRIcon'
 import SmartDoorIcon from '../components/DeviceComponents/DeviceTypeImages/SmartDoorSensorIcon'
@@ -42,8 +42,8 @@ let batteryLowIcon = <CgBatteryEmpty size={20} color='red' />
 let batteryNoDataIcon = <TbBatteryOff size={20} color='#ccc' />
 
 //favorite icons
-let favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
-let favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
+let favIconEnabled = <TiStarFullOutline size={26} style={{ color: 'gold' }} />
+let favIconDisabled = <TiStarOutline size={26} style={{ color: 'black' }} />
 
 const useDeviceIcon = (device) => {
   const [deviceIcon, setDeviceIcon] = useState(<></>)

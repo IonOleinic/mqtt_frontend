@@ -89,7 +89,7 @@ function UserProfile(props) {
                 message: `Are you sure that want to sign out?`,
                 header: 'Sign out confirmation',
                 icon: 'pi pi-sign-out',
-                // defaultFocus: 'reject',
+                defaultFocus: 'reject',
                 acceptClassName: 'p-button-danger',
                 accept: () => {
                   logout()

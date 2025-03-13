@@ -32,14 +32,14 @@ function Schedule({ scene }) {
   return (
     <div className='schedule'>
       <div className='schedule-top'>
-        <div className='schedule-device'>
+        <div className='schedule-scene-item'>
           <p>{execDevice.name}</p>
           {execDeviceIcons.deviceIcon}
         </div>
         <div className='arrow-right'>
           <HiOutlineArrowRight size={30} color={'black'} />
         </div>
-        <div className='schedule-action'>
+        <div className='schedule-scene-item'>
           <div className='schedule-text'>
             <GrAction size={20} />
             {scene.executable_text.includes('Color') ? (
@@ -87,7 +87,7 @@ function Schedule({ scene }) {
           <span
             className='schedule-repeat-once-icon'
             style={{
-              display: scene.dayOfWeek == '' ? 'inline' : 'none',
+              display: scene.dayOfWeek == '' ? 'flex' : 'none',
             }}
           >
             <TbRepeatOnce size={18} color={'red'} />

@@ -1,16 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MdOutlineExpandMore } from 'react-icons/md'
-import { AiOutlineStar } from 'react-icons/ai'
-import { AiFillStar } from 'react-icons/ai'
-import { AiOutlineDelete } from 'react-icons/ai'
-import { MdOutlineCancel } from 'react-icons/md'
-import { AiOutlineInfoCircle } from 'react-icons/ai'
-import { CiEdit } from 'react-icons/ci'
+import { TiStarFullOutline } from 'react-icons/ti'
+import { TiStarOutline } from 'react-icons/ti'
 import { confirmDialog } from 'primereact/confirmdialog'
+import { FiMoreVertical } from 'react-icons/fi'
+import { Menu } from 'primereact/menu'
 import Switch from 'react-switch'
 import Schedule from './Schedule/Schedule'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
-import VerticalMenu from '../../VerticalMenu/VerticalMenu'
 import DeviceScene from './DeviceScene/DeviceScene'
 import WeatherScene from './WeatherScene/WeatherScene'
 import wheather_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/wheather_scene_icon.png'
@@ -20,16 +17,18 @@ import schedule_icon from '../../../components/SceneComponents/AddSceneComponent
 import './Scene.css'
 import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
 
-const favIconEnabled = <AiFillStar size={26} style={{ color: 'gold' }} />
-const favIconDisabled = <AiOutlineStar size={26} style={{ color: 'black' }} />
+const favIconEnabled = <TiStarFullOutline size={26} style={{ color: 'gold' }} />
+const favIconDisabled = <TiStarOutline size={26} style={{ color: 'black' }} />
 function Scene({ init_scene, handleDeleteScene }) {
   const axios = useAxiosPrivate()
+  const menuRight = useRef(null)
   const [favIcon, setFavIcon] = useState(favIconDisabled)
   const [favBool, setFavBool] = useState(false)
   const [visibility, setVisibility] = useState(true)
   const [isActive, setIsActive] = useState(false)
   const [scene, setScene] = useState(init_scene)
   const [sceneIcon, setSceneIcon] = useState('')
+
   const getDateFromStr = (date) => {
     const addZero = (i) => {
       if (i <= 9) {
@@ -87,6 +86,7 @@ function Scene({ init_scene, handleDeleteScene }) {
         break
     }
   }, [scene])
+
   let final_scene = <></>
   if (scene.scene_type === 'schedule') {
     final_scene = <Schedule scene={scene} />
@@ -95,6 +95,31 @@ function Scene({ init_scene, handleDeleteScene }) {
   } else if (scene.scene_type === 'weather') {
     final_scene = <WeatherScene scene={scene} />
   }
+  const menuItems = [
+    { label: 'Info', icon: 'pi pi-info-circle' },
+    {
+      label: 'Edit',
+      icon: 'pi pi-pencil',
+    },
+    {
+      label: 'Delete',
+      icon: 'pi pi-trash',
+      command: () => {
+        confirmDialog({
+          message: `Do you want to destroy scene ${scene.name}?`,
+          header: 'Destroy Confirmation',
+          icon: 'pi pi-trash',
+          defaultFocus: 'reject',
+          acceptClassName: 'p-button-danger',
+          accept: () => {
+            handleDeleteScene(scene.id)
+          },
+          reject: () => {},
+        })
+      },
+    },
+    { label: 'Cancel', icon: 'pi pi-times-circle' },
+  ]
   return (
     <div className='scene'>
       <div className='scene-top'>
@@ -145,31 +170,22 @@ function Scene({ init_scene, handleDeleteScene }) {
         >
           {favIcon}
         </span>
-        <VerticalMenu
-          items={[
-            { name: 'Info', icon: <AiOutlineInfoCircle /> },
-            { name: 'Edit', icon: <CiEdit /> },
-            {
-              name: 'Delete',
-              icon: <AiOutlineDelete />,
-              action: () => {
-                confirmDialog({
-                  message: `Do you want to destroy scene ${scene.name}?`,
-                  header: 'Destroy Confirmation',
-                  icon: 'pi pi-trash',
-                  // defaultFocus: 'reject',
-                  acceptClassName: 'p-button-danger',
-                  accept: () => {
-                    handleDeleteScene(scene.id)
-                  },
-                  reject: () => {},
-                })
-              },
-              isRed: true,
-            },
-            { name: 'Cancel', icon: <MdOutlineCancel /> },
-          ]}
-        />
+        <div className='vertical-menu'>
+          <Menu
+            model={menuItems}
+            popup
+            ref={menuRight}
+            id='popup_menu_right'
+            aria-controls='popup_menu_right'
+            aria-haspopup
+          />
+          <span
+            onClick={(e) => menuRight.current.toggle(e)}
+            className='vertical-menu-dots'
+          >
+            <FiMoreVertical size={25} />
+          </span>
+        </div>
         <span className='scene-date'>
           {getDateFromStr(scene.createdAt.toString())}
         </span>
