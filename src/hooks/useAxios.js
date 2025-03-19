@@ -9,7 +9,7 @@ function useAxios() {
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
-        const userId = JSON.parse(sessionStorage.getItem('userId'))
+        const userId = Number(JSON.parse(sessionStorage.getItem('userId')))
         if (userId) {
           config.params = { ...config.params, user_id: userId }
         }

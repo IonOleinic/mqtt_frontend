@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import PowerBtn from './PowerBtn/PowerBtn'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import voltageIcon from './SensorDataIcons/voltage-icon.png'
 import currentIcon from './SensorDataIcons/current-icon.png'
 import powerIcon from './SensorDataIcons/power-icon.png'
 import totalPowerIcon from './SensorDataIcons/total-power-icon.png'
+
 import './SmartStrip.css'
 
 function SmartStrip({ device }) {
@@ -15,12 +16,12 @@ function SmartStrip({ device }) {
   let powerButtons = []
   let powerBtnSize = 100
 
-  if (device.nr_of_sockets > 1 && device.nr_of_sockets <= 2) {
+  if (device.nr_of_sockets == 2) {
     powerBtnSize = 70
-  } else if (device.nr_of_sockets > 2 && device.nr_of_sockets <= 3) {
+  } else if (device.nr_of_sockets == 3) {
+    powerBtnSize = 65
+  } else if (device.nr_of_sockets >= 4) {
     powerBtnSize = 60
-  } else if (device.nr_of_sockets > 3) {
-    powerBtnSize = 50
   }
   if (device.switch_type === 'plug') {
     powerBtnSize -= 10
@@ -86,6 +87,15 @@ function SmartStrip({ device }) {
           display: sensorData === undefined ? 'none' : 'flex',
         }}
       >
+        <div
+          className='energy-today'
+          style={{
+            display: sensorData === undefined ? 'none' : 'flex',
+          }}
+        >
+          <h1>{sensorData.Today}</h1>
+          <p>kW</p>
+        </div>
         <div className='sensor'>
           <div className='sensor-item'>
             <img src={voltageIcon} />
@@ -126,18 +136,9 @@ function SmartStrip({ device }) {
       <div className='power-buttons-container'>
         <div
           className='power-buttons'
-          style={{ padding: device.nr_of_sockets == 4 ? '0 3rem' : '0 1rem' }}
+          style={{ padding: device.nr_of_sockets == 4 ? '0 4rem' : '0 1rem' }}
         >
           {powerButtons}
-        </div>
-        <div
-          className='energy-today'
-          style={{
-            display: device.switch_type === 'plug' ? 'flex' : 'none',
-          }}
-        >
-          <h1>{sensorData.Today}</h1>
-          <p>kW</p>
         </div>
       </div>
       {sensorPart}

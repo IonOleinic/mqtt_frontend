@@ -9,13 +9,15 @@ import DeletedDevices from '../../../components/DeviceComponents/DeletedDevices/
 import { Dropdown } from 'primereact/dropdown'
 import { TiSortAlphabetically } from 'react-icons/ti'
 import { TiCalendar } from 'react-icons/ti'
-import { GrCubes } from 'react-icons/gr'
+import { LiaCubesSolid } from 'react-icons/lia'
 import { TiStarFullOutline } from 'react-icons/ti'
 import { TiStarHalfOutline } from 'react-icons/ti'
 import { TiStarOutline } from 'react-icons/ti'
 import { InputText } from 'primereact/inputtext'
+import { MultiSelect } from 'primereact/multiselect'
 import { VscChromeClose } from 'react-icons/vsc'
 import { VscFilter } from 'react-icons/vsc'
+import useDebounce from '../../../hooks/useDebounce'
 import './Devices.css'
 
 const tiCalendarIcon = <TiCalendar size={20} />
@@ -40,17 +42,24 @@ const Devices = () => {
   const navigate = useNavigate()
   const [devices, setDevices] = useState([])
   const [filter, setFilter] = useState({
-    group: 'General',
-    favorite: undefined,
     name: '',
+    favorite: undefined,
+    groups: [],
   })
-  const [mqttGroups, setMqttGroups] = useState(['General'])
+  const debouncedFilterName = useDebounce(filter.name, 300)
+  const [groups, setGroups] = useState([])
+  const [selectedGroups, setSelectedGroups] = useState([])
   const [selectedOrder, setSelectedOrder] = useState(selectedOrderOptions[0])
   const [selectedFavorite, setSelectedFavorite] = useState(
     selectedFavoriteOptions[0]
   )
   const [toolbarExpanded, setToolbarExpanded] = useState(false)
-
+  const [isFilterActive, setIsFilterActive] = useState(false)
+  const [filterIndicator, setFilterIndicator] = useState({
+    name: false,
+    favorite: false,
+    groups: false,
+  })
   const axios = useAxiosPrivate()
 
   const getDevices = async (usedFilter = filter, usedOrder = selectedOrder) => {
@@ -65,20 +74,41 @@ const Devices = () => {
     }
   }
 
-  async function getMqttGroups() {
+  const getGroups = async () => {
     try {
-      let response = await axios.get('/mqttGroups')
-      setMqttGroups(response.data)
+      let response = await axios.get('/groups')
+      setGroups(response.data)
     } catch (error) {
       console.log(error.message)
     }
   }
+  // useEffect(() => {
+  //   getDevices(filter)
+  // }, [])
   useEffect(() => {
-    getDevices(filter)
+    getGroups()
   }, [])
+
   useEffect(() => {
-    getMqttGroups()
-  }, [devices])
+    getDevices({ ...filter, name: debouncedFilterName })
+  }, [debouncedFilterName])
+
+  useEffect(() => {
+    setFilterIndicator({
+      ...filterIndicator,
+      name: filter.name !== '',
+      favorite: filter.favorite !== undefined,
+      groups: filter.groups !== undefined && filter.groups.length !== 0,
+    })
+
+    if (
+      filter.name !== '' ||
+      filter.favorite !== undefined ||
+      (filter.groups !== undefined && filter.groups.length !== 0)
+    )
+      setIsFilterActive(true)
+    else setIsFilterActive(false)
+  }, [filter])
 
   const handleDeleteDevice = async (deviceId) => {
     try {
@@ -90,18 +120,19 @@ const Devices = () => {
   }
 
   const resetFIlter = () => {
-    setFilter({ ...filter, name: '', group: 'General', favorite: undefined })
+    setFilter({ ...filter, name: '', groups: [], favorite: undefined })
     getDevices(
       {
         ...filter,
         name: '',
-        group: 'General',
         favorite: undefined,
+        groups: [],
       },
       selectedOrderOptions[0]
     )
     setSelectedFavorite(selectedFavoriteOptions[0])
     setSelectedOrder(selectedOrderOptions[0])
+    setSelectedGroups([])
   }
 
   const selectedOptionTemplate = (option, props) => {
@@ -136,6 +167,13 @@ const Devices = () => {
             >
               <VscFilter size={30} />
             </button>
+            <span
+              className={
+                isFilterActive
+                  ? 'active-filter-indicator'
+                  : 'active-filter-indicator-hidden'
+              }
+            ></span>
           </div>
           <div className='toolbar-item'>
             <label>Add</label>
@@ -166,10 +204,11 @@ const Devices = () => {
             />
           </div>
         </div>
+        <div className='toolbar-vertical-line' />
         <div className='toolbar-section device-filters-section'>
           <div className='toolbar-item'>
-            <label>Reset</label>
             <Button
+              label='Reset'
               icon='pi pi-refresh'
               outlined
               onClick={() => {
@@ -178,32 +217,59 @@ const Devices = () => {
             />
           </div>
           <div className='toolbar-item'>
+            <span
+              className={
+                filterIndicator.name
+                  ? 'toolbar-item-filter-indicator'
+                  : 'toolbar-item-filter-indicator-hidden'
+              }
+            ></span>
             <label>Name</label>
             <InputText
+              placeholder='type device name'
               value={filter.name}
               onChange={(e) => {
                 setFilter({ ...filter, name: e.target.value })
-                getDevices({ ...filter, name: e.target.value })
               }}
             />
           </div>
           <div className='toolbar-item'>
+            <span
+              className={
+                filterIndicator.groups
+                  ? 'toolbar-item-filter-indicator'
+                  : 'toolbar-item-filter-indicator-hidden'
+              }
+            ></span>
             <label>
-              <GrCubes size={22} />
+              <LiaCubesSolid size={24} />
             </label>
-            <Dropdown
-              value={filter.group}
+            <MultiSelect
+              value={selectedGroups}
               onChange={(e) => {
-                setFilter({ ...filter, group: e.value })
-                getDevices({ ...filter, group: e.value })
+                setSelectedGroups(e.value)
+                let groupIds = []
+                e.value.map((group) => {
+                  groupIds.push(group.id)
+                })
+                setFilter({ ...filter, groups: groupIds })
+                getDevices({ ...filter, groups: groupIds })
               }}
-              options={mqttGroups}
+              options={groups}
+              maxSelectedLabels={2}
               optionLabel='name'
-              placeholder='Select a group'
-              className='w-full md:w-14rem'
+              placeholder='Select groups'
+              className='w-full md:w-20rem'
             />
           </div>
           <div className='toolbar-item'>
+            <span
+              className={
+                filterIndicator.favorite
+                  ? 'toolbar-item-filter-indicator'
+                  : 'toolbar-item-filter-indicator-hidden'
+              }
+            ></span>
             <label>
               <TiStarOutline size={22} />
             </label>
@@ -239,13 +305,16 @@ const Devices = () => {
             />
           </div>
         </div>
+        <div className='toolbar-vertical-line' />
         <div className='toolbar-section apply-filters-section'>
           <div className='toolbar-item toolbar-item-refresh'>
             <Button
+              label='Refresh'
               icon='pi pi-sync'
               outlined
               onClick={() => {
                 getDevices()
+                setToolbarExpanded(false)
               }}
             />
           </div>

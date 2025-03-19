@@ -102,7 +102,7 @@ function Scene({ init_scene, handleDeleteScene }) {
       icon: 'pi pi-pencil',
     },
     {
-      label: 'Delete',
+      label: 'Destroy',
       icon: 'pi pi-trash',
       command: () => {
         confirmDialog({

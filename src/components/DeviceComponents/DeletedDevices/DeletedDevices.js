@@ -120,7 +120,7 @@ function DeletedDevices({ devices, refreshDevices }) {
               })
             }}
           >
-            <CgUndo size={25} />
+            <CgUndo size={30} />
             <p>Recover all</p>
           </button>
           <button
@@ -133,6 +133,7 @@ function DeletedDevices({ devices, refreshDevices }) {
                     : `Do you want to destroy ${deletedDevices.length} devices?`,
                 header: 'Destroy Confirmation',
                 icon: 'pi pi-trash',
+                defaultFocus: 'reject',
                 acceptClassName: 'p-button-danger',
                 accept: () => {
                   destroyAll()
@@ -141,7 +142,7 @@ function DeletedDevices({ devices, refreshDevices }) {
               })
             }}
           >
-            <IoMdTrash size={22} />
+            <IoMdTrash size={27} />
             <p>Destroy all</p>
           </button>
         </div>

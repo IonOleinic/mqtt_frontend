@@ -5,6 +5,10 @@ function SubSwitch({ setSubProps, disable_add_btn }) {
   const [nrOfSockets, setNrOfSockets] = useState(1)
   const [switchType, setSwitchType] = useState('plug')
   useEffect(() => {
+    disable_add_btn(false)
+  }, [])
+
+  useEffect(() => {
     setSubProps({
       switch_type: switchType,
       nr_of_sockets: nrOfSockets,

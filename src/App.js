@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 import Navigation from './components/Navigation/Navigation'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Devices from './pages/DevicePages/Devices/Devices'
@@ -18,6 +19,18 @@ import PersistLogin from './components/Auth/PersistLogin'
 function App() {
   return (
     <>
+      <ToastContainer
+        position='bottom-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
       <Navigation />
       <Routes>
         <Route path='/' element={<AppLayout />}>

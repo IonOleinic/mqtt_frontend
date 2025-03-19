@@ -16,6 +16,7 @@ import { MultiSelect } from 'primereact/multiselect'
 import { TbDeviceNintendo } from 'react-icons/tb'
 import { VscChromeClose } from 'react-icons/vsc'
 import { VscFilter } from 'react-icons/vsc'
+import useDebounce from '../../../hooks/useDebounce'
 import './Scenes.css'
 
 const tiCalendarIcon = <TiCalendar size={20} />
@@ -41,9 +42,16 @@ const Scenes = () => {
   const [sceneInvolvedDevices, setSceneInvolvedDevices] = useState([])
   const [selectedDevices, setSelectedDevices] = useState([])
   const [filter, setFilter] = useState({
-    devices: [],
-    favorite: undefined,
     name: '',
+    favorite: undefined,
+    devices: [],
+  })
+  const debouncedFilterName = useDebounce(filter.name, 300)
+  const [isFilterActive, setIsFilterActive] = useState(false)
+  const [filterIndicator, setFilterIndicator] = useState({
+    name: false,
+    favorite: false,
+    devices: false,
   })
   const [addSceneVisibility, setAddSceneVisibility] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState(selectedOrderOptions[0])
@@ -74,9 +82,13 @@ const Scenes = () => {
     }
   }
   useEffect(() => {
-    getScenes()
+    // getScenes()
     getSceneInvolvedDevices()
   }, [])
+
+  useEffect(() => {
+    getScenes({ ...filter, name: debouncedFilterName })
+  }, [debouncedFilterName])
 
   const handleDeleteScene = async (sceneId) => {
     try {
@@ -86,15 +98,31 @@ const Scenes = () => {
       console.log(error.message)
     }
   }
+  useEffect(() => {
+    setFilterIndicator({
+      ...filterIndicator,
+      name: filter.name !== '',
+      favorite: filter.favorite !== undefined,
+      devices: filter.devices !== undefined && filter.devices.length !== 0,
+    })
+
+    if (
+      filter.name !== '' ||
+      filter.favorite !== undefined ||
+      (filter.devices !== undefined && filter.devices.length !== 0)
+    )
+      setIsFilterActive(true)
+    else setIsFilterActive(false)
+  }, [filter])
 
   const resetFIlter = () => {
-    setFilter({ ...filter, name: '', devices: [], favorite: undefined })
+    setFilter({ ...filter, name: '', favorite: undefined, devices: [] })
     getScenes(
       {
         ...filter,
         name: '',
-        devices: [],
         favorite: undefined,
+        devices: [],
       },
       selectedOrderOptions[0]
     )
@@ -138,6 +166,13 @@ const Scenes = () => {
               >
                 <VscFilter size={30} />
               </button>
+              <span
+                className={
+                  isFilterActive
+                    ? 'active-filter-indicator'
+                    : 'active-filter-indicator-hidden'
+                }
+              ></span>
             </div>
             <div className='toolbar-item'>
               <label>Add</label>
@@ -168,10 +203,11 @@ const Scenes = () => {
               />
             </div>
           </div>
+          <div className='toolbar-vertical-line' />
           <div className='toolbar-section device-filters-section'>
             <div className='toolbar-item'>
-              <label>Reset</label>
               <Button
+                label='Reset'
                 icon='pi pi-refresh'
                 outlined
                 onClick={() => {
@@ -180,16 +216,30 @@ const Scenes = () => {
               />
             </div>
             <div className='toolbar-item'>
+              <span
+                className={
+                  filterIndicator.name
+                    ? 'toolbar-item-filter-indicator'
+                    : 'toolbar-item-filter-indicator-hidden'
+                }
+              ></span>
               <label>Name</label>
               <InputText
+                placeholder='type scene name'
                 value={filter.name}
                 onChange={(e) => {
                   setFilter({ ...filter, name: e.target.value })
-                  getScenes({ ...filter, name: e.target.value })
                 }}
               />
             </div>
             <div className='toolbar-item'>
+              <span
+                className={
+                  filterIndicator.devices
+                    ? 'toolbar-item-filter-indicator'
+                    : 'toolbar-item-filter-indicator-hidden'
+                }
+              ></span>
               <label>
                 <TbDeviceNintendo size={22} />
               </label>
@@ -213,6 +263,13 @@ const Scenes = () => {
             </div>
 
             <div className='toolbar-item'>
+              <span
+                className={
+                  filterIndicator.favorite
+                    ? 'toolbar-item-filter-indicator'
+                    : 'toolbar-item-filter-indicator-hidden'
+                }
+              ></span>
               <label>
                 <TiStarOutline size={22} />
               </label>
@@ -248,13 +305,16 @@ const Scenes = () => {
               />
             </div>
           </div>
+          <div className='toolbar-vertical-line' />
           <div className='toolbar-section apply-filters-section'>
             <div className='toolbar-item toolbar-item-refresh'>
               <Button
+                label='Refresh'
                 icon='pi pi-sync'
                 outlined
                 onClick={() => {
                   getScenes()
+                  setToolbarExpanded(false)
                 }}
               />
             </div>

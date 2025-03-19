@@ -10,6 +10,7 @@ import UseAnimations from 'react-useanimations'
 import loading from 'react-useanimations/lib/loading'
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import './AddDevice.css'
+import { set } from 'lodash'
 
 let iconSucces = <IoIosCheckmarkCircleOutline size='25px' color='green' />
 let iconError = <VscError className='icon-inside' color='red' size='25px' />
@@ -29,11 +30,13 @@ function AddDevice() {
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
   const [manufacter, setManufacter] = useState('tasmota')
-  const [mqttGroup, setMqttGroups] = useState('')
+  const [groupId, setGroupId] = useState(undefined)
+  const [groups, setGroups] = useState([])
   const [deviceType, setDeviceType] = useState('')
   const [attributes, setAttributes] = useState({})
   const [subDevice, setSubDevice] = useState(<></>)
-  const getAllTypes = async () => {
+
+  const getDeviceTypes = async () => {
     try {
       let result = await axios.get('/deviceTypes')
       setDeviceTypes(result.data)
@@ -41,8 +44,17 @@ function AddDevice() {
       console.log(error)
     }
   }
+  const getGroups = async () => {
+    try {
+      let result = await axios.get('/groups')
+      setGroups(result.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    getAllTypes()
+    getDeviceTypes()
+    getGroups()
   }, [])
   useEffect(() => {
     setCheckmark(false)
@@ -59,16 +71,7 @@ function AddDevice() {
     device.mqtt_name = mqttName
     device.manufacter = manufacter
     device.device_type = deviceType
-    if (mqttGroup) {
-      if (mqttGroup.toUpperCase().includes('GENERAL')) {
-        device.mqtt_group = mqttGroup.split(',').toString()
-      } else {
-        device.mqtt_group = ['General'].concat(mqttGroup.split(',')).toString()
-      }
-    } else {
-      device.mqtt_group = ['General'].toString()
-    }
-    device.user_id = JSON.parse(sessionStorage.getItem('userId'))
+    device.group_id = Number(groupId)
     device.attributes = attributes
 
     try {
@@ -139,6 +142,7 @@ function AddDevice() {
         break
       default:
         subtype = <></>
+        setDisabledAddBtn(true)
         break
     }
     setSubDevice(subtype)
@@ -202,17 +206,25 @@ function AddDevice() {
           </div>
           <div className='form-group mt-3'>
             <label htmlFor='input-groups'>Groups</label>
-            <input
-              id='input-groups'
-              type='text'
-              className='form-control mt-1'
-              placeholder='Living Room,etc'
-              value={mqttGroup}
+            <select
+              id='select-manufacter'
+              className='form-select select-type'
+              aria-label='Default select example'
               onChange={(e) => {
-                setMqttGroups(e.target.value)
+                setGroupId(e.target.value)
               }}
-            />
+            >
+              <option value={undefined}>None</option>
+              {groups.map((group) => {
+                return (
+                  <option key={group.id} value={group.id}>
+                    {group.name}
+                  </option>
+                )
+              })}
+            </select>
           </div>
+          <div className='form-group mt-3'></div>
           <div className='form-group mt-3'>
             <label htmlFor='select-type'>Device Type</label>
             <select
@@ -226,7 +238,7 @@ function AddDevice() {
                 chooseSubDevice(e.target.value)
               }}
             >
-              <option value='none'>None</option>
+              <option value={undefined}>None</option>
               {Object.keys(deviceTypes).map((deviceType) => {
                 return (
                   <option key={deviceType} value={deviceTypes[deviceType]}>

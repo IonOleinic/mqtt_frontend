@@ -7,19 +7,14 @@ import { socket } from '../../../api/io'
 import useDeviceIcon from '../../../hooks/useDeviceIcon'
 import useFinalDevice from '../../../hooks/useFinalDevice'
 import { confirmDialog } from 'primereact/confirmdialog'
-import { CiWarning } from 'react-icons/ci'
 import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
 import { Menu } from 'primereact/menu'
 import { FiMoreVertical } from 'react-icons/fi'
+import { LiaCubesSolid } from 'react-icons/lia'
+import { toast } from 'react-toastify'
 import './Device.css'
 
-function Device({
-  handleDeleteDevice,
-  initDevice,
-  toggleInfoBar,
-  handleSelectDevice,
-  isOpenInfoBar,
-}) {
+function Device({ handleDeleteDevice, initDevice }) {
   const menuRight = useRef(null)
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
@@ -37,6 +32,7 @@ function Device({
       console.log(error)
     }
   }
+
   useEffect(() => {
     if (socket) {
       const updateDeviceHandler = (data) => {
@@ -51,6 +47,23 @@ function Device({
             })
           } else {
             setDevice(data.device)
+            // setDevice((prev) => {
+            //   if (data.device.device_type === 'smartStrip') {
+            //     if (
+            //       JSON.stringify(data.device.power_status) !=
+            //       JSON.stringify(prev.power_status)
+            //     ) {
+            //       // toast.dismiss()
+            //       console.log(allowToast)
+
+            //       if (allowToast)
+            //         toast.success(
+            //           `(${data.device.name}) Power is ${data.device.power_status}`
+            //         )
+            //     }
+            //   }
+            //   return data.device
+            // })
           }
         }
       }
@@ -130,7 +143,16 @@ function Device({
           }}
         >
           <h3>{device.name} </h3>
-          <span>{device.mqtt_group.toString().slice(0, 20)}</span>
+          <div
+            className={
+              device.group_name
+                ? 'device-group-container'
+                : 'device-group-container-hidden'
+            }
+          >
+            <LiaCubesSolid size={18} />
+            <p>{device.group_name}</p>
+          </div>
         </div>
         <button
           className='fav-icon'
@@ -190,11 +212,7 @@ function Device({
         }
       >
         {finalDevice}
-        <InactiveLayer
-          visibility={!device.available}
-          // message='Device is offline.'
-          // icon={<CiWarning color='gold' />}
-        />
+        <InactiveLayer visibility={!device.available} />
       </div>
     </div>
   )

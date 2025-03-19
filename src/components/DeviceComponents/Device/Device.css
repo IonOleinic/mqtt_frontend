@@ -61,17 +61,27 @@
   padding: 0;
   display: inline-block;
 }
-.device-info span {
-  width: 100%;
-  font-size: 1rem;
-  font-style: oblique;
-}
 .device-info h3 {
-  font-size: 1.5rem;
-  height: 3.4rem;
-  width: 100%;
+  font-size: 1.35rem;
+  width: 130px;
+  height: 80px;
   word-wrap: break-word;
   font-weight: 400;
+  overflow: hidden;
+}
+.device-group-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: 100%;
+}
+.device-group-container-hidden {
+  display: none;
+}
+.device-group-container p {
+  font-size: 1rem;
+  font-style: oblique;
 }
 .fav-icon {
   margin-top: 0.3rem;

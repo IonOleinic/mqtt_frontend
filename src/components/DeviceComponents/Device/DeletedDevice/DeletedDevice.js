@@ -46,7 +46,7 @@ function DeletedDevice({ device, refreshDevices }) {
             })
           }}
         >
-          <CgUndo size={25} />
+          <CgUndo size={28} />
         </button>
         <button
           className='btn-destroy-device deleted-device-btn'
@@ -64,7 +64,7 @@ function DeletedDevice({ device, refreshDevices }) {
             })
           }}
         >
-          <IoMdTrash size={22} />
+          <IoMdTrash size={25} />
         </button>
       </div>
     </div>
