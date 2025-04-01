@@ -18,6 +18,7 @@ import { MultiSelect } from 'primereact/multiselect'
 import { VscChromeClose } from 'react-icons/vsc'
 import { VscFilter } from 'react-icons/vsc'
 import useDebounce from '../../../hooks/useDebounce'
+import useOptionTemplate from '../../../hooks/useOptionTemplate'
 import './Devices.css'
 
 const tiCalendarIcon = <TiCalendar size={20} />
@@ -40,6 +41,7 @@ const selectedFavoriteOptions = [
 
 const Devices = () => {
   const navigate = useNavigate()
+  const { selectedOptionTemplate, optionTemplate } = useOptionTemplate()
   const [devices, setDevices] = useState([])
   const [filter, setFilter] = useState({
     name: '',
@@ -77,7 +79,7 @@ const Devices = () => {
   const getGroups = async () => {
     try {
       let response = await axios.get('/groups')
-      setGroups(response.data)
+      setGroups([{ id: null, name: 'No group' }, ...response.data])
     } catch (error) {
       console.log(error.message)
     }
@@ -133,27 +135,6 @@ const Devices = () => {
     setSelectedFavorite(selectedFavoriteOptions[0])
     setSelectedOrder(selectedOrderOptions[0])
     setSelectedGroups([])
-  }
-
-  const selectedOptionTemplate = (option, props) => {
-    if (option) {
-      return (
-        <div className='dropdown-template'>
-          {option.icon}
-          <div className='dropdown-template-name'>{option.name}</div>
-        </div>
-      )
-    }
-    return <span>{props.placeholder}</span>
-  }
-
-  const optionTemplate = (option) => {
-    return (
-      <div className='dropdown-template'>
-        {option.icon}
-        <div className='dropdown-template-name'>{option.name}</div>
-      </div>
-    )
   }
 
   return (

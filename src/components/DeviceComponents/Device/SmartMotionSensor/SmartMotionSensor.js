@@ -7,8 +7,8 @@ function SmartMotionSensor({ device }) {
   const [status, setStatus] = useState('No Motion')
   const [statusImg, setStatusImg] = useState(no_motion_img)
   useEffect(() => {
-    setStatus(device.status)
-    if (device.status == 'Motion') {
+    setStatus(device.attributes.status)
+    if (device.attributes.status == 'Motion') {
       setStatusImg(motion_img)
     } else {
       setStatusImg(no_motion_img)

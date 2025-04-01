@@ -17,6 +17,7 @@ import { TbDeviceNintendo } from 'react-icons/tb'
 import { VscChromeClose } from 'react-icons/vsc'
 import { VscFilter } from 'react-icons/vsc'
 import useDebounce from '../../../hooks/useDebounce'
+import useOptionTemplate from '../../../hooks/useOptionTemplate'
 import './Scenes.css'
 
 const tiCalendarIcon = <TiCalendar size={20} />
@@ -38,6 +39,7 @@ const selectedFavoriteOptions = [
 ]
 
 const Scenes = () => {
+  const { selectedOptionTemplate, optionTemplate } = useOptionTemplate()
   const [scenes, setScenes] = useState([])
   const [sceneInvolvedDevices, setSceneInvolvedDevices] = useState([])
   const [selectedDevices, setSelectedDevices] = useState([])
@@ -129,27 +131,6 @@ const Scenes = () => {
     setSelectedDevices([])
     setSelectedFavorite(selectedFavoriteOptions[0])
     setSelectedOrder(selectedOrderOptions[0])
-  }
-
-  const selectedOptionTemplate = (option, props) => {
-    if (option) {
-      return (
-        <div className='dropdown-template'>
-          {option.icon}
-          <div className='dropdown-template-name'>{option.name}</div>
-        </div>
-      )
-    }
-    return <span>{props.placeholder}</span>
-  }
-
-  const optionTemplate = (option) => {
-    return (
-      <div className='dropdown-template'>
-        {option.icon}
-        <div className='dropdown-template-name'>{option.name}</div>
-      </div>
-    )
   }
 
   return (

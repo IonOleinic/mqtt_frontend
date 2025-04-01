@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import PowerBtn from './PowerBtn/PowerBtn'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import voltageIcon from './SensorDataIcons/voltage-icon.png'
 import currentIcon from './SensorDataIcons/current-icon.png'
 import powerIcon from './SensorDataIcons/power-icon.png'
 import totalPowerIcon from './SensorDataIcons/total-power-icon.png'
-
 import './SmartStrip.css'
 
 function SmartStrip({ device }) {
@@ -15,36 +14,29 @@ function SmartStrip({ device }) {
   let sensorPart = <></>
   let powerButtons = []
   let powerBtnSize = 100
-
-  if (device.nr_of_sockets == 2) {
+  if (device.attributes.nr_of_sockets == 2) {
     powerBtnSize = 70
-  } else if (device.nr_of_sockets == 3) {
+  } else if (device.attributes.nr_of_sockets == 3) {
     powerBtnSize = 65
-  } else if (device.nr_of_sockets >= 4) {
+  } else if (device.attributes.nr_of_sockets >= 4) {
     powerBtnSize = 60
   }
-  if (device.switch_type === 'plug') {
+  if (device.attributes.power_monitor == true) {
     powerBtnSize -= 10
   }
-
-  for (let i = 0; i < device.nr_of_sockets; i++) {
+  for (let i = 0; i < device.attributes.nr_of_sockets; i++) {
     initStatuses.push('OFF')
     initCheckedlist.push(false)
   }
+
   const [statusList, setStatusList] = useState(initStatuses)
   const [isCheckedList, setIsCheckedList] = useState(initCheckedlist)
-  const [sensorData, setSensorData] = useState({
-    Total: '--',
-    Today: '--',
-    Power: '--',
-    Voltage: '--',
-    Current: '--',
-  })
+  const [sensorData, setSensorData] = useState({})
 
   useEffect(() => {
-    updateStatuses(device.power_status)
-    if (device.switch_type == 'plug') {
-      setSensorData(device.sensor_data)
+    updateStatuses(device.attributes?.power_status)
+    if (device.attributes?.power_monitor == true) {
+      setSensorData(device.attributes?.sensor_data)
     }
   }, [device])
 
@@ -79,7 +71,7 @@ function SmartStrip({ device }) {
     }
   }
   //init sensor part (ENERGY)
-  if (device.switch_type === 'plug') {
+  if (device.attributes?.power_monitor == true) {
     sensorPart = (
       <div
         className='sensor-container'
@@ -119,7 +111,7 @@ function SmartStrip({ device }) {
   }
 
   //init power buttons
-  for (let i = 0; i < device.nr_of_sockets; i++) {
+  for (let i = 0; i < device.attributes?.nr_of_sockets; i++) {
     powerButtons.push(
       <PowerBtn
         key={i}
@@ -136,7 +128,10 @@ function SmartStrip({ device }) {
       <div className='power-buttons-container'>
         <div
           className='power-buttons'
-          style={{ padding: device.nr_of_sockets == 4 ? '0 4rem' : '0 1rem' }}
+          style={{
+            padding:
+              device.attributes?.nr_of_sockets == 4 ? '0 4rem' : '0 1rem',
+          }}
         >
           {powerButtons}
         </div>

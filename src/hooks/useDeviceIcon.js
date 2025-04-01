@@ -55,15 +55,19 @@ const useDeviceIcon = (device) => {
   useEffect(() => {
     switch (device.device_type) {
       case 'smartStrip':
-        if (device.switch_type === 'plug') {
+        if (device.sub_type === 'plug') {
           setDeviceIcon(
-            device.nr_of_sockets == 1 ? <SmartPlugIcon /> : <SmartStripIcon />
+            device.attributes?.nr_of_sockets == 1 ? (
+              <SmartPlugIcon />
+            ) : (
+              <SmartStripIcon />
+            )
           )
-        } else if (device.switch_type === 'switch') {
+        } else if (device.sub_type === 'switch') {
           setDeviceIcon(<SmartSwitchIcon />)
-        } else if (device.switch_type === 'wall_switch') {
+        } else if (device.sub_type === 'wall_switch') {
           setDeviceIcon(<SmartWallSwitchIcon />)
-        } else if (device.switch_type === 'valve') {
+        } else if (device.sub_type === 'valve') {
           setDeviceIcon(<SmartValveIcon />)
         }
         break
@@ -97,9 +101,6 @@ const useDeviceIcon = (device) => {
         break
     }
   }, [device.device_type])
-  // useEffect(() => {
-  //   console.log(deviceIcon)
-  // }, [deviceIcon])
   useEffect(() => {
     setAvailableIcon(device.available ? iconOnline : iconOffline)
   }, [device.available])
@@ -110,7 +111,7 @@ const useDeviceIcon = (device) => {
   }, [device.favorite])
 
   useEffect(() => {
-    switch (device.battery_level) {
+    switch (device.attributes?.battery_level) {
       case 1:
         setBatteryIcon(batteryLowIcon)
         break
@@ -127,7 +128,7 @@ const useDeviceIcon = (device) => {
         setBatteryIcon(batteryNoDataIcon)
         break
     }
-  }, [device.battery_level])
+  }, [device.attributes?.battery_level])
 
   return { deviceIcon, availableIcon, batteryIcon, favIcon, favBool }
 }

@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-// const serverURL = 'http://localhost'
-const serverURL = 'http://192.168.12.108'
-// const serverURL = 'http://192.168.1.163'
+const serverURL = 'http://localhost'
+// const serverURL = 'http://192.168.12.108'
+// const serverURL = 'http://192.168.1.197'
 
 const serverPort = '5000'
 

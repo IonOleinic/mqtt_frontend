@@ -10,8 +10,8 @@ function SmartTempSensor({ device }) {
   const [humidity, setHumidity] = useState(0)
 
   useEffect(() => {
-    setTemperature(device.temperature)
-    setHumidity(device.humidity)
+    setTemperature(device.attributes.temperature)
+    setHumidity(device.attributes.humidity)
   }, [device])
 
   return (

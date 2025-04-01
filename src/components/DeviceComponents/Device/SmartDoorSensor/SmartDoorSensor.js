@@ -14,8 +14,8 @@ function SmartDoorSensor({ device }) {
   const [status, setStatus] = useState('Closed')
   const [lockImg, setLockImg] = useState(lockedImg)
   useEffect(() => {
-    setStatus(device.status)
-    if (device.status == 'Closed') {
+    setStatus(device.attributes.status)
+    if (device.attributes.status == 'Closed') {
       setLockImg(lockedImg)
     } else {
       setLockImg(unlockedImg)

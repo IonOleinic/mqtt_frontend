@@ -1,3 +1,6 @@
+.hidden {
+  display: none;
+}
 .active-color {
   color: revert;
 }
@@ -7,7 +10,6 @@
 .inactive-color {
   color: #ccc;
 }
-
 .page-container {
   position: relative;
   display: flex;
@@ -18,159 +20,11 @@
   width: 100%;
   background-color: var(--bck-page-default);
 }
-
-.btn-form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .btn-set-scene {
   width: 140px;
 }
-/* Auth form */
-.Auth-form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  min-height: 90vh;
-  padding: 4rem 0;
-  transition: all 0.4s ease-in-out;
-}
-.Auth-form {
-  width: 420px;
-  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
-  padding: 30px 20px 20px 20px;
-  border-radius: 8px;
-  background-color: white;
-}
-.Auth-form-content {
-  padding-left: 12%;
-  padding-right: 12%;
-}
-.Auth-form-title {
-  text-align: center;
-  margin-bottom: 1em;
-  font-size: 24px;
-  color: rgb(34, 34, 34);
-  font-weight: 800;
-}
-/* Add form */
-.Add-form-container {
-  margin: 2rem 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-height: 70vh;
-  transition: all 0.4s ease-in-out;
-}
 
-.Add-form {
-  width: 420px;
-  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
-  padding: 30px 20px 20px 20px;
-  border-radius: 8px;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.Add-form-content {
-  padding-left: 12%;
-  padding-right: 12%;
-  width: 100%;
-}
-
-.Add-form-title {
-  text-align: center;
-  margin-bottom: 1em;
-  font-size: 24px;
-  color: rgb(34, 34, 34);
-  font-weight: 500;
-}
-
-@media (max-width: 568px) {
-  .Add-form,
-  .Auth-form {
-    width: 95%;
-    max-width: 420px;
-  }
-}
-
-/* invalid input */
-.invalid-input {
-  color: #495057;
-  background-color: #fff;
-  border-color: var(--custom-red);
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(239, 8, 8, 0.25);
-}
-.invalid-input:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: var(--custom-red);
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(239, 8, 8, 0.25);
-}
-.invalid-msg-auth * {
-  margin: 0;
-}
-.valid-msg-auth {
-  visibility: hidden;
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: opacity 0.5s ease-in-out;
-}
-.invalid-msg-auth {
-  display: flex;
-  align-items: flex-start;
-  color: var(--custom-red);
-  font-size: 0.85rem;
-  padding-left: 0.3rem;
-  padding-top: 0.4rem;
-  visibility: visible;
-  max-height: 50px;
-  opacity: 1;
-}
-.no-server-error-auth {
-  display: none;
-}
-.server-error-auth * {
-  margin: 0;
-}
-.server-error-auth {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--custom-red);
-  font-size: 1rem;
-  padding-left: 0.3rem;
-  padding-top: 0.4rem;
-}
-.server-error-auth p {
-  margin-left: 0.4rem;
-}
-
-.form-check-input[type='checkbox'] {
-  width: 14px;
-  height: 14px;
-  margin-top: 5px;
-  margin-left: -1.2rem;
-}
-.form-check-label {
-  font-weight: 300;
-}
-
-.fatimes-icon-auth {
-  margin-right: 0.2rem;
-  margin-top: 0.155rem;
-}
 /* empty page*/
-
 .empty-page {
   width: 100%;
   height: 70vh;
@@ -325,8 +179,8 @@
   align-items: center;
   justify-content: flex-start;
   gap: 0.2rem;
-  max-width: 100px;
-  font-size: 18px;
+  max-width: 120px;
+  font-size: 1rem;
 }
 
 /* vertical menu */
@@ -351,7 +205,6 @@
   width: 25px;
   height: 25px;
 }
-
 @media (max-width: 568px) {
   .toolbar {
     padding: 0.2rem 0 4rem 0;
@@ -385,4 +238,159 @@
   .toolbar-vertical-line {
     display: none;
   }
+}
+
+/*Forms*/
+/* Auth form */
+.Auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  min-height: 90vh;
+  padding: 4rem 0;
+  transition: all 0.4s ease-in-out;
+}
+.Auth-form {
+  width: 420px;
+  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+  padding: 30px 20px 20px 20px;
+  border-radius: 8px;
+  background-color: white;
+}
+.Auth-form-content {
+  padding-left: 12%;
+  padding-right: 12%;
+}
+.Auth-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+}
+/* Add form */
+.Add-form-container {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 70vh;
+  transition: all 0.4s ease-in-out;
+}
+.Add-form {
+  width: 420px;
+  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+  padding: 30px 20px 20px 20px;
+  border-radius: 8px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.Add-form-content {
+  padding-left: 12%;
+  padding-right: 12%;
+  width: 100%;
+}
+.Add-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 500;
+}
+@media (max-width: 568px) {
+  .Add-form,
+  .Auth-form {
+    width: 95%;
+    max-width: 420px;
+  }
+}
+
+/* form inputs */
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 300px;
+}
+.form-input-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 300px;
+}
+.btn-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.invalid-input {
+  color: #495057;
+  background-color: #fff;
+  border-color: var(--custom-red);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(239, 8, 8, 0.25);
+}
+.invalid-input:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: var(--custom-red);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(239, 8, 8, 0.25);
+}
+.invalid-msg-auth * {
+  margin: 0;
+}
+.valid-msg-auth {
+  visibility: hidden;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.5s ease-in-out;
+}
+.invalid-msg-auth {
+  display: flex;
+  align-items: flex-start;
+  color: var(--custom-red);
+  font-size: 0.85rem;
+  padding-left: 0.3rem;
+  padding-top: 0.4rem;
+  visibility: visible;
+  max-height: 50px;
+  opacity: 1;
+}
+.no-server-error-auth {
+  display: none;
+}
+.server-error-auth * {
+  margin: 0;
+}
+.server-error-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--custom-red);
+  font-size: 1rem;
+  padding-left: 0.3rem;
+  padding-top: 0.4rem;
+}
+.server-error-auth p {
+  margin-left: 0.4rem;
+}
+.form-check-input[type='checkbox'] {
+  width: 14px;
+  height: 14px;
+  margin-top: 5px;
+  margin-left: -1.2rem;
+}
+.form-check-label {
+  font-weight: 300;
+}
+.fatimes-icon-auth {
+  margin-right: 0.2rem;
+  margin-top: 0.155rem;
 }

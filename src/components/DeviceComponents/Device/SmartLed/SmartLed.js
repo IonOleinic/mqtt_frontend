@@ -43,11 +43,11 @@ function SmartLed({ device }) {
 
   useEffect(() => {
     setLedIconFunc()
-  }, [color, device.status, device.color])
+  }, [color, device.attributes.status, device.attributes.color])
 
   useEffect(() => {
     setPaletteColors(
-      device.palette
+      device.attributes.palette
         .map((paletteColor) => {
           if (paletteColor) {
             return `#${paletteColor}`
@@ -55,36 +55,37 @@ function SmartLed({ device }) {
         })
         .filter((item) => item)
     )
-  }, [device.palette])
+  }, [device.attributes.palette])
 
   useEffect(() => {
-    if (device.led_type.includes('rgb')) {
-      if (device.color.substring(0, 6).toUpperCase() === 'FFFFFF') {
+    if (device.attributes.led_type?.includes('rgb')) {
+      if (device.attributes.color?.substring(0, 6).toUpperCase() === 'FFFFFF') {
         setColor('#ffff00')
       } else {
-        setColor('#' + device.color.substring(0, 6))
+        setColor('#' + device.attributes.color?.substring(0, 6))
       }
     } else {
       setColor('#ffff00')
     }
-    if (device.led_type.includes('c')) {
-      const cold_ch = parseInt(device.color.substring(6, 8), 16) / 255
+    if (device.attributes.led_type == 'rgbw') {
+      const cold_ch =
+        parseInt(device.attributes.color?.substring(6, 8), 16) / 255
       setCold(cold_ch)
     }
-    if (device.led_type.includes('w')) {
-      const warm_ch = parseInt(device.color.substring(8), 16) / 255
+    if (device.attributes.led_type == 'rgbcw') {
+      const warm_ch = parseInt(device.attributes.color?.substring(8), 16) / 255
       setWarm(warm_ch)
     }
-    setDimmer(device.dimmer)
-    setPaletteSpeed(device.speed)
+    setDimmer(device.attributes.dimmer)
+    setPaletteSpeed(device.attributes.speed)
     setTimeout(() => {
       setStarted(true) //used to delay send change dimmer (change dimmer cause forced power ON)
     }, 1500)
   }, [device])
 
   useEffect(() => {
-    setPaletteItemsFunc(device.palette)
-  }, [device.palette])
+    setPaletteItemsFunc(device.attributes.palette)
+  }, [device.attributes.palette])
 
   const setPaletteItemsFunc = (palette) => {
     let items = []
@@ -164,7 +165,7 @@ function SmartLed({ device }) {
     }
   }
   const handlePaletteChange = async (id, color) => {
-    let temp = device.palette
+    let temp = device.attributes.palette
     temp[id] = color.replaceAll('#', '').toUpperCase()
     sendChangePalette(temp)
   }
@@ -191,7 +192,9 @@ function SmartLed({ device }) {
             <div
               className='slider-item'
               style={{
-                display: device.led_type.includes('rgb') ? 'flex' : 'none',
+                display: device.attributes.led_type?.includes('rgb')
+                  ? 'flex'
+                  : 'none',
               }}
             >
               <label htmlFor='#'>Color</label>
@@ -227,8 +230,9 @@ function SmartLed({ device }) {
               <button
                 className='bulb-item-icon'
                 style={{
-                  borderColor: device.status == 'ON' ? color : `#ccc`,
-                  color: device.status == 'ON' ? color : '#ccc',
+                  borderColor:
+                    device.attributes.status == 'ON' ? color : `#ccc`,
+                  color: device.attributes.status == 'ON' ? color : '#ccc',
                 }}
                 onClick={sendChangePower}
               >
@@ -239,12 +243,15 @@ function SmartLed({ device }) {
         )}
         {currentTab === 1 && (
           <div className='smart-led-tab cold-warm-tab'>
-            {device.led_type.includes('c') || device.led_type.includes('w') ? (
+            {device.attributes.led_type?.includes('c') ||
+            device.attributes.led_type?.includes('w') ? (
               <>
                 <div
                   className='slider-item'
                   style={{
-                    display: device.led_type.includes('c') ? 'flex' : 'none',
+                    display: device.attributes.led_type?.includes('c')
+                      ? 'flex'
+                      : 'none',
                   }}
                 >
                   <label htmlFor='#'>Cold</label>
@@ -262,7 +269,9 @@ function SmartLed({ device }) {
                 <div
                   className='slider-item'
                   style={{
-                    display: device.led_type.includes('w') ? 'flex' : 'none',
+                    display: device.attributes.led_type?.includes('w')
+                      ? 'flex'
+                      : 'none',
                   }}
                 >
                   <label htmlFor='#'>Warm</label>
@@ -288,7 +297,7 @@ function SmartLed({ device }) {
         {currentTab === 2 && (
           <div className='smart-led-tab palette-tab'>
             {device.manufacter == 'tasmota' &&
-            device.led_type.includes('rgb') ? (
+            device.attributes.led_type?.includes('rgb') ? (
               <div
                 className='slider-item palette-controll'
                 style={{
@@ -301,12 +310,16 @@ function SmartLed({ device }) {
                 <div className='palette-controll-item palette-buttons'>
                   <div
                     className={
-                      device.scheme == '1' || device.scheme == '0'
+                      device.attributes.scheme == '1' ||
+                      device.attributes.scheme == '0'
                         ? 'palette-play-btn palette-btn-hovered'
                         : 'palette-play-btn'
                     }
                     onClick={() => {
-                      if (device.scheme == '1' || device.scheme == '0') {
+                      if (
+                        device.attributes.scheme == '1' ||
+                        device.attributes.scheme == '0'
+                      ) {
                         sendChangeScheme(2)
                       }
                     }}
@@ -314,7 +327,8 @@ function SmartLed({ device }) {
                     <BsPlayCircle
                       size={40}
                       color={
-                        device.scheme == '1' || device.scheme == '0'
+                        device.attributes.scheme == '1' ||
+                        device.attributes.scheme == '0'
                           ? 'green'
                           : '#ccc'
                       }
@@ -322,12 +336,16 @@ function SmartLed({ device }) {
                   </div>
                   <div
                     className={
-                      device.scheme == '1' || device.scheme == '0'
+                      device.attributes.scheme == '1' ||
+                      device.attributes.scheme == '0'
                         ? 'palette-stop-btn '
                         : 'palette-stop-btn palette-btn-hovered'
                     }
                     onClick={() => {
-                      if (device.scheme == '2' || device.scheme == '3') {
+                      if (
+                        device.attributes.scheme == '2' ||
+                        device.attributes.scheme == '3'
+                      ) {
                         sendChangeScheme(1)
                       }
                     }}
@@ -335,7 +353,8 @@ function SmartLed({ device }) {
                     <BsStopCircle
                       size={40}
                       color={
-                        device.scheme == '2' || device.scheme == '3'
+                        device.attributes.scheme == '2' ||
+                        device.attributes.scheme == '3'
                           ? 'red'
                           : '#ccc'
                       }
@@ -384,7 +403,9 @@ function SmartLed({ device }) {
           onClick={() => changeTab(0)}
           style={{
             color:
-              device.available && device.status == 'ON' && currentTab === 0
+              device.available &&
+              device.attributes.status == 'ON' &&
+              currentTab === 0
                 ? color
                 : currentTab === 0
                 ? 'blue'

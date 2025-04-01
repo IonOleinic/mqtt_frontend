@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { socket } from '../../../../api/io'
+import { Dropdown } from 'primereact/dropdown'
+import { InputText } from 'primereact/inputtext'
+import { Button } from 'primereact/button'
 import './SubIR.css'
 
-function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
+function SubIR({ mqttName, manufacter, setAttributes }) {
   const axios = useAxiosPrivate()
   const [initProtocol, setInitProtocol] = useState('')
   const [initBits, setInitBits] = useState('')
@@ -89,40 +92,50 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
       code: '',
     },
   ])
-  const [selectedBtn, setSelectedBtn] = useState(buttons[0].name)
+  const [selectedBtn, setSelectedBtn] = useState(buttons[0])
   const [code, setCode] = useState('')
   const [protocol, setProtocol] = useState('')
   const [bits, setBits] = useState('')
   const [disableDoneBtn, setDisableDoneBtn] = useState(true)
 
-  const set_btn = (btn_name, btn_code) => {
+  const setBtn = (btnName, btnCode) => {
     for (let i = 0; i < buttons.length; i++) {
-      if (buttons[i].name === btn_name) {
-        buttons[i].code = btn_code
+      if (buttons[i].name === btnName) {
+        buttons[i].code = btnCode
       }
     }
     setButtons(buttons)
   }
-  const apply_btn_code = () => {
-    set_btn(selectedBtn, code)
+  const transformBtnsArrToObj = () => {
+    let transformedBtns = {}
+    for (let i = 0; i < buttons.length; i++) {
+      transformedBtns[`${buttons[i].name}`] = {
+        code: buttons[i].code,
+        fullName: buttons[i].fullName,
+      }
+    }
+    return transformedBtns
+  }
+  const applyBtnCode = () => {
+    setBtn(selectedBtn.name, code)
     setDisableDoneBtn(false)
   }
   useEffect(() => {
     try {
       let response = axios.post(
-        `/tempIR?mqtt_name=${mqtt_name}&manufacter=${manufacter}`
+        `/tempIR?mqtt_name=${mqttName}&manufacter=${manufacter}`
       )
     } catch (error) {
       console.log(error)
     }
     if (socket) {
       const updateTempIRHandler = (data) => {
-        if (data.mqtt_name === mqtt_name) {
-          setProtocol(data.IR_info.protocol)
-          setInitProtocol(data.IR_info.protocol)
-          setBits(data.IR_info.bits)
-          setInitBits(data.IR_info.bits)
-          setCode(data.IR_info.code)
+        if (data.mqtt_name === mqttName) {
+          setProtocol(data.IR_info.protocol || '')
+          setInitProtocol(data.IR_info.protocol || '')
+          setBits(data.IR_info.bits || '')
+          setInitBits(data.IR_info.bits || '')
+          setCode(data.IR_info.code || '')
         }
       }
       socket.on('update_temp_ir', updateTempIRHandler)
@@ -133,64 +146,47 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
     }
   }, [])
   return (
-    <>
-      <div className='form-group mt-3 '>
+    <div className='sub-ir'>
+      <div className='form-input-group'>
         <label htmlFor='select-ir-btn'>IR Button</label>
-        <select
+        <Dropdown
           id='select-ir-btn'
-          className='form-select select-type'
-          aria-label='Default select example'
+          options={buttons}
+          optionLabel='fullName'
+          value={selectedBtn}
           onChange={(e) => {
-            let button = buttons.find((elem) => elem.name === e.target.value)
-            setSelectedBtn(button.name)
+            setSelectedBtn(e.value)
             setProtocol(initProtocol)
             setBits(initBits)
-            setCode(button.code)
+            setCode(e.value?.code)
           }}
-        >
-          {buttons.map((button, index) => {
-            let checked = button.code === '' ? '' : '✔'
-            return (
-              <option key={index} value={button.name}>
-                {button.fullName}
-                {'\t'}
-                {checked}
-              </option>
-            )
-          })}
-        </select>
+        />
       </div>
       <div className='ir-group-codes'>
-        <div className='form-group mt-3 ir-codes'>
+        <div className='form-input-group ir-codes'>
           <label htmlFor='input-ir-protocol'>IR protocol</label>
-          <input
+          <InputText
             id='input-ir-protocol'
-            type='text'
-            className='form-control mt-1 '
             value={protocol}
             onChange={(e) => {
               setProtocol(e.target.value)
             }}
           />
         </div>
-        <div className='form-group mt-3 ir-codes'>
+        <div className='form-input-group ir-codes'>
           <label htmlFor='input-ir-bits'>IR bits</label>
-          <input
+          <InputText
             id='input-ir-bits'
-            type='text'
-            className='form-control mt-1 '
             value={bits}
             onChange={(e) => {
               setBits(e.target.value)
             }}
           />
         </div>
-        <div className='form-group mt-3 ir-codes'>
+        <div className='form-input-group ir-codes'>
           <label htmlFor='input-ir-btn-code'>IR btn</label>
-          <input
+          <InputText
             id='input-ir-btn-code'
-            type='text'
-            className='form-control mt-1 '
             value={code}
             onChange={(e) => {
               setCode(e.target.value)
@@ -198,38 +194,30 @@ function SubIR({ mqtt_name, manufacter, setSubProps, disable_add_btn }) {
           />
         </div>
       </div>
-      <div className='ir-align'>
-        <div className='d-grid gap-2 mt-3 btn-ir'>
-          <button
-            disabled={disableDoneBtn}
-            type='button'
-            className='btn btn-primary '
-            onClick={() => {
-              setSubProps({
-                PRESET: {
-                  buttons,
-                  protocol,
-                  tasmotaBits: bits,
-                  openBekenBits: bits,
-                },
-              })
-              disable_add_btn(false)
-            }}
-          >
-            Done
-          </button>
-        </div>
-        <div className='d-grid gap-2 mt-3 btn-ir'>
-          <button
-            type='button'
-            className='btn btn-primary '
-            onClick={apply_btn_code}
-          >
-            Apply
-          </button>
-        </div>
+      <div className='sub-ir-buttons'>
+        <Button
+          label='Done'
+          severity='secondary'
+          icon='pi pi-check'
+          disabled={disableDoneBtn}
+          onClick={() => {
+            setAttributes({
+              preset: {
+                buttons: transformBtnsArrToObj(),
+                protocol,
+                bits,
+              },
+            })
+          }}
+        />
+        <Button
+          label='Apply'
+          severity='secondary'
+          icon='pi pi-check'
+          onClick={applyBtnCode}
+        />
       </div>
-    </>
+    </div>
   )
 }
 

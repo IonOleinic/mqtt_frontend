@@ -28,24 +28,24 @@ function SmartSirenAlarm({ device }) {
   const [volumeIcon, setVolumeIcon] = useState(volume_off)
 
   useEffect(() => {
-    setStatus(device.status)
-    if (device.status == 'ON') {
+    setStatus(device.attributes.status)
+    if (device.attributes.status == 'ON') {
       setVolumeIcon(volume_on)
     } else {
       setVolumeIcon(volume_off)
     }
-    setTemperature(device.temperature)
-    setHumidity(device.humidity)
-    setSound(device.sound)
-    if (device.volume == 2) {
+    setTemperature(device.attributes.temperature)
+    setHumidity(device.attributes.humidity)
+    setSound(device.attributes.sound)
+    if (device.attributes.volume == 2) {
       setInversedVolume(1)
-    } else if (device.volume == 1) {
+    } else if (device.attributes.volume == 1) {
       setInversedVolume(2)
-    } else if (device.volume == 0) {
+    } else if (device.attributes.volume == 0) {
       setInversedVolume(3)
     }
-    setVolume(device.volume)
-    setSoundDuration(device.sound_duration)
+    setVolume(device.attributes.volume)
+    setSoundDuration(device.attributes.sound_duration)
   }, [device])
 
   useEffect(() => {

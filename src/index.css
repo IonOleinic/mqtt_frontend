@@ -35,6 +35,9 @@
   --toolbar-height: 68px;
   --navbar-height: 100px;
 
+  /* borders */
+  --dashed-border-basic: 3px dashed #e0e0e0;
+
   /* shadow */
   --box-shadow-default: 1px 1px 14px 1px #888888;
 }

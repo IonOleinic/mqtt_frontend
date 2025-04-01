@@ -1,9 +1,9 @@
 import { MdOutlineCancel } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
-import wheather_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/wheather_scene_icon.png'
-import location_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/location_scene_icon.png'
-import device_scene_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/device_scene_icon.png'
-import schedule_icon from '../../../components/SceneComponents/AddSceneComponents/SceneTypeImages/schedule_icon.png'
+import wheather_icon from '../../../components/SceneComponents/SceneTypeImages/wheather_scene_icon.png'
+import location_icon from '../../../components/SceneComponents/SceneTypeImages/location_scene_icon.png'
+import device_scene_icon from '../../../components/SceneComponents/SceneTypeImages/device_scene_icon.png'
+import schedule_icon from '../../../components/SceneComponents/SceneTypeImages/schedule_icon.png'
 import { Dialog } from 'primereact/dialog'
 import './AddScene.css'
 

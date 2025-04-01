@@ -12,7 +12,7 @@ function SubSceneSirenAlarm({
 }) {
   useEffect(() => {
     if (event_or_action == 'event') {
-      setConditionalTopic(device.receive_status_topic)
+      setConditionalTopic(device.attributes.receive_status_topic)
       if (device.manufacter == 'tasmota') {
         setConditionalPayload('OFF')
       } else if (device.manufacter == 'openBeken') {
@@ -20,7 +20,7 @@ function SubSceneSirenAlarm({
       }
       setConditionalText(`Sound OFF`)
     } else if (event_or_action == 'action') {
-      setExecutableTopic(device.cmnd_status_topic)
+      setExecutableTopic(device.attributes.cmnd_status_topic)
       setExecutablePayload('OFF')
       setExecutableText(`Sound OFF`)
     }

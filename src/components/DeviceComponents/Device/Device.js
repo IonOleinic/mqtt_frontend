@@ -11,7 +11,6 @@ import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
 import { Menu } from 'primereact/menu'
 import { FiMoreVertical } from 'react-icons/fi'
 import { LiaCubesSolid } from 'react-icons/lia'
-import { toast } from 'react-toastify'
 import './Device.css'
 
 function Device({ handleDeleteDevice, initDevice }) {
@@ -47,23 +46,6 @@ function Device({ handleDeleteDevice, initDevice }) {
             })
           } else {
             setDevice(data.device)
-            // setDevice((prev) => {
-            //   if (data.device.device_type === 'smartStrip') {
-            //     if (
-            //       JSON.stringify(data.device.power_status) !=
-            //       JSON.stringify(prev.power_status)
-            //     ) {
-            //       // toast.dismiss()
-            //       console.log(allowToast)
-
-            //       if (allowToast)
-            //         toast.success(
-            //           `(${data.device.name}) Power is ${data.device.power_status}`
-            //         )
-            //     }
-            //   }
-            //   return data.device
-            // })
           }
         }
       }

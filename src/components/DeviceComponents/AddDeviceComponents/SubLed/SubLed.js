@@ -1,53 +1,36 @@
 import { useState, useEffect } from 'react'
+import { Dropdown } from 'primereact/dropdown'
 import './SubLed.css'
 
-function SubLed({ setSubProps, disable_add_btn }) {
-  const [subType, setSubType] = useState('bulb')
-  const [ledType, setLedType] = useState('rgb')
+const ledTypes = [
+  { name: 'White', code: 'white' },
+  { name: 'RGB', code: 'rgb' },
+  { name: 'RGBW', code: 'rgbw' },
+  { name: 'RGBCW', code: 'rgbcw' },
+]
+
+function SubLed({ setAttributes }) {
+  const [selectedLedType, setSelectedLedType] = useState(ledTypes[1])
   useEffect(() => {
-    setSubProps({
-      led_type: ledType,
-      sub_type: subType,
+    setAttributes({
+      led_type: selectedLedType?.code,
     })
-  }, [ledType, subType])
+  }, [selectedLedType])
 
   return (
     <>
-      <div className='form-group mt-3'>
-        <label htmlFor='select-sub-type'>Sub Type</label>
-        <select
-          id='select-sub-type'
-          className='form-select select-type'
-          aria-label='Default select example'
-          onChange={(e) => {
-            setSubType(e.target.value)
-          }}
-        >
-          <option value='bulb'>Bulb</option>
-          <option value='ledStrip'>Led Strip</option>
-        </select>
-      </div>
-      <div className='form-group mt-3'>
+      <div className='form-input-group'>
         <label htmlFor='select-led-type'>Led Type</label>
-        <select
+        <Dropdown
           id='select-led-type'
-          className='form-select select-type'
-          aria-label='Default select example'
+          placeholder='Select a led type'
+          optionLabel='name'
+          options={ledTypes}
+          value={selectedLedType}
           onChange={(e) => {
-            if (e.target.value == 'none') {
-              disable_add_btn(true)
-            } else {
-              disable_add_btn(false)
-              setLedType(e.target.value)
-            }
+            setSelectedLedType(e.value)
           }}
-        >
-          <option value='none'>None</option>
-          <option value='simple'>White</option>
-          <option value='rgb'>RGB</option>
-          <option value='rgbc'>RGBW</option>
-          <option value='rgbcw'>RGBCW</option>
-        </select>
+        />
       </div>
     </>
   )

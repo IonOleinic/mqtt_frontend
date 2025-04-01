@@ -1,60 +1,56 @@
 import { useState, useEffect } from 'react'
+import { Dropdown } from 'primereact/dropdown'
+import { Checkbox } from 'primereact/checkbox'
 import './SubSwitch.css'
 
-function SubSwitch({ setSubProps, disable_add_btn }) {
+function SubSwitch({ sub_type, setAttributes }) {
   const [nrOfSockets, setNrOfSockets] = useState(1)
-  const [switchType, setSwitchType] = useState('plug')
-  useEffect(() => {
-    disable_add_btn(false)
-  }, [])
+  const [powerMonitor, setPowerMonitor] = useState(undefined)
 
   useEffect(() => {
-    setSubProps({
-      switch_type: switchType,
+    setAttributes({
       nr_of_sockets: nrOfSockets,
+      power_monitor: powerMonitor,
     })
-  }, [switchType, nrOfSockets])
+  }, [powerMonitor, nrOfSockets])
+
+  useEffect(() => {
+    if (sub_type === 'plug') {
+      setPowerMonitor(true)
+    } else if (sub_type !== 'plug') {
+      setPowerMonitor(undefined)
+    } else {
+      setPowerMonitor(false)
+    }
+  }, [sub_type])
   return (
-    <>
-      <div className='form-group mt-3'>
-        <label htmlFor='select-switch-type'>Switch Type</label>
-        <select
-          id='select-switch-type'
-          className='form-select select-type'
-          aria-label='Default select example'
-          onChange={(e) => {
-            setSwitchType(e.target.value)
-            setNrOfSockets(1)
-            disable_add_btn(false)
-          }}
-        >
-          <option value='plug'>{'Plug (Power Monitor)'}</option>
-          <option value='switch'>{'Switch (No Power Monitor)'}</option>
-          <option value='wall_switch'>Wall Switch</option>
-          <option value='valve'>Valve Switch</option>
-        </select>
-      </div>
-      <div className='form-group mt-3'>
-        <label htmlFor='input nr-sockets'>Nr. of Sockets</label>
-        <input
-          id='input nr-sockets'
-          pattern='[0-9]{1,5}'
-          maxLength={1}
-          type='number'
+    <div className='sub-switch'>
+      <div className='form-input-group'>
+        <label htmlFor='nr-sockets-dropdown'>Nr. of Sockets</label>
+        <Dropdown
+          id='nr-sockets-dropdown'
           value={nrOfSockets}
-          className='form-control mt-1'
+          options={[1, 2, 3, 4, 5, 6]}
           placeholder='Enter number of sockets'
           onChange={(e) => {
-            setNrOfSockets(e.target.value)
-            if (Number(e.target.value) > 0 && e.target.value <= 6) {
-              disable_add_btn(false)
-            } else {
-              disable_add_btn(true)
-            }
+            setNrOfSockets(e.value)
           }}
         />
       </div>
-    </>
+      <div
+        className={sub_type === 'plug' ? 'form-input-group-inline' : 'hidden'}
+      >
+        <label htmlFor='pwr-mon-checkbox'>With Power Monitor</label>
+        <Checkbox
+          id='pwr-mon-checkbox'
+          checked={powerMonitor}
+          disabled={sub_type !== 'plug'}
+          onChange={(e) => {
+            setPowerMonitor(e.checked)
+          }}
+        />
+      </div>
+    </div>
   )
 }
 

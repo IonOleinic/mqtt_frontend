@@ -33,7 +33,7 @@ function SmartIR({ device }) {
           className='ir-buttons btn-pow'
           aria-disabled={true}
           onClick={() => {
-            handlePressBtn(device.buttons.btn_power.code)
+            handlePressBtn(device.attributes.preset?.buttons?.btn_power?.code)
           }}
         >
           <BiPowerOff size={30} />
@@ -49,7 +49,7 @@ function SmartIR({ device }) {
         <div
           className='ir-buttons exit'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_exit.code)
+            handlePressBtn(device.attributes.preset?.buttons?.btn_exit?.code)
           }}
         >
           Exit
@@ -57,7 +57,7 @@ function SmartIR({ device }) {
         <div
           className='ir-buttons back'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_back.code)
+            handlePressBtn(device.attributes.preset?.buttons?.btn_back?.code)
           }}
         >
           <RiArrowGoBackFill size={25} />
@@ -68,7 +68,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_volUp.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_volUp?.code)
             }}
           >
             <BiPlus size={30} />
@@ -77,7 +77,9 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_volDown.code)
+              handlePressBtn(
+                device.attributes.preset?.buttons?.btn_volDown?.code
+              )
             }}
           >
             <BiMinus size={30} />
@@ -88,7 +90,7 @@ function SmartIR({ device }) {
             <div
               className='ir-buttons ok-up'
               onClick={() => {
-                handlePressBtn(device.buttons.btn_up.code)
+                handlePressBtn(device.attributes.preset?.buttons?.btn_up?.code)
               }}
             >
               <BiChevronUp size={30} />
@@ -97,7 +99,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons ok-left'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_left.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_left?.code)
             }}
           >
             <BiChevronLeft size={30} />
@@ -105,7 +107,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons ok-enter'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_ok.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_ok?.code)
             }}
           >
             OK
@@ -113,7 +115,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons ok-right'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_right.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_right?.code)
             }}
           >
             <BiChevronRight size={30} />
@@ -122,7 +124,9 @@ function SmartIR({ device }) {
             <div
               className='ir-buttons ok-down'
               onClick={() => {
-                handlePressBtn(device.buttons.btn_down.code)
+                handlePressBtn(
+                  device.attributes.preset?.buttons?.btn_down?.code
+                )
               }}
             >
               <BiChevronDown size={30} />
@@ -133,7 +137,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons up'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_chnUp.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_chnUp?.code)
             }}
           >
             <BiPlus size={30} />
@@ -142,7 +146,9 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons down'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_chnDown.code)
+              handlePressBtn(
+                device.attributes.preset?.buttons?.btn_chnDown?.code
+              )
             }}
           >
             <BiMinus size={30} />
@@ -153,7 +159,7 @@ function SmartIR({ device }) {
         <div
           className='ir-buttons mute'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_mute.code)
+            handlePressBtn(device.attributes.preset?.buttons?.btn_mute?.code)
           }}
         >
           <BiVolumeMute size={25} />
@@ -161,7 +167,7 @@ function SmartIR({ device }) {
         <div
           className='ir-buttons menu'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_home.code)
+            handlePressBtn(device.attributes.preset?.buttons?.btn_home?.code)
           }}
         >
           Menu
@@ -169,7 +175,7 @@ function SmartIR({ device }) {
         <div
           className='ir-buttons input'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_input.code)
+            handlePressBtn(device.attributes.preset?.buttons?.btn_input?.code)
           }}
         >
           <MdInput size={25} />
@@ -177,7 +183,7 @@ function SmartIR({ device }) {
         <div
           className='ir-buttons info'
           onClick={() => {
-            handlePressBtn(device.buttons.btn_info.code)
+            handlePressBtn(device.attributes.preset?.buttons?.btn_info?.code)
           }}
         >
           <BiInfoCircle size={25} />
@@ -188,7 +194,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_1.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_1?.code)
             }}
           >
             1
@@ -196,7 +202,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_2.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_2?.code)
             }}
           >
             2
@@ -204,7 +210,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_3.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_3?.code)
             }}
           >
             3
@@ -214,7 +220,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_4.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_4?.code)
             }}
           >
             4
@@ -222,7 +228,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_5.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_5?.code)
             }}
           >
             5
@@ -230,7 +236,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_6.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_6?.code)
             }}
           >
             6
@@ -240,7 +246,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_7.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_7?.code)
             }}
           >
             7
@@ -248,7 +254,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_8.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_8?.code)
             }}
           >
             8
@@ -256,7 +262,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_9.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_9?.code)
             }}
           >
             9
@@ -266,7 +272,7 @@ function SmartIR({ device }) {
           <div
             className='ir-buttons number'
             onClick={() => {
-              handlePressBtn(device.buttons.btn_0.code)
+              handlePressBtn(device.attributes.preset?.buttons?.btn_0?.code)
             }}
           >
             0

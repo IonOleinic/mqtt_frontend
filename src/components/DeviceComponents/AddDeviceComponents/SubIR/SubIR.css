@@ -1,18 +1,19 @@
-.btn-ir {
-  width: 30%;
+.sub-ir {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
 }
-.ir-align {
+.sub-ir .sub-ir-buttons {
   display: flex;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  justify-content: space-around;
-}
-.ir-codes {
-  width: 30%;
+  justify-content: center;
+  gap: 1rem;
 }
 .ir-group-codes {
   display: flex;
   justify-content: space-between;
+}
+.ir-codes {
+  width: 30%;
 }

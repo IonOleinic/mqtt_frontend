@@ -7,7 +7,7 @@ function SubSceneDoorSensor({
   setConditionalText,
 }) {
   useEffect(() => {
-    setConditionalTopic(device.receive_status_topic)
+    setConditionalTopic(device.attributes.receive_status_topic)
     if (device.manufacter == 'tasmota') {
       setConditionalPayload('OFF')
     } else if (device.manufacter == 'openBeken') {

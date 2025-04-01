@@ -14,21 +14,21 @@ function SubSceneSmartStrip({
   const [state, setState] = useState('OFF')
   useEffect(() => {
     if (event_or_action == 'event') {
-      setConditionalTopic(device.stat_power_topics[0])
+      setConditionalTopic(device.attributes.stat_power_topics[0])
       if (device.manufacter == 'tasmota') {
         setConditionalPayload('OFF')
       } else if (device.manufacter == 'openBeken') {
         setConditionalPayload('0')
       }
-      if (device.nr_of_sockets == 1) {
+      if (device.attributes.nr_of_sockets == 1) {
         setConditionalText(`Power OFF`)
       } else {
         setConditionalText(`Power 1 OFF`)
       }
     } else if (event_or_action == 'action') {
-      setExecutableTopic(device.cmnd_power_topics[0])
+      setExecutableTopic(device.attributes.cmnd_power_topics[0])
       setExecutablePayload('OFF')
-      if (device.nr_of_sockets == 1) {
+      if (device.attributes.nr_of_sockets == 1) {
         setExecutableText(`Power OFF`)
       } else {
         setExecutableText(`Power 1 OFF`)
@@ -58,8 +58,10 @@ function SubSceneSmartStrip({
           aria-label='Default select example'
           onChange={(e) => {
             if (event_or_action == 'event') {
-              setConditionalTopic(device.stat_power_topics[e.target.value])
-              if (device.nr_of_sockets == 1) {
+              setConditionalTopic(
+                device.attributes.stat_power_topics[e.target.value]
+              )
+              if (device.attributes.nr_of_sockets == 1) {
                 setSelectedSocket('')
               } else {
                 setSelectedSocket(` ${Number(e.target.value) + 1} `)
@@ -68,8 +70,10 @@ function SubSceneSmartStrip({
                 )
               }
             } else if (event_or_action == 'action') {
-              setExecutableTopic(device.cmnd_power_topics[e.target.value])
-              if (device.nr_of_sockets == 1) {
+              setExecutableTopic(
+                device.attributes.cmnd_power_topics[e.target.value]
+              )
+              if (device.attributes.nr_of_sockets == 1) {
                 setSelectedSocket('')
               } else {
                 setSelectedSocket(` ${Number(e.target.value) + 1} `)
@@ -83,7 +87,7 @@ function SubSceneSmartStrip({
             }
           }}
         >
-          {device.cmnd_power_topics.map((topic, index) => {
+          {device.attributes.cmnd_power_topics?.map((topic, index) => {
             return (
               <option key={topic} value={index}>
                 {index + 1}

@@ -67,10 +67,10 @@ function WeatherScene({ scene }) {
                   alignItems: 'center',
                 }}
               >
-                <p>{'Color'}</p>
+                <p style={{ margin: '0 0.3rem' }}>{'Color'}</p>
                 <div
                   style={{
-                    width: '35px',
+                    width: '25px',
                     height: '25px',
                     borderRadius: '5px',
                     border:

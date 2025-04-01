@@ -97,7 +97,7 @@ function SubSceneSmartLed({
   }, [])
   const set_default_power_values = () => {
     if (event_or_action == 'event') {
-      setConditionalTopic(device.receive_status_topic)
+      setConditionalTopic(device.attributes.receive_status_topic)
       if (device.manufacter == 'tasmota') {
         setConditionalPayload('OFF')
       } else if (device.manufacter == 'openBeken') {
@@ -161,7 +161,8 @@ function SubSceneSmartLed({
             value='Color'
             style={{
               display:
-                event_or_action == 'action' && device.led_type.includes('rgb')
+                event_or_action == 'action' &&
+                device.attributes.led_type?.includes('rgb')
                   ? 'revert'
                   : 'none',
             }}

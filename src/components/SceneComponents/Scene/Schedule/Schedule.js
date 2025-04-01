@@ -33,8 +33,10 @@ function Schedule({ scene }) {
     <div className='schedule'>
       <div className='schedule-top'>
         <div className='schedule-scene-item'>
-          <p>{execDevice.name}</p>
-          {execDeviceIcons.deviceIcon}
+          <div className='schedule-scene-name-img'>
+            <p>{execDevice.name}</p>
+            {execDeviceIcons.deviceIcon}
+          </div>
         </div>
         <div className='arrow-right'>
           <HiOutlineArrowRight size={30} color={'black'} />
@@ -49,17 +51,10 @@ function Schedule({ scene }) {
                   alignItems: 'center',
                 }}
               >
-                <p
-                  style={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
-                  }}
-                >
-                  {'Color'}
-                </p>
+                <p style={{ margin: '0 0.3rem' }}>{'Color'}</p>
                 <div
                   style={{
-                    width: '24px',
+                    width: '25px',
                     height: '25px',
                     borderRadius: '5px',
                     border:

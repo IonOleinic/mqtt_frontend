@@ -12,19 +12,28 @@ function SubSceneSirenAlarm({
 }) {
   useEffect(() => {
     if (event_or_action == 'event') {
-      setConditionalTopic(device.receive_topic)
+      setConditionalTopic(device.attributes.receive_topic)
       if (device.manufacter == 'tasmota') {
-        //TODO
+        const payload = {
+          Protocol: device.attributes.preset?.protocol,
+          Bits: device.attributes.preset?.bits,
+          Data: device.attributes.preset?.buttons.btn_ok?.code,
+        }
+        setConditionalPayload(JSON.stringify(payload))
       } else if (device.manufacter == 'openBeken') {
-        let payload = `IR_${device.IR_protocol} ${device.bits} ${device.buttons.btn_power.code} 1`
+        const payload = `IR_${device.attributes.preset?.protocol} ${device.attributes.preset?.bits} ${device.attributes.preset?.buttons?.btn_ok?.code} 1`
         setConditionalPayload(payload)
       }
-      setConditionalText(`Button ${device.buttons.btn_power.fullName}`)
+      setConditionalText(
+        `Button ${device.attributes.preset?.buttons?.btn_ok?.fullName}`
+      )
     } else if (event_or_action == 'action') {
-      setExecutableTopic(device.cmnd_topic)
-      let payload = `${device.IR_protocol} ${device.bits} ${device.buttons.btn_power.code} ${device.repeats}`
+      setExecutableTopic(device.attributes.cmnd_topic)
+      const payload = `${device.attributes.preset?.protocol} ${device.attributes.preset?.bits} ${device.attributes.preset?.buttons?.btn_ok?.code} ${device.attributes.preset?.repeats}`
       setExecutablePayload(payload)
-      setExecutableText(`Button ${device.buttons.btn_power.fullName}`)
+      setExecutableText(
+        `Button ${device.attributes.preset?.buttons?.btn_ok?.fullName}`
+      )
     }
   }, [])
   return (
@@ -34,23 +43,36 @@ function SubSceneSirenAlarm({
         id='select-event-ir-state'
         className='form-select select-type'
         aria-label='Default select example'
+        placeholder='Select IR Button'
         onChange={(e) => {
-          let button = JSON.parse(e.target.value)
+          const button = JSON.parse(e.target.value) || {}
           if (event_or_action == 'event') {
-            let payload = `IR_${device.IR_protocol} ${device.bits} ${button.code} 0`
-            setConditionalPayload(payload)
+            if (device.manufacter == 'tasmota') {
+              const payload = {
+                Protocol: device.attributes.preset?.protocol,
+                Bits: device.attributes.preset?.bits,
+                Data: button?.code,
+              }
+              setConditionalPayload(JSON.stringify(payload))
+            } else if (device.manufacter == 'openBeken') {
+              const payload = `IR_${device.attributes.preset?.protocol} ${device.attributes.preset?.bits} ${button.code} 1`
+              setConditionalPayload(payload)
+            }
             setConditionalText(`Button ${button.fullName}`)
           } else if (event_or_action == 'action') {
-            let payload = `${device.IR_protocol} ${device.bits} ${button.code} ${device.repeats}`
+            const payload = `${device.attributes.preset?.protocol} ${device.attributes.preset?.bits} ${button.code} ${device.attributes.preset?.repeats}`
             setExecutablePayload(payload)
             setExecutableText(`Button ${button.fullName}`)
           }
         }}
       >
-        {Object.keys(device.buttons).map((button, index) => {
+        {Object.keys(device.attributes.preset?.buttons).map((button, index) => {
           return (
-            <option key={index} value={JSON.stringify(device.buttons[button])}>
-              {device.buttons[button].fullName}
+            <option
+              key={index}
+              value={JSON.stringify(device.attributes.preset?.buttons[button])}
+            >
+              {device.attributes.preset?.buttons[button].fullName}
             </option>
           )
         })}

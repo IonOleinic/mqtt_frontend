@@ -1,275 +1,521 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Stepper } from 'primereact/stepper'
+import { StepperPanel } from 'primereact/stepperpanel'
+import { Button } from 'primereact/button'
+import { InputText } from 'primereact/inputtext'
+import { Dropdown } from 'primereact/dropdown'
+import { Message } from 'primereact/message'
+import useDeviceTypes from '../../../hooks/useDeviceTypes'
+import useOptionTemplate from '../../../hooks/useOptionTemplate'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import SubSwitch from '../../../components/DeviceComponents/AddDeviceComponents/SubSwitch/SubSwitch'
 import SubIR from '../../../components/DeviceComponents/AddDeviceComponents/SubIR/SubIR'
 import SubLed from '../../../components/DeviceComponents/AddDeviceComponents/SubLed/SubLed'
-import { VscError } from 'react-icons/vsc'
-import CheckMessage from '../../../components/CheckMessage/CheckMessage'
-import UseAnimations from 'react-useanimations'
-import loading from 'react-useanimations/lib/loading'
-import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
+import { useNavigate } from 'react-router-dom'
+import tasmotaLogoPng from './images/tasmota-logo-blue.png'
+import openBekenLogoPng from './images/openBeken-logo.png'
+import { toast } from 'react-toastify'
 import './AddDevice.css'
-import { set } from 'lodash'
 
-let iconSucces = <IoIosCheckmarkCircleOutline size='25px' color='green' />
-let iconError = <VscError className='icon-inside' color='red' size='25px' />
-let iconLoading = <UseAnimations animation={loading} size={40} />
+const tasmotaIcon = (
+  <img src={tasmotaLogoPng} style={{ width: '20px', height: '20px' }} />
+)
+const openBekenIcon = (
+  <img src={openBekenLogoPng} style={{ width: '20px', height: '20px' }} />
+)
+
+const selectedManufacterOptions = [
+  { name: 'tasmota', icon: tasmotaIcon },
+  { name: 'openBeken', icon: openBekenIcon },
+]
+
 function AddDevice() {
+  const stepperRef = useRef(null)
   const axios = useAxiosPrivate()
-  //validation info
-  const [checkmark, setCheckmark] = useState(false)
-  const [icon, setIcon] = useState(iconLoading)
-  const [message, setMessage] = useState('Loading...')
-  const [textColor, setTextColor] = useState('black')
-
   const navigate = useNavigate()
-  const [disabledAddBtn, setDisabledAddBtn] = useState(true)
-  const [disabledTypeSelect, setDisabledTypeSelect] = useState(true)
-  const [deviceTypes, setDeviceTypes] = useState([])
+  const { selectedOptionTemplate, optionTemplate } = useOptionTemplate()
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
-  const [manufacter, setManufacter] = useState('tasmota')
-  const [groupId, setGroupId] = useState(undefined)
+  const [isMqttNameValid, setIsMqttNameValid] = useState(undefined)
+  const [isFirstStepValid, setIsFirstStepValid] = useState(false)
+  const [isSecondStepValid, setIsSecondStepValid] = useState(false)
+  const [selectedManufacter, setSelectedManufacter] = useState(
+    selectedManufacterOptions[0]
+  )
+  const [selectedTypeGroup, setSelectedTypeGroup] = useState(undefined)
+  const [selectedSubTypeGroup, setSelectedSubTypeGroup] = useState(undefined)
+  const { typeGroups, subTypeGroups } = useDeviceTypes(selectedTypeGroup)
+  const [groupId, setGroupId] = useState(null)
+  const [selectedGroup, setSelectedDeviceGroup] = useState({
+    id: null,
+    name: 'No group',
+  })
   const [groups, setGroups] = useState([])
-  const [deviceType, setDeviceType] = useState('')
   const [attributes, setAttributes] = useState({})
-  const [subDevice, setSubDevice] = useState(<></>)
+  const [subDevice, setSubDevice] = useState(undefined)
+  const [resultMessage, setResultMessage] = useState('')
 
-  const getDeviceTypes = async () => {
-    try {
-      let result = await axios.get('/deviceTypes')
-      setDeviceTypes(result.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
   const getGroups = async () => {
     try {
-      let result = await axios.get('/groups')
-      setGroups(result.data)
+      let response = await axios.get('/groups')
+      setGroups([{ id: null, name: 'No group' }, ...response.data])
     } catch (error) {
       console.log(error)
     }
   }
   useEffect(() => {
-    getDeviceTypes()
     getGroups()
   }, [])
-  useEffect(() => {
-    setCheckmark(false)
-  }, [deviceTypes, name, mqttName, deviceType, manufacter])
-  const handleAddDevice = async () => {
-    setIcon(iconLoading)
-    setMessage('Adding...')
-    setTextColor('black')
-    setCheckmark(true)
-    let device = {}
-    device.name = name
-      ? name
-      : 'device_' + Math.random().toString(16).slice(2, 7)
-    device.mqtt_name = mqttName
-    device.manufacter = manufacter
-    device.device_type = deviceType
-    device.group_id = Number(groupId)
-    device.attributes = attributes
 
-    try {
-      let response = await axios.post('/device', device)
-      navigate('/devices')
-    } catch (error) {
-      console.log(error)
-      setIcon(iconError)
-      setTextColor('red')
-      setMessage(
-        error.response.data?.msg || 'Error occured!. Please try again.'
-      )
+  useEffect(() => {
+    setGroupId(selectedGroup?.id)
+  }, [selectedGroup])
+
+  const validateFirstStep = () => {
+    setResultMessage('')
+    let isValid = false
+    if (mqttName.length >= 2 && mqttName.length < 30) {
+      isValid = true
+    } else {
+      isValid = false
     }
+    setIsMqttNameValid(isValid)
+    setIsFirstStepValid(isValid)
+    return isValid
   }
-  const setSubProps = (props) => {
-    setAttributes(props)
+  const validateSecondStep = () => {
+    setResultMessage('')
+    let isValid = false
+    if (selectedTypeGroup && selectedSubTypeGroup) {
+      isValid = true
+      setIsSecondStepValid(true)
+    } else {
+      isValid = false
+      setIsSecondStepValid(false)
+    }
+    return isValid
+  }
+  useEffect(() => {
+    if (subTypeGroups.length > 0) {
+      setSelectedSubTypeGroup(subTypeGroups[0])
+    }
+  }, [subTypeGroups])
+
+  useEffect(() => {
+    validateSecondStep()
+    chooseSubDevice(selectedSubTypeGroup?.type)
+  }, [selectedSubTypeGroup])
+
+  useEffect(() => {
+    if (validateFirstStep()) resetSelectedOptions()
+  }, [mqttName])
+
+  const resetSelectedOptions = () => {
+    setIsSecondStepValid(false)
+    setSelectedTypeGroup(undefined)
+    setSelectedSubTypeGroup(undefined)
+    setSelectedDeviceGroup({ id: null, name: 'No group' })
+    setGroupId(null)
+    setAttributes({})
+    setSubDevice(undefined)
   }
   const chooseSubDevice = (type) => {
-    let subtype = <></>
-    setDeviceType(type)
+    setAttributes({})
+    let subDevice = undefined
     switch (type) {
       case 'smartPlug':
       case 'smartStrip':
       case 'smartSwitch':
       case 'smartValve':
-        subtype = (
+        subDevice = (
           <SubSwitch
-            setSubProps={setSubProps}
-            disable_add_btn={disableAddBtn}
+            setAttributes={setAttributes}
+            sub_type={selectedSubTypeGroup?.sub_type}
           />
         )
         break
       case 'smartIR':
-        subtype = (
+        subDevice = (
           <SubIR
-            setSubProps={setSubProps}
-            mqtt_name={mqttName}
-            manufacter={manufacter}
-            disable_add_btn={disableAddBtn}
+            mqttName={mqttName}
+            manufacter={selectedManufacter?.name}
+            setAttributes={setAttributes}
           />
         )
         break
       case 'smartDoorSensor':
-        disableAddBtn(false)
-        subtype = <></>
+        subDevice = undefined
         break
       case 'smartTempSensor':
-        disableAddBtn(false)
-        subtype = <></>
+        subDevice = undefined
         break
       case 'smartSirenAlarm':
-        disableAddBtn(false)
-        subtype = <></>
+        subDevice = undefined
         break
       case 'smartMotionSensor':
-        disableAddBtn(false)
-        subtype = <></>
+        subDevice = undefined
         break
       case 'smartLed':
-        subtype = (
-          <SubLed
-            setSubProps={setSubProps}
-            mqtt_name={mqttName}
-            manufacter={manufacter}
-            disable_add_btn={disableAddBtn}
-          />
-        )
+        subDevice = <SubLed setAttributes={setAttributes} />
         break
       default:
-        subtype = <></>
-        setDisabledAddBtn(true)
+        subDevice = undefined
         break
     }
-    setSubDevice(subtype)
+    setSubDevice(subDevice)
   }
-  const disableAddBtn = (__bool) => {
-    setDisabledAddBtn(__bool)
+  const handleAddDevice = async () => {
+    setResultMessage('')
+    let deviceData = {}
+    deviceData.name = name
+      ? name
+      : 'device_' + Math.random().toString(16).slice(2, 7)
+    deviceData.mqtt_name = mqttName
+    deviceData.manufacter = selectedManufacter?.name
+    deviceData.device_type = selectedSubTypeGroup?.type
+    deviceData.sub_type = selectedSubTypeGroup?.sub_type
+    deviceData.group_id = groupId ? Number(groupId) : null
+    deviceData.attributes = attributes
+    try {
+      let response = await axios.post('/device', deviceData)
+      navigate('/devices')
+    } catch (error) {
+      console.log(error)
+      toast.dismiss()
+      toast.error(
+        error.response.data?.msg || 'Error occured!. Please try again.'
+      )
+      setResultMessage(
+        error.response.data?.msg || 'Error occured!. Please try again.'
+      )
+    }
   }
 
   return (
-    <div className='Add-form-container'>
-      <form className='Add-form'>
-        <div className='Add-form-content'>
-          <h3 className='Add-form-title'>Add Device</h3>
-          <div className='form-group mt-3'>
-            <label htmlFor='input-name'>Device Name</label>
-            <input
-              id='input-name'
-              type='text'
-              className='form-control mt-1'
-              placeholder='Device name'
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value)
-              }}
-            />
+    <div className='device-stepper-container'>
+      <Stepper
+        ref={stepperRef}
+        style={{ flexBasis: '50rem' }}
+        orientation='vertical'
+        className='device-stepper'
+      >
+        <StepperPanel header='Initial Setup'>
+          <div className='content-container'>
+            <div className='initial-setup-container'>
+              <div className='form-input-group'>
+                <label htmlFor='input-device-name'>Device Name</label>
+                <InputText
+                  id='input-device-name'
+                  aria-describedby='device-name-help'
+                  placeholder='Type Device Name'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className='form-input-group'>
+                <label htmlFor='select-manufacter'>Manufacter</label>
+                <Dropdown
+                  id='select-manufacter'
+                  value={selectedManufacter}
+                  options={selectedManufacterOptions}
+                  optionLabel='name'
+                  onChange={(e) => {
+                    setSelectedManufacter(e.value)
+                  }}
+                  valueTemplate={selectedOptionTemplate}
+                  itemTemplate={optionTemplate}
+                  placeholder='Select a manufacter'
+                />
+              </div>
+              <div className='form-input-group'>
+                <label htmlFor='input-mqtt-name'>
+                  MQTT Name <span style={{ color: 'red' }}>*</span>
+                </label>
+                <InputText
+                  id='input-mqtt-name'
+                  aria-describedby='mqtt-name-help'
+                  placeholder='Type MQTT Name'
+                  required
+                  invalid={!isMqttNameValid}
+                  value={mqttName}
+                  onChange={(e) => {
+                    setMqttName(e.target.value)
+                  }}
+                />
+              </div>
+            </div>
           </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='select-manufacter'>Manufacter</label>
-            <select
-              id='select-manufacter'
-              className='form-select select-type'
-              aria-label='Default select example'
-              onChange={(e) => {
-                setManufacter(e.target.value)
-              }}
-            >
-              <option value='tasmota'>Tasmota</option>
-              <option value='openBeken'>Open Beken</option>
-            </select>
-          </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='input-mqtt'>
-              MQTT Name <span style={{ color: 'red' }}>*</span>
-            </label>
-            <input
-              required={true}
-              id='input-mqtt'
-              type='text'
-              className='form-control mt-1'
-              placeholder='mqtt topic *(unique)'
-              value={mqttName}
-              onChange={(e) => {
-                setMqttName(e.target.value)
-                if (e.target.value.length > 3 && e.target.value.length < 30) {
-                  setDisabledTypeSelect(false)
+          <div className='buttons'>
+            <Button
+              label='Next'
+              icon='pi pi-arrow-right'
+              iconPos='right'
+              onClick={() => {
+                if (validateFirstStep()) {
+                  stepperRef.current.nextCallback()
                 } else {
-                  setDisabledTypeSelect(true)
+                  toast.dismiss()
+                  toast.error('Mqtt name is not valid')
                 }
               }}
             />
           </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='input-groups'>Groups</label>
-            <select
-              id='select-manufacter'
-              className='form-select select-type'
-              aria-label='Default select example'
-              onChange={(e) => {
-                setGroupId(e.target.value)
+        </StepperPanel>
+        <StepperPanel header='Device Type'>
+          <div className='content-container'>
+            {isFirstStepValid ? (
+              <div className='all-groups-container'>
+                <div className='type-groups-container'>
+                  <p className='type-groups-title'>Base Groups</p>
+                  <div className='type-groups'>
+                    {typeGroups.map((group) => {
+                      return (
+                        <div
+                          className={
+                            group?.label == selectedTypeGroup?.label
+                              ? 'type-group type-group-selected'
+                              : 'type-group'
+                          }
+                          key={group.label}
+                          onClick={() => {
+                            setSelectedTypeGroup(group)
+                          }}
+                        >
+                          <>{group.icon}</>
+                          <p>{group.label}</p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+                <div className='sub-type-groups-container'>
+                  <p className='sub-type-groups-title'>Sub Groups</p>
+                  {subTypeGroups?.length > 0 ? (
+                    <div className='sub-type-groups'>
+                      {subTypeGroups.map((subTypeGroup) => {
+                        return (
+                          <div
+                            className={
+                              subTypeGroup?.label == selectedSubTypeGroup?.label
+                                ? 'sub-type-group sub-type-group-selected'
+                                : 'sub-type-group'
+                            }
+                            key={subTypeGroup.label}
+                            onClick={() =>
+                              setSelectedSubTypeGroup(subTypeGroup)
+                            }
+                          >
+                            <>{subTypeGroup.icon}</>
+                            <p>{subTypeGroup.label}</p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <div className='empty-sub-type-groups'>
+                      <p>Please select a base device group.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className='previous-steps-required-container'>
+                <p>Please complete previous step.</p>
+              </div>
+            )}
+          </div>
+          <div className='buttons'>
+            <Button
+              label='Back'
+              severity='secondary'
+              icon='pi pi-arrow-left'
+              onClick={() => stepperRef.current.prevCallback()}
+            />
+            <Button
+              label='Next'
+              icon='pi pi-arrow-right'
+              iconPos='right'
+              onClick={() => {
+                if (validateFirstStep()) {
+                  if (validateSecondStep()) {
+                    stepperRef.current.nextCallback()
+                  } else {
+                    toast.dismiss()
+                    toast.error('Please select a device type')
+                  }
+                } else {
+                  toast.dismiss()
+                  toast.error('Please complete the first step')
+                }
               }}
-            >
-              <option value={undefined}>None</option>
-              {groups.map((group) => {
-                return (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-          <div className='form-group mt-3'></div>
-          <div className='form-group mt-3'>
-            <label htmlFor='select-type'>Device Type</label>
-            <select
-              disabled={disabledTypeSelect}
-              id='select-type'
-              className='form-select select-type'
-              aria-label='Default select example'
-              onChange={(e) => {
-                disableAddBtn(true)
-                setAttributes({})
-                chooseSubDevice(e.target.value)
-              }}
-            >
-              <option value={undefined}>None</option>
-              {Object.keys(deviceTypes).map((deviceType) => {
-                return (
-                  <option key={deviceType} value={deviceTypes[deviceType]}>
-                    {deviceType}
-                  </option>
-                )
-              })}
-            </select>
-            {subDevice}
-          </div>
-          <div className='form-group mt-3 btn-form-container'>
-            <button
-              id='btn-add-dev'
-              disabled={disabledAddBtn}
-              type='button'
-              className='btn btn-primary btn-add-device'
-              onClick={handleAddDevice}
-            >
-              Add
-            </button>
-          </div>
-          <div className='form-group mt-3'>
-            <CheckMessage
-              textColor={textColor}
-              visibility={checkmark}
-              icon={icon}
-              message={message}
             />
           </div>
-        </div>
-      </form>
+        </StepperPanel>
+        <StepperPanel header='Device Configuration'>
+          <div className='content-container'>
+            {isFirstStepValid && isSecondStepValid ? (
+              <div className='device-config-container'>
+                <div
+                  className={
+                    subDevice === undefined
+                      ? 'sub-device-container-hidden'
+                      : 'sub-device-container'
+                  }
+                >
+                  {subDevice}
+                </div>
+                <div className='select-group-container'>
+                  <div className='form-input-group'>
+                    <label htmlFor='select-device-group'>Add to a group</label>
+                    <Dropdown
+                      id='select-device-group'
+                      value={selectedGroup}
+                      options={groups}
+                      optionLabel='name'
+                      onChange={(e) => {
+                        setSelectedDeviceGroup(e.value)
+                        setGroupId(e.value?.id)
+                      }}
+                      placeholder='Select a device group'
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className='previous-steps-required-container'>
+                <p>Please complete previous steps.</p>
+              </div>
+            )}
+          </div>
+          <div className='buttons'>
+            <Button
+              label='Back'
+              severity='secondary'
+              icon='pi pi-arrow-left'
+              onClick={() => stepperRef.current.prevCallback()}
+            />
+            <Button
+              label='Next'
+              icon='pi pi-arrow-right'
+              iconPos='right'
+              onClick={() => {
+                if (validateFirstStep() && validateSecondStep()) {
+                  stepperRef.current.nextCallback()
+                } else {
+                  toast.dismiss()
+                  toast.error('Please complete the previous steps')
+                }
+              }}
+            />
+          </div>
+        </StepperPanel>
+        <StepperPanel header='Finish'>
+          <div className='content-container'>
+            {isFirstStepValid && isSecondStepValid ? (
+              <div className='summarised-data-container'>
+                <div className='summarised-title'>
+                  <p>Summarised Options:</p>
+                </div>
+                <div className='summarised-data'>
+                  <div className='summarised-data-row'>
+                    <label>Device Name:</label>
+                    <p>{name || '?'}</p>
+                  </div>
+                  <div className='summarised-data-row'>
+                    <label>MQTT Name:</label>
+                    <p>{mqttName}</p>
+                  </div>
+                  <div className='summarised-data-row'>
+                    <label>Manufacter:</label>
+                    {selectedManufacter?.icon}
+                    <p>{selectedManufacter?.name}</p>
+                  </div>
+                  <div className='summarised-data-row'>
+                    <label>Type:</label>
+                    <p>{selectedTypeGroup?.label}</p>
+                  </div>
+                  <div className='summarised-data-row'>
+                    <label>Subtype:</label>
+                    {selectedSubTypeGroup?.icon}
+                    <p>{selectedSubTypeGroup?.label}</p>
+                  </div>
+                  <div className='summarised-data-row'>
+                    <label>Group:</label>
+                    <p>{selectedGroup?.name}</p>
+                  </div>
+                  <div
+                    className={
+                      Object.keys(attributes).length > 0 &&
+                      selectedSubTypeGroup?.type !== 'smartIR'
+                        ? 'summarised-data-row summarised-attributes-row'
+                        : 'hidden'
+                    }
+                  >
+                    <label>Attributes:</label>
+                    <div className='summarised-attributes'>
+                      {Object.keys(attributes).map((attributeKey, index) => {
+                        return (
+                          <div
+                            className={
+                              attributes[attributeKey] !== undefined
+                                ? 'attribute-data-row'
+                                : 'hidden'
+                            }
+                            key={index}
+                          >
+                            <p>
+                              {attributeKey.toString()?.replaceAll('_', ' ')}
+                            </p>
+                            <p>:</p>
+                            <p>
+                              {attributes[attributeKey]
+                                ?.toString()
+                                .replace('true', 'Yes')
+                                .replace('false', 'No')}
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={
+                    resultMessage ? 'result-message-container' : 'hidden'
+                  }
+                >
+                  <Message severity='error' text={resultMessage} />
+                </div>
+              </div>
+            ) : (
+              <div className='previous-steps-required-container'>
+                <p>Please complete previous steps.</p>
+              </div>
+            )}
+          </div>
+          <div className='buttons'>
+            <Button
+              label='Back'
+              severity='secondary'
+              icon='pi pi-arrow-left'
+              onClick={() => stepperRef.current.prevCallback()}
+            />
+            <Button
+              label='Create'
+              icon='pi pi-plus'
+              iconPos='left'
+              onClick={() => {
+                if (validateFirstStep() && validateSecondStep()) {
+                  handleAddDevice()
+                } else {
+                  toast.dismiss()
+                  toast.error('Please complete the previous steps')
+                }
+              }}
+            />
+          </div>
+        </StepperPanel>
+      </Stepper>
     </div>
   )
 }

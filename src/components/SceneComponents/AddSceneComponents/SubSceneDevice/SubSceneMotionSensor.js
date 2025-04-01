@@ -7,7 +7,7 @@ function SubSceneMotionSensor({
   setConditionalText,
 }) {
   useEffect(() => {
-    setConditionalTopic(device.receive_status_topic)
+    setConditionalTopic(device.attributes.receive_status_topic)
     if (device.manufacter == 'tasmota') {
       setConditionalPayload('ON')
     } else if (device.manufacter == 'openBeken') {
