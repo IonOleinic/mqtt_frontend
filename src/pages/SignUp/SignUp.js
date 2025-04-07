@@ -3,12 +3,16 @@ import useAxios from '../../hooks/useAxios'
 import { useRef, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { Button } from 'primereact/button'
+import { InputText } from 'primereact/inputtext'
+import { Message } from 'primereact/message'
+import { RadioButton } from 'primereact/radiobutton'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import './SignUp.css'
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d.@$!%*?&]{8,}$/
-const nameRegex = /^[a-zA-Z' -]+$/
+
 function SignUp() {
   const { setAuth } = useAuth()
   const axios = useAxios()
@@ -24,12 +28,41 @@ function SignUp() {
   const [validPassword, setValidPassword] = useState(true)
   const [validConfirmPassword, setValidConfirmPassword] = useState(true)
 
-  const [serverErrorMsg, setServerErrorMsg] = useState('')
-  const [serverErrorVisibility, setServerErrorVisibility] = useState(false)
+  const [errorMsg, setErrorMsg] = useState('')
+  const [errorVisibility, setErrorVisibility] = useState(false)
 
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
+
+  useEffect(() => {
+    if (password) setValidPassword(passwordRegex.test(password))
+    if (confirmPassword) {
+      if (password === confirmPassword) {
+        setValidConfirmPassword(true)
+      } else {
+        setValidConfirmPassword(false)
+      }
+    }
+  }, [password, confirmPassword])
+  useEffect(() => {
+    if (name) {
+      if (name.length >= 3) {
+        setValidName(true)
+      } else {
+        setValidName(false)
+      }
+    }
+  }, [name])
+
+  useEffect(() => {
+    setValidEmail(true)
+  }, [email])
+
+  useEffect(() => {
+    setErrorVisibility(false)
+  }, [name, email, password, confirmPassword])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (validEmail && validEmail && validPassword && validConfirmPassword)
@@ -45,12 +78,13 @@ function SignUp() {
         }
       } catch (error) {
         console.log(error)
+        setErrorVisibility(true)
         if (error.response.status === 409) {
           setValidEmail(false)
           emailRef.current.focus()
+          setErrorMsg('This email is already registered.')
         } else if (error.response.status === 500) {
-          setServerErrorMsg('Server Error. Please try again.')
-          setServerErrorVisibility(true)
+          setErrorMsg('Server Error. Please try again.')
         }
       }
   }
@@ -71,205 +105,160 @@ function SignUp() {
       navigate('/signin')
     }
   }
-  useEffect(() => {
-    if (password) setValidPassword(passwordRegex.test(password))
-    if (confirmPassword) {
-      if (password === confirmPassword) {
-        setValidConfirmPassword(true)
-      } else {
-        setValidConfirmPassword(false)
-      }
-    }
-  }, [password, confirmPassword])
-  useEffect(() => {
-    if (name) {
-      if (name.length >= 3) {
-        setValidName(nameRegex.test(name))
-      } else {
-        setValidName(false)
-      }
-    }
-  }, [name])
-  useEffect(() => {
-    setValidEmail(true)
-  }, [email])
-  useEffect(() => {
-    setServerErrorVisibility(false)
-  }, [name, email, password, confirmPassword])
+
   return (
-    <div className='Auth-form-container'>
-      <form className='Auth-form' onSubmit={handleSubmit}>
-        <div className='Auth-form-content'>
-          <h3 className='Auth-form-title'>Sign Up</h3>
-          <div className='form-group mt-3'>
-            <label htmlFor='name'>Name</label>
-            <input
-              required
-              id='name'
-              type='text'
-              className={
-                validName
-                  ? 'form-control mt-1'
-                  : 'form-control mt-1 invalid-input'
-              }
-              placeholder='Enter name'
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value)
-              }}
-            />
-          </div>
-          <div
-            className={
-              validName ? 'valid-msg-auth' : 'valid-msg-auth invalid-msg-auth'
-            }
-          >
-            <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
-            <p>Invalid username.</p>
-          </div>
-          <div className='form-group mt-3'>
-            <label>Gender</label>
-            <div className='signup-gender-group'>
-              <div class='form-check'>
-                <input
-                  class='form-check-input'
-                  type='radio'
-                  name='flexRadioDefault'
-                  id='flexRadioDefault1'
-                  checked={gender === 'male' ? true : false}
-                  onChange={(e) => {
-                    setGender('male')
-                  }}
-                />
-                <label class='form-check-label' for='flexRadioDefault1'>
-                  Male
-                </label>
+    <div className='auth-form-container'>
+      <form className='auth-form' onSubmit={handleSubmit}>
+        <div className='auth-form-content'>
+          <h3 className='auth-form-title'>Sign Up</h3>
+          <div className='auth-form-inputs'>
+            <div className='form-input-group auth-form-input-group'>
+              <label htmlFor='sign-up-name-input'>Name</label>
+              <InputText
+                required
+                id='sign-up-name-input'
+                invalid={!validName}
+                placeholder='Enter name'
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value)
+                }}
+              />
+              <div
+                className={
+                  !validName
+                    ? 'auth-invalid-input-msg'
+                    : 'auth-invalid-input-msg auth-invalid-input-msg-hidden'
+                }
+              >
+                <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
+                <p>Invalid username.</p>
               </div>
-              <div class='form-check'>
-                <input
-                  class='form-check-input'
-                  type='radio'
-                  name='flexRadioDefault'
-                  id='flexRadioDefault2'
-                  value='female'
-                  checked={gender === 'female' ? true : false}
-                  onChange={(e) => {
-                    setGender('female')
-                  }}
-                />
-                <label class='form-check-label' for='flexRadioDefault2'>
-                  Female
-                </label>
+            </div>
+            <div className='form-input-group auth-form-input-group'>
+              <label>Gender</label>
+              <div className='form-input-group-inline'>
+                <div className='sign-up-radio-button'>
+                  <RadioButton
+                    inputId='sign-up-male-radio'
+                    value='male'
+                    checked={gender === 'male' ? true : false}
+                    onChange={(e) => {
+                      setGender('male')
+                    }}
+                  />
+                  <label htmlFor='sign-up-female-radio'>Male</label>
+                </div>
+                <div className='sign-up-radio-button'>
+                  <RadioButton
+                    inputId='sign-up-female-radio'
+                    value='female'
+                    checked={gender === 'female' ? true : false}
+                    onChange={(e) => {
+                      setGender('female')
+                    }}
+                  />
+                  <label htmlFor='sign-up-female-radio'>Female</label>
+                </div>
+              </div>
+            </div>
+            <div className='form-input-group auth-form-input-group'>
+              <label htmlFor='sign-up-email-input'>Email address</label>
+              <InputText
+                ref={emailRef}
+                required
+                id='sign-up-email-input'
+                type='email'
+                invalid={!validEmail}
+                placeholder='Enter email'
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                }}
+              />
+              <div
+                className={
+                  !validEmail
+                    ? 'auth-invalid-input-msg'
+                    : 'auth-invalid-input-msg auth-invalid-input-msg-hidden'
+                }
+              >
+                <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
+                <p>Invalid email.</p>
+              </div>
+            </div>
+            <div className='form-input-group auth-form-input-group'>
+              <label htmlFor='sign-up-password-input'>Password</label>
+              <InputText
+                required
+                id='sign-up-password-input'
+                type='password'
+                invalid={!validPassword}
+                placeholder='Enter password'
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                }}
+              />
+              <div
+                className={
+                  !validPassword
+                    ? 'auth-invalid-input-msg'
+                    : 'auth-invalid-input-msg auth-invalid-input-msg-hidden'
+                }
+              >
+                <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
+                <p>
+                  Password must include uppercase, lowercase and digits.
+                  Required minimum 8 characters.
+                </p>
+              </div>
+            </div>
+            <div className='form-input-group auth-form-input-group'>
+              <label htmlFor='sign-up-conf-password-input'>
+                Confirm Password
+              </label>
+              <InputText
+                required
+                id='sign-up-conf-password-input'
+                type={'password'}
+                invalid={!validConfirmPassword}
+                placeholder='Confirm password'
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value)
+                }}
+              />
+              <div
+                className={
+                  !validConfirmPassword
+                    ? 'auth-invalid-input-msg'
+                    : 'auth-invalid-input-msg auth-invalid-input-msg-hidden'
+                }
+              >
+                <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
+                <p>Password and Confirm Password must match.</p>
               </div>
             </div>
           </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='email'>Email address</label>
-            <input
-              ref={emailRef}
-              required
-              id='email'
-              type='email'
-              className={
-                validEmail
-                  ? 'form-control mt-1'
-                  : 'form-control mt-1 invalid-input'
-              }
-              placeholder='Enter email'
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value)
-              }}
-            />
-          </div>
           <div
             className={
-              validEmail ? 'valid-msg-auth' : 'valid-msg-auth invalid-msg-auth'
+              errorVisibility ? 'auth-error' : 'auth-error auth-error-hidden'
             }
           >
-            <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
-            <p>An account with this email already exists.</p>
+            <Message severity='error' text={errorMsg} />
           </div>
-
-          <div className='form-group mt-3'>
-            <label htmlFor='password'>Password</label>
-            <input
-              required
-              id='password'
-              type={'password'}
-              className={
-                validPassword
-                  ? 'form-control mt-1'
-                  : 'form-control mt-1 invalid-input'
-              }
-              placeholder='Enter password'
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value)
-              }}
-            />
+          <div className='form-input-group auth-form-input-group auth-button-container'>
+            <Button label='Register' />
           </div>
-          <div
-            className={
-              validPassword
-                ? 'valid-msg-auth'
-                : 'valid-msg-auth invalid-msg-auth'
-            }
-          >
-            <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
+          <div className='auth-external-links'>
             <p>
-              Password must include uppercase, lowercase and digits. Required
-              minimum 8 characters.
+              <a href='./forgot'>Forgot password?</a>
+            </p>
+            <p>
+              Already have an account? <Link to={'/signin'}>Sign in here</Link>
             </p>
           </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='confirmPassword'>Confirm Password</label>
-            <input
-              required
-              id='confirmPassword'
-              type={'password'}
-              className={
-                validConfirmPassword
-                  ? 'form-control mt-1'
-                  : 'form-control mt-1 invalid-input'
-              }
-              placeholder='Confirm password'
-              value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value)
-              }}
-            />
-          </div>
-          <div
-            className={
-              validConfirmPassword
-                ? 'valid-msg-auth'
-                : 'valid-msg-auth invalid-msg-auth '
-            }
-          >
-            <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
-            <p>Password and Confirm Password must match.</p>
-          </div>
-
-          <div
-            className={
-              serverErrorVisibility
-                ? 'server-error-auth'
-                : 'no-server-error-auth'
-            }
-          >
-            <FontAwesomeIcon icon={faTimes} className='fatimes-icon-auth' />
-            <p>{serverErrorMsg}</p>
-          </div>
-          <div className='d-grid gap-2 mt-3 align-center'>
-            <button className='btn btn-primary'>Register</button>
-          </div>
-          <p className='forgot-password text-right mt-2'>
-            <a href='./forgot'>Forgot password?</a>
-          </p>
-          <p className='forgot-password text-right mt-2'>
-            Already have an account? <Link to={'/signin'}>Sign in here</Link>
-          </p>
         </div>
       </form>
     </div>

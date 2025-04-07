@@ -1,33 +1,6 @@
-.pass-sign-in-div {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-.show-pass-btn {
-  position: absolute;
-  top: 25%;
-  right: 0;
-  margin-right: 0.8rem;
-  visibility: visible;
-  opacity: 100%;
-  transition: all 0.4s ease-in-out;
-}
-.show-pass-btn-hidden {
-  visibility: hidden;
-  opacity: 0;
-}
-.show-pass-btn:hover {
-  cursor: pointer;
-}
-
-.align-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.login-btn {
-  width: 7rem;
-}
 .checkbox-remember-me {
-  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
 }

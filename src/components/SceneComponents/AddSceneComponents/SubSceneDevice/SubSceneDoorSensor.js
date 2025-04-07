@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { Dropdown } from 'primereact/dropdown'
 
 function SubSceneDoorSensor({
   device,
@@ -6,44 +7,36 @@ function SubSceneDoorSensor({
   setConditionalPayload,
   setConditionalText,
 }) {
+  const [state, setState] = useState('Closed')
   useEffect(() => {
     setConditionalTopic(device.attributes.receive_status_topic)
-    if (device.manufacter == 'tasmota') {
-      setConditionalPayload('OFF')
-    } else if (device.manufacter == 'openBeken') {
-      setConditionalPayload('0')
+    setConditionalText(state)
+    if (state == 'Opened') {
+      if (device.manufacter == 'tasmota') {
+        setConditionalPayload('ON')
+      } else if (device.manufacter == 'openBeken') {
+        setConditionalPayload('1')
+      }
+    } else if (state == 'Closed') {
+      if (device.manufacter == 'tasmota') {
+        setConditionalPayload('OFF')
+      } else if (device.manufacter == 'openBeken') {
+        setConditionalPayload('0')
+      }
     }
-    setConditionalText(`Closed`)
-  }, [])
+  }, [state])
   return (
-    <div className='form-group mt-3'>
-      <label htmlFor='select-event-state'>Door State</label>
-      <select
-        // value={eventDeviceState}
-        id='select-event-state'
-        className='form-select select-type'
-        aria-label='Default select example'
+    <div className='form-input-group'>
+      <label htmlFor='sub-door-state-dropdown'>Door State</label>
+      <Dropdown
+        id='sub-door-state-dropdown'
+        value={state}
+        options={['Closed', 'Opened']}
+        placeholder='Select Door State'
         onChange={(e) => {
-          if (e.target.value == 'ON') {
-            if (device.manufacter == 'tasmota') {
-              setConditionalPayload('ON')
-            } else if (device.manufacter == 'openBeken') {
-              setConditionalPayload('1')
-            }
-            setConditionalText(`Opened`)
-          } else {
-            if (device.manufacter == 'tasmota') {
-              setConditionalPayload('OFF')
-            } else if (device.manufacter == 'openBeken') {
-              setConditionalPayload('0')
-            }
-            setConditionalText(`Closed`)
-          }
+          setState(e.target.value)
         }}
-      >
-        <option value='OFF'>Closed</option>
-        <option value='ON'>Opened</option>
-      </select>
+      />
     </div>
   )
 }

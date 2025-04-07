@@ -26,9 +26,9 @@ function SubSwitch({ sub_type, setAttributes }) {
   return (
     <div className='sub-switch'>
       <div className='form-input-group'>
-        <label htmlFor='nr-sockets-dropdown'>Nr. of Sockets</label>
+        <label htmlFor='sub-switch-nr-sockets-dropdown'>Nr. of Sockets</label>
         <Dropdown
-          id='nr-sockets-dropdown'
+          id='sub-switch-nr-sockets-dropdown'
           value={nrOfSockets}
           options={[1, 2, 3, 4, 5, 6]}
           placeholder='Enter number of sockets'
@@ -40,9 +40,9 @@ function SubSwitch({ sub_type, setAttributes }) {
       <div
         className={sub_type === 'plug' ? 'form-input-group-inline' : 'hidden'}
       >
-        <label htmlFor='pwr-mon-checkbox'>With Power Monitor</label>
+        <label htmlFor='sub-switch-pwr-mon-checkbox'>With Power Monitor</label>
         <Checkbox
-          id='pwr-mon-checkbox'
+          id='sub-switch-pwr-mon-checkbox'
           checked={powerMonitor}
           disabled={sub_type !== 'plug'}
           onChange={(e) => {

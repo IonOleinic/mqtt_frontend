@@ -1,7 +1,5 @@
-.signup-gender-group {
+.sign-up-radio-button {
   display: flex;
   align-items: center;
-}
-.signup-gender-group .form-check {
-  margin: 0.5rem 1rem;
+  gap: 3px;
 }

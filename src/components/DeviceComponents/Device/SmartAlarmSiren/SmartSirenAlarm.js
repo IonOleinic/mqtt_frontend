@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Slider } from 'primereact/slider'
 import { FaTemperatureLow } from 'react-icons/fa'
 import { WiHumidity } from 'react-icons/wi'
 import { SlVolume2 } from 'react-icons/sl'
 import { SlVolumeOff } from 'react-icons/sl'
-import { GrVolumeControl } from 'react-icons/gr'
 import { AiOutlinePercentage } from 'react-icons/ai'
 import { RiCelsiusLine } from 'react-icons/ri'
+import { Dropdown } from 'primereact/dropdown'
+import { InputNumber } from 'primereact/inputnumber'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import useDebounce from '../../../../hooks/useDebounce'
 import './SmartSirenAlarm.css'
@@ -19,12 +19,17 @@ function SmartSirenAlarm({ device }) {
   const [status, setStatus] = useState('OFF')
   const [temperature, setTemperature] = useState(0)
   const [humidity, setHumidity] = useState(0)
-  const [sound, setSound] = useState(0)
+  const [ringtone, setRingtone] = useState(0)
   const [volume, setVolume] = useState(2)
-  const debouncedVolume = useDebounce(volume, 300)
-  const [inversedVolume, setInversedVolume] = useState(1)
   const [soundDuration, setSoundDuration] = useState(0)
   const debouncedSoundDuration = useDebounce(soundDuration, 300)
+  const [volumeMapper, setVolumeMapper] = useState({})
+  const volumeLabels = Object.keys(volumeMapper).filter((key) => {
+    return volumeMapper[key] != -1 && volumeMapper[key] !== undefined
+  })
+  const [selectedVolumeLabel, setSelectedVolumeLabel] = useState(
+    volumeLabels[0]
+  )
   const [volumeIcon, setVolumeIcon] = useState(volume_off)
 
   useEffect(() => {
@@ -36,24 +41,27 @@ function SmartSirenAlarm({ device }) {
     }
     setTemperature(device.attributes.temperature)
     setHumidity(device.attributes.humidity)
-    setSound(device.attributes.sound)
-    if (device.attributes.volume == 2) {
-      setInversedVolume(1)
-    } else if (device.attributes.volume == 1) {
-      setInversedVolume(2)
-    } else if (device.attributes.volume == 0) {
-      setInversedVolume(3)
-    }
+    setRingtone(device.attributes.ringtone)
     setVolume(device.attributes.volume)
+    setVolumeMapper(device.attributes.volume_mapper)
     setSoundDuration(device.attributes.sound_duration)
   }, [device])
+
+  useEffect(() => {
+    const findedLabel =
+      Object.keys(volumeMapper).find((label) => {
+        return volumeMapper[label] == volume
+      }) || 'unknown'
+
+    setSelectedVolumeLabel(findedLabel)
+  }, [volumeMapper])
 
   useEffect(() => {
     if (debouncedSoundDuration == 0) {
       return
     }
-    updateAlarmOptions(sound, debouncedVolume, debouncedSoundDuration)
-  }, [debouncedVolume, debouncedSoundDuration])
+    updateAlarmOptions(ringtone, volume, debouncedSoundDuration)
+  }, [debouncedSoundDuration])
 
   const sendChangePower = async (powerStatus) => {
     try {
@@ -65,119 +73,106 @@ function SmartSirenAlarm({ device }) {
     }
   }
 
-  const updateAlarmOptions = async (newSound, newVolume, newDuration) => {
+  const updateAlarmOptions = async (newRingtone, newVolume, newDuration) => {
     try {
       const response = await axios.post(
-        `/smartSirenAlarm/options?new_sound=${newSound}&new_volume=${newVolume}&new_duration=${newDuration}&device_id=${device.id}`
+        `/smartSirenAlarm/options?new_sound=${newRingtone}&new_volume=${newVolume}&new_duration=${newDuration}&device_id=${device.id}`
       )
     } catch (error) {
       console.log(error)
     }
   }
-  let array_types = []
-  for (let i = 0; i < 18; i++) {
-    array_types.push(i + 1)
+  let ringtonesArray = []
+  for (let i = 1; i <= device.attributes.nr_of_ringtones; i++) {
+    ringtonesArray.push(i)
   }
   return (
-    <div className='smart-siren-alarm'>
-      <div className='siren-alarm-control'>
-        <div className='siren-alarm-sensors'>
-          <div className='siren-alarm-sensor-item siren-alarm-temp-item'>
-            <FaTemperatureLow size={26} color='red' />
-            <p>{temperature} </p>
-            <RiCelsiusLine size={20} color='black' className='celsius-icon' />
-          </div>
-          <div className='siren-alarm-sensor-item'>
-            <WiHumidity size={35} color='blue' />
-            <p>{humidity}</p>
-            <AiOutlinePercentage size={20} />
-          </div>
+    <div className='smart-siren'>
+      <div className='siren-sensors'>
+        <div
+          className={
+            device.attributes.temp_hum_sensor
+              ? 'siren-sensor-item siren-temp-item'
+              : 'hidden'
+          }
+        >
+          <FaTemperatureLow size={26} color='red' />
+          <p>{temperature} </p>
+          <RiCelsiusLine size={20} color='black' className='celsius-icon' />
         </div>
         <div
           className={
-            status == 'ON'
-              ? 'siren-alarm-btn siren-alarm-active'
-              : 'siren-alarm-btn'
+            device.attributes.temp_hum_sensor ? 'siren-sensor-item' : 'hidden'
           }
+        >
+          <WiHumidity size={35} color='blue' />
+          <p>{humidity}</p>
+          <AiOutlinePercentage size={20} />
+        </div>
+      </div>
+      <div className='siren-control'>
+        <div className='siren-option'>
+          <div className='form-input-group'>
+            <label htmlFor='siren-select-sound-type'>Sound Type</label>
+            <Dropdown
+              id='siren-select-sound-type'
+              value={ringtone}
+              options={ringtonesArray}
+              onChange={(e) => {
+                setRingtone(e.target.value)
+                updateAlarmOptions(
+                  e.target.value,
+                  volume,
+                  debouncedSoundDuration
+                )
+              }}
+            />
+          </div>
+        </div>
+        <div
+          className={status == 'ON' ? 'siren-btn siren-active' : 'siren-btn'}
           onClick={() => sendChangePower('TOGGLE')}
         >
           {volumeIcon}
           <p
             className={
-              status == 'ON'
-                ? 'siren-alarm-btn-info siren-alarm-active'
-                : 'siren-alarm-btn-info'
+              status == 'ON' ? 'siren-btn-info siren-active' : 'siren-btn-info'
             }
           >
             Tap To Toggle
           </p>
         </div>
-        <div className='siren-alarm-options'>
-          <div className='form-group mt-3'>
-            <label htmlFor='select-sound-type'>Sound Type</label>
-            <select
-              id='select-sound-type'
-              className='form-select select-type'
-              aria-label='Default select example'
-              value={sound}
-              onChange={(e) => {
-                setSound(e.target.value)
-                updateAlarmOptions(
-                  e.target.value,
-                  debouncedVolume,
-                  debouncedSoundDuration
-                )
-              }}
-            >
-              {array_types.map((array_type, index) => {
-                return (
-                  <option key={index} value={array_type}>
-                    {`${array_type}`}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='input-sound-duration'>{'Duration (s)'}</label>
-            <input
-              id='input-sound-duration'
-              pattern='[0-9]{1,5}'
-              type='number'
-              min={1}
+        <div className='siren-option'>
+          <div className='form-input-group'>
+            <label htmlFor='siren-sound-duration-input'>{'Duration (s)'}</label>
+            <InputNumber
+              id='siren-sound-duration-input'
+              min={2}
               max={120}
-              className='form-control mt-1'
-              placeholder='Duration'
+              placeholder='Duration (s)'
               value={soundDuration}
-              onChange={(e) => {
-                setSoundDuration(e.target.value)
+              onValueChange={(e) => {
+                setSoundDuration(e.value)
               }}
             />
           </div>
         </div>
       </div>
-      <div className='siren-alarm-volume'>
-        <div className='volume-control-icon'>
-          <GrVolumeControl size={30} />
-        </div>
-        <Slider
-          min={0}
-          max={3}
-          value={inversedVolume}
-          step={1}
+      <div className='siren-volume'>
+        <label htmlFor='siren-volume-dropdown'>Volume</label>
+        <Dropdown
+          id='siren-volume-dropdown'
+          value={selectedVolumeLabel}
+          options={volumeLabels}
+          optionLabel='name'
           onChange={(e) => {
-            if (e.value != '0') {
-              setInversedVolume(e.value)
-            }
-            if (e.value == '3') {
-              setVolume(0)
-            } else if (e.value == '2') {
-              setVolume(1)
-            } else if (e.value == '1') {
-              setVolume(2)
-            }
+            setSelectedVolumeLabel(e.value)
+            updateAlarmOptions(
+              ringtone,
+              volumeMapper[e.value],
+              debouncedSoundDuration
+            )
           }}
-          style={{ width: '60%' }}
         />
       </div>
     </div>

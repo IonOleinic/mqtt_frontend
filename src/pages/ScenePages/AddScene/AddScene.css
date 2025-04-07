@@ -78,6 +78,7 @@
   font-size: 1rem;
   font-weight: bolder;
 }
+
 @media (max-width: 568px) {
   .add-scene {
     width: 95%;

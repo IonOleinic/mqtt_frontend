@@ -1,111 +1,98 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Dropdown } from 'primereact/dropdown'
+import { Message } from 'primereact/message'
+import { Button } from 'primereact/button'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import { VscError } from 'react-icons/vsc'
-import CheckMessage from '../../../../components/CheckMessage/CheckMessage'
-import UseAnimations from 'react-useanimations'
-import loading from 'react-useanimations/lib/loading'
 import SubSceneSmartStrip from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartStrip'
-import SubSceneDoorSensor from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneDoorSensor'
 import SubSceneSirenAlarm from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartIR'
 import SubSceneSmartLed from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartLed'
+import SubSceneDoorSensor from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneDoorSensor'
 import SubSceneMotionSensor from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneMotionSensor'
-import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import './AddDeviceScene.css'
+import { InputText } from 'primereact/inputtext'
 
-let iconSucces = <IoIosCheckmarkCircleOutline size='25px' color='green' />
-let iconError = <VscError className='icon-inside' color='red' size='25px' />
-let iconLoading = <UseAnimations animation={loading} size={40} />
 function AddSchedule() {
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
-  //validation info
-  const [checkmark, setCheckmark] = useState(false)
-  const [icon, setIcon] = useState(iconLoading)
-  const [message, setMessage] = useState('Loading...')
-  const [textColor, setTextColor] = useState('black')
-
   const [name, setName] = useState('')
+  //validation info
+  const [errorMsg, setErrorMsg] = useState('')
+  const [errorVisibility, setErrorVisibility] = useState(false)
+
   const [devices, setDevices] = useState([])
-  const [eventDeviceId, setEventDeviceId] = useState(undefined)
-  const [eventDeviceMqtt, setEventDeviceMqtt] = useState('')
-  const [actionDeviceId, setActionDeviceId] = useState(undefined)
+  const [selectedEventDevice, setSelectedEventDevice] = useState(undefined)
+  const [invalidEventDevice, setInvalidEventDevice] = useState(false)
+  const [invalidActionDevice, setInvalidActionDevice] = useState(false)
+  const [selectedActionDevice, setSelectedActionDevice] = useState(undefined)
+
   const [conditionalPayload, setConditionalPayload] = useState('OFF')
   const [executablePayload, setExecutablePayload] = useState('OFF')
   const [conditionalTopic, setConditionalTopic] = useState('')
   const [executableTopic, setExecutableTopic] = useState('')
   const [conditionalText, setConditionalText] = useState('')
   const [executableText, setExecutableText] = useState('')
-  const [subEventDevice, setSubEventDevice] = useState(<></>)
-  const [subActionDevice, setSubActionDevice] = useState(<></>)
+  const [subEventScene, setSubEventScene] = useState(<></>)
+  const [subActionScene, setSubActionScene] = useState(<></>)
 
-  const get_mqtt_name_by_id = (id) => {
-    let filtered_devices = devices.filter((device) => device.id == id)
-    return filtered_devices[0].mqtt_name
-  }
   const checkChoosedDevices = () => {
-    let event_device = document.getElementById('select-event-device')
-    let action_device = document.getElementById('select-action-device')
     if (conditionalTopic == '' || conditionalPayload == '') {
-      changeFieldStyle(event_device)
+      setErrorVisibility(true)
+      setErrorMsg('Device not implemented yet!')
+      setInvalidEventDevice(true)
       return false
     }
     if (executableTopic == '' || executablePayload == '') {
-      changeFieldStyle(action_device)
+      setErrorVisibility(true)
+      setErrorMsg('Device not implemented yet!')
+      setInvalidEventDevice(true)
       return false
     }
     return true
   }
   const checkAllFields = () => {
-    let event_device = document.getElementById('select-event-device')
-    let action_device = document.getElementById('select-action-device')
-    if (!eventDeviceId) {
-      changeFieldStyle(event_device)
+    if (!selectedEventDevice) {
+      setErrorVisibility(true)
+      setErrorMsg('Please select a device!')
+      setInvalidEventDevice(true)
       return false
     }
-    if (!actionDeviceId) {
-      changeFieldStyle(action_device)
+    if (!selectedActionDevice) {
+      setErrorVisibility(true)
+      setErrorMsg('Please select a device!')
+      setInvalidActionDevice(true)
       return false
+    }
+    if (selectedEventDevice && selectedActionDevice) {
+      if (selectedEventDevice?.id == selectedActionDevice?.id) {
+        setErrorVisibility(true)
+        setErrorMsg('Event and Action device cannot be the same!')
+        setInvalidEventDevice(true)
+        setInvalidActionDevice(true)
+        return false
+      }
     }
     return true
   }
-  const revertFieldStyle = (field) => {
-    field.style.backgroundColor = '#fff'
-  }
-  const changeFieldStyle = (field) => {
-    field.style.backgroundColor = 'pink'
-  }
-  const createDeviceScene = async () => {
+  const createDeviceScene = async (e) => {
+    e.preventDefault()
     if (checkAllFields() == false) {
-      setIcon(iconError)
-      setMessage('Please complete all fields!')
-      setTextColor('red')
-      setCheckmark(true)
       return
     }
     if (checkChoosedDevices() == false) {
-      setIcon(iconError)
-      setMessage('Device not implemented yet!')
-      setTextColor('red')
-      setCheckmark(true)
       return
     }
-    setIcon(iconLoading)
-    setMessage('Sending..')
-    setTextColor('black')
-    setCheckmark(true)
-
     let scene = {}
     scene.name = name ? name : 'scene_' + Math.random().toString(16).slice(2, 7)
     scene.scene_type = 'deviceScene'
-    scene.exec_device_id = Number(actionDeviceId)
+    scene.exec_device_id = selectedActionDevice.id
     scene.executable_topic = executableTopic
     scene.executable_payload = executablePayload
     scene.executable_text = executableText
     let attributes = {}
-    attributes.cond_device_mqtt = eventDeviceMqtt
-    attributes.cond_device_id = Number(eventDeviceId)
+    attributes.cond_device_mqtt = selectedEventDevice.mqtt_name
+    attributes.cond_device_id = selectedEventDevice.id
     attributes.conditional_topic = conditionalTopic
     attributes.conditional_payload = conditionalPayload
     attributes.conditional_text = conditionalText
@@ -115,213 +102,184 @@ function AddSchedule() {
       navigate('/scenes')
     } catch (error) {
       console.log(error)
-      setIcon(iconError)
-      setTextColor('red')
-      setMessage(error.response.data?.msg || 'Server error.Please Try again.')
+      setErrorVisibility(true)
+      setErrorMsg(error.response.data?.msg || 'Server error.Please Try again.')
     }
   }
-  async function getAllDevices() {
+  async function getDevices() {
     try {
       let result = await axios.get(`/devices`)
-      console.log(result.data)
-
       setDevices(result.data)
     } catch (error) {
       console.log(error.message)
     }
   }
   useEffect(() => {
-    getAllDevices()
+    getDevices()
   }, [])
-  useEffect(() => {
-    setCheckmark(false)
-  }, [
-    eventDeviceId,
-    actionDeviceId,
-    conditionalPayload,
-    executablePayload,
-    name,
-  ])
 
-  const chooseSubDevice = (device_id, event_or_action) => {
-    let sub_dev = <></>
-    for (let i = 0; i < devices.length; i++) {
-      if (devices[i].id == device_id) {
-        if (devices[i].device_type == 'smartStrip') {
-          sub_dev = (
-            <SubSceneSmartStrip
-              device={devices[i]}
-              setConditionalTopic={setConditionalTopic}
-              setConditionalPayload={setConditionalPayload}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setConditionalText={setConditionalText}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        } else if (devices[i].device_type == 'smartDoorSensor') {
-          sub_dev = (
-            <SubSceneDoorSensor
-              device={devices[i]}
-              setConditionalTopic={setConditionalTopic}
-              setConditionalPayload={setConditionalPayload}
-              setConditionalText={setConditionalText}
-            />
-          )
-        } else if (devices[i].device_type == 'smartSirenAlarm') {
-          sub_dev = (
-            <SubSceneSirenAlarm
-              device={devices[i]}
-              setConditionalTopic={setConditionalTopic}
-              setConditionalPayload={setConditionalPayload}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setConditionalText={setConditionalText}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        } else if (devices[i].device_type == 'smartIR') {
-          sub_dev = (
-            <SubSceneSmartIR
-              device={devices[i]}
-              setConditionalTopic={setConditionalTopic}
-              setConditionalPayload={setConditionalPayload}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setConditionalText={setConditionalText}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        } else if (devices[i].device_type == 'smartLed') {
-          sub_dev = (
-            <SubSceneSmartLed
-              device={devices[i]}
-              setConditionalTopic={setConditionalTopic}
-              setConditionalPayload={setConditionalPayload}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setConditionalText={setConditionalText}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        } else if (devices[i].device_type == 'smartMotionSensor') {
-          sub_dev = (
-            <SubSceneMotionSensor
-              device={devices[i]}
-              setConditionalTopic={setConditionalTopic}
-              setConditionalPayload={setConditionalPayload}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setConditionalText={setConditionalText}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        }
-      }
+  useEffect(() => {
+    setErrorVisibility(false)
+    setInvalidEventDevice(false)
+    setInvalidActionDevice(false)
+  }, [selectedEventDevice, selectedActionDevice])
+
+  const chooseSubScene = (device, eventOrAction) => {
+    let subScene = <></>
+    switch (device.device_type) {
+      case 'smartStrip':
+        subScene = (
+          <SubSceneSmartStrip
+            device={device}
+            setConditionalTopic={setConditionalTopic}
+            setConditionalPayload={setConditionalPayload}
+            setConditionalText={setConditionalText}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      case 'smartSirenAlarm':
+        subScene = (
+          <SubSceneSirenAlarm
+            device={device}
+            setConditionalTopic={setConditionalTopic}
+            setConditionalPayload={setConditionalPayload}
+            setConditionalText={setConditionalText}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      case 'smartIR':
+        subScene = (
+          <SubSceneSmartIR
+            device={device}
+            setConditionalTopic={setConditionalTopic}
+            setConditionalPayload={setConditionalPayload}
+            setConditionalText={setConditionalText}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      case 'smartLed':
+        subScene = (
+          <SubSceneSmartLed
+            device={device}
+            setConditionalTopic={setConditionalTopic}
+            setConditionalPayload={setConditionalPayload}
+            setConditionalText={setConditionalText}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      case 'smartDoorSensor':
+        subScene = (
+          <SubSceneDoorSensor
+            device={device}
+            setConditionalTopic={setConditionalTopic}
+            setConditionalPayload={setConditionalPayload}
+            setConditionalText={setConditionalText}
+          />
+        )
+        break
+      case 'smartMotionSensor':
+        subScene = (
+          <SubSceneMotionSensor
+            device={device}
+            setConditionalTopic={setConditionalTopic}
+            setConditionalPayload={setConditionalPayload}
+            setConditionalText={setConditionalText}
+          />
+        )
+        break
+      default:
+        subScene = <></>
+        break
     }
-    return sub_dev
+    return subScene
   }
+
   return (
-    <div className='Add-form-container'>
-      <form className='Add-form add-scene-form'>
-        <div className='Add-form-content'>
-          <h3 className='Add-form-title'>Add Device Scene</h3>
-          <div className='form-group mt-3'>
-            <label htmlFor='device-scene-name'>Name</label>
-            <input
-              id='device-scene-name'
-              type='text'
-              className='form-control mt-1'
-              placeholder='Scene name'
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value)
-              }}
-            />
+    <div className='add-form-container'>
+      <form className='add-form add-scene-form' onSubmit={createDeviceScene}>
+        <div className='add-form-content'>
+          <h3 className='add-form-title'>Add Device Scene</h3>
+          <div className='add-form-inputs'>
+            <div className='form-input-group'>
+              <label htmlFor='device-scene-name'>Name</label>
+              <InputText
+                id='device-scene-name'
+                type='text'
+                placeholder='Scene name'
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value)
+                }}
+              />
+            </div>
+            <div className='form-input-group'>
+              <label htmlFor='select-event-device'>Event Device</label>
+              <Dropdown
+                id='select-event-device'
+                value={selectedEventDevice}
+                invalid={invalidEventDevice}
+                optionLabel='name'
+                placeholder='Select Event Device'
+                options={devices}
+                onChange={(e) => {
+                  setSelectedEventDevice(e.value)
+                  setConditionalTopic('')
+                  setConditionalPayload('')
+                  setConditionalText('')
+                  setSubEventScene(chooseSubScene(e.value, 'event'))
+                }}
+              />
+            </div>
+            {subEventScene}
+            <div className='form-input-group'>
+              <label htmlFor='select-action-device'>Action Device</label>
+              <Dropdown
+                id='select-action-device'
+                value={selectedActionDevice}
+                invalid={invalidActionDevice}
+                optionLabel='name'
+                placeholder='Select Action Device'
+                options={devices.filter((device) => {
+                  return !device.read_only
+                })}
+                onChange={(e) => {
+                  setSelectedActionDevice(e.value)
+                  setExecutableTopic('')
+                  setExecutablePayload('')
+                  setExecutableText('')
+                  setSubActionScene(chooseSubScene(e.value, 'action'))
+                }}
+              />
+            </div>
+            {subActionScene}
           </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='select-event-device'>Event Device</label>
-            <select
-              value={eventDeviceId}
-              id='select-event-device'
-              className='form-select select-type'
-              aria-label='Default select example'
-              onChange={(e) => {
-                setConditionalTopic('')
-                setConditionalPayload('')
-                setEventDeviceId(e.target.value)
-                setEventDeviceMqtt(get_mqtt_name_by_id(e.target.value))
-                setSubEventDevice(chooseSubDevice(e.target.value, 'event'))
-                revertFieldStyle(e.target)
-              }}
-            >
-              <option value={undefined}>None</option>
-              {devices.map((device) => {
-                return (
-                  <option key={device.id} value={device.id}>
-                    {device.name}
-                  </option>
-                )
-              })}
-            </select>
+          <div
+            className={
+              errorVisibility
+                ? 'form-error-msg'
+                : 'form-error-msg form-error-msg-hidden'
+            }
+          >
+            <Message severity='error' text={errorMsg} />
           </div>
-          {subEventDevice}
-          <div className='form-group mt-3'>
-            <label htmlFor='select-action-device'>Action Device</label>
-            <select
-              value={actionDeviceId}
-              id='select-action-device'
-              className='form-select select-type'
-              aria-label='Default select example'
-              onChange={(e) => {
-                setExecutableTopic('')
-                setExecutablePayload('')
-                setActionDeviceId(e.target.value)
-                setSubActionDevice(chooseSubDevice(e.target.value, 'action'))
-                revertFieldStyle(e.target)
-              }}
-            >
-              <option value={undefined}>None</option>
-              {devices.map((device) => {
-                if (
-                  device.read_only == false &&
-                  device.id != eventDeviceId &&
-                  device.mqtt_name != eventDeviceMqtt
-                ) {
-                  return (
-                    <option key={device.id} value={device.id}>
-                      {device.name}
-                    </option>
-                  )
-                }
-              })}
-            </select>
-          </div>
-          {subActionDevice}
-          <div className='form-group mt-3 btn-form-container'>
-            <button
-              id='btn-set-time-schedule'
-              type='button'
-              className='btn btn-primary btn-set-scene'
-              onClick={() => {
-                createDeviceScene()
-              }}
-            >
-              Set
-            </button>
-          </div>
-          <div className='form-group mt-3'>
-            <CheckMessage
-              textColor={textColor}
-              visibility={checkmark}
-              icon={icon}
-              message={message}
-            />
+          <div className='form-input-group form-button-container'>
+            <Button label='Set' />
           </div>
         </div>
       </form>

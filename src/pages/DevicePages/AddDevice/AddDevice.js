@@ -16,6 +16,7 @@ import tasmotaLogoPng from './images/tasmota-logo-blue.png'
 import openBekenLogoPng from './images/openBeken-logo.png'
 import { toast } from 'react-toastify'
 import './AddDevice.css'
+import SubSiren from '../../../components/DeviceComponents/AddDeviceComponents/SubSiren/SubSiren'
 
 const tasmotaIcon = (
   <img src={tasmotaLogoPng} style={{ width: '20px', height: '20px' }} />
@@ -83,6 +84,7 @@ function AddDevice() {
     setIsFirstStepValid(isValid)
     return isValid
   }
+
   const validateSecondStep = () => {
     setResultMessage('')
     let isValid = false
@@ -150,7 +152,13 @@ function AddDevice() {
         subDevice = undefined
         break
       case 'smartSirenAlarm':
-        subDevice = undefined
+        subDevice = (
+          <SubSiren
+            mqttName={mqttName}
+            manufacter={selectedManufacter?.name}
+            setAttributes={setAttributes}
+          />
+        )
         break
       case 'smartMotionSensor':
         subDevice = undefined
@@ -192,16 +200,16 @@ function AddDevice() {
   }
 
   return (
-    <div className='device-stepper-container'>
+    <div className='dev-step-contn'>
       <Stepper
         ref={stepperRef}
         style={{ flexBasis: '50rem' }}
         orientation='vertical'
-        className='device-stepper'
+        className='dev-step'
       >
         <StepperPanel header='Initial Setup'>
-          <div className='content-container'>
-            <div className='initial-setup-container'>
+          <div className='dev-step-content'>
+            <div className='dev-step-initial-setup'>
               <div className='form-input-group'>
                 <label htmlFor='input-device-name'>Device Name</label>
                 <InputText
@@ -245,7 +253,7 @@ function AddDevice() {
               </div>
             </div>
           </div>
-          <div className='buttons'>
+          <div className='dev-step-buttons'>
             <Button
               label='Next'
               icon='pi pi-arrow-right'
@@ -262,19 +270,19 @@ function AddDevice() {
           </div>
         </StepperPanel>
         <StepperPanel header='Device Type'>
-          <div className='content-container'>
+          <div className='dev-step-content'>
             {isFirstStepValid ? (
-              <div className='all-groups-container'>
-                <div className='type-groups-container'>
-                  <p className='type-groups-title'>Base Groups</p>
-                  <div className='type-groups'>
+              <div className='dev-step-all-groups'>
+                <div className='dev-step-type-groups-contn'>
+                  <p className='dev-step-groups-title'>Base Groups</p>
+                  <div className='dev-step-type-groups'>
                     {typeGroups.map((group) => {
                       return (
                         <div
                           className={
                             group?.label == selectedTypeGroup?.label
-                              ? 'type-group type-group-selected'
-                              : 'type-group'
+                              ? 'dev-step-type-group dev-step-type-group-selected'
+                              : 'dev-step-type-group'
                           }
                           key={group.label}
                           onClick={() => {
@@ -288,17 +296,17 @@ function AddDevice() {
                     })}
                   </div>
                 </div>
-                <div className='sub-type-groups-container'>
-                  <p className='sub-type-groups-title'>Sub Groups</p>
+                <div className='dev-step-sub-type-groups-contn'>
+                  <p className='dev-step-groups-title'>Sub Groups</p>
                   {subTypeGroups?.length > 0 ? (
-                    <div className='sub-type-groups'>
+                    <div className='dev-step-sub-type-groups'>
                       {subTypeGroups.map((subTypeGroup) => {
                         return (
                           <div
                             className={
                               subTypeGroup?.label == selectedSubTypeGroup?.label
-                                ? 'sub-type-group sub-type-group-selected'
-                                : 'sub-type-group'
+                                ? 'dev-step-sub-type-group dev-step-sub-type-group-selected'
+                                : 'dev-step-sub-type-group'
                             }
                             key={subTypeGroup.label}
                             onClick={() =>
@@ -312,19 +320,19 @@ function AddDevice() {
                       })}
                     </div>
                   ) : (
-                    <div className='empty-sub-type-groups'>
+                    <div className='dev-step-empty-sub-type-groups'>
                       <p>Please select a base device group.</p>
                     </div>
                   )}
                 </div>
               </div>
             ) : (
-              <div className='previous-steps-required-container'>
+              <div className='dev-step-prev-steps-required'>
                 <p>Please complete previous step.</p>
               </div>
             )}
           </div>
-          <div className='buttons'>
+          <div className='dev-step-buttons'>
             <Button
               label='Back'
               severity='secondary'
@@ -352,19 +360,19 @@ function AddDevice() {
           </div>
         </StepperPanel>
         <StepperPanel header='Device Configuration'>
-          <div className='content-container'>
+          <div className='dev-step-content'>
             {isFirstStepValid && isSecondStepValid ? (
-              <div className='device-config-container'>
+              <div className='dev-step-device-config'>
                 <div
                   className={
                     subDevice === undefined
-                      ? 'sub-device-container-hidden'
-                      : 'sub-device-container'
+                      ? 'dev-step-sub-device-contn-hidden'
+                      : 'dev-step-sub-device-contn'
                   }
                 >
                   {subDevice}
                 </div>
-                <div className='select-group-container'>
+                <div className='dev-step-select-group-contn'>
                   <div className='form-input-group'>
                     <label htmlFor='select-device-group'>Add to a group</label>
                     <Dropdown
@@ -382,12 +390,12 @@ function AddDevice() {
                 </div>
               </div>
             ) : (
-              <div className='previous-steps-required-container'>
+              <div className='dev-step-prev-steps-required'>
                 <p>Please complete previous steps.</p>
               </div>
             )}
           </div>
-          <div className='buttons'>
+          <div className='dev-step-buttons'>
             <Button
               label='Back'
               severity='secondary'
@@ -410,90 +418,93 @@ function AddDevice() {
           </div>
         </StepperPanel>
         <StepperPanel header='Finish'>
-          <div className='content-container'>
-            {isFirstStepValid && isSecondStepValid ? (
-              <div className='summarised-data-container'>
-                <div className='summarised-title'>
-                  <p>Summarised Options:</p>
-                </div>
-                <div className='summarised-data'>
-                  <div className='summarised-data-row'>
-                    <label>Device Name:</label>
-                    <p>{name || '?'}</p>
+          <div className='dev-step-content'>
+            <div className='dev-step-summar-data-contn'>
+              {isFirstStepValid && isSecondStepValid ? (
+                <div className='dev-step-summar-data'>
+                  <div className='dev-step-summar-title'>
+                    <p>Summarised Options:</p>
                   </div>
-                  <div className='summarised-data-row'>
-                    <label>MQTT Name:</label>
-                    <p>{mqttName}</p>
-                  </div>
-                  <div className='summarised-data-row'>
-                    <label>Manufacter:</label>
-                    {selectedManufacter?.icon}
-                    <p>{selectedManufacter?.name}</p>
-                  </div>
-                  <div className='summarised-data-row'>
-                    <label>Type:</label>
-                    <p>{selectedTypeGroup?.label}</p>
-                  </div>
-                  <div className='summarised-data-row'>
-                    <label>Subtype:</label>
-                    {selectedSubTypeGroup?.icon}
-                    <p>{selectedSubTypeGroup?.label}</p>
-                  </div>
-                  <div className='summarised-data-row'>
-                    <label>Group:</label>
-                    <p>{selectedGroup?.name}</p>
+                  <div className='dev-step-summar-data'>
+                    <div className='dev-step-summar-data-row'>
+                      <label>Device Name:</label>
+                      <p>{name || '?'}</p>
+                    </div>
+                    <div className='dev-step-summar-data-row'>
+                      <label>MQTT Name:</label>
+                      <p>{mqttName}</p>
+                    </div>
+                    <div className='dev-step-summar-data-row'>
+                      <label>Manufacter:</label>
+                      {selectedManufacter?.icon}
+                      <p>{selectedManufacter?.name}</p>
+                    </div>
+                    <div className='dev-step-summar-data-row'>
+                      <label>Type:</label>
+                      <p>{selectedTypeGroup?.label}</p>
+                    </div>
+                    <div className='dev-step-summar-data-row'>
+                      <label>Subtype:</label>
+                      {selectedSubTypeGroup?.icon}
+                      <p>{selectedSubTypeGroup?.label}</p>
+                    </div>
+                    <div className='dev-step-summar-data-row'>
+                      <label>Group:</label>
+                      <p>{selectedGroup?.name}</p>
+                    </div>
+                    <div
+                      className={
+                        Object.keys(attributes).length > 0 &&
+                        selectedSubTypeGroup?.type !== 'smartIR'
+                          ? 'dev-step-summar-data-row dev-step-summar-attr-row'
+                          : 'hidden'
+                      }
+                    >
+                      <label>Attributes:</label>
+                      <div className='dev-step-summar-attr'>
+                        {Object.keys(attributes).map((attributeKey, index) => {
+                          return (
+                            <div
+                              className={
+                                attributes[attributeKey] !== undefined &&
+                                typeof attributes[attributeKey] !== 'object'
+                                  ? 'dev-step-attribute-data-row'
+                                  : 'hidden'
+                              }
+                              key={index}
+                            >
+                              <p>
+                                {attributeKey.toString()?.replaceAll('_', ' ')}
+                              </p>
+                              <p>:</p>
+                              <p>
+                                {attributes[attributeKey]
+                                  ?.toString()
+                                  .replace('true', 'Yes')
+                                  .replace('false', 'No')}
+                              </p>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
                   </div>
                   <div
                     className={
-                      Object.keys(attributes).length > 0 &&
-                      selectedSubTypeGroup?.type !== 'smartIR'
-                        ? 'summarised-data-row summarised-attributes-row'
-                        : 'hidden'
+                      resultMessage ? 'dev-step-res-msg-contn' : 'hidden'
                     }
                   >
-                    <label>Attributes:</label>
-                    <div className='summarised-attributes'>
-                      {Object.keys(attributes).map((attributeKey, index) => {
-                        return (
-                          <div
-                            className={
-                              attributes[attributeKey] !== undefined
-                                ? 'attribute-data-row'
-                                : 'hidden'
-                            }
-                            key={index}
-                          >
-                            <p>
-                              {attributeKey.toString()?.replaceAll('_', ' ')}
-                            </p>
-                            <p>:</p>
-                            <p>
-                              {attributes[attributeKey]
-                                ?.toString()
-                                .replace('true', 'Yes')
-                                .replace('false', 'No')}
-                            </p>
-                          </div>
-                        )
-                      })}
-                    </div>
+                    <Message severity='error' text={resultMessage} />
                   </div>
                 </div>
-                <div
-                  className={
-                    resultMessage ? 'result-message-container' : 'hidden'
-                  }
-                >
-                  <Message severity='error' text={resultMessage} />
+              ) : (
+                <div className='dev-step-prev-steps-required'>
+                  <p>Please complete previous steps.</p>
                 </div>
-              </div>
-            ) : (
-              <div className='previous-steps-required-container'>
-                <p>Please complete previous steps.</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-          <div className='buttons'>
+          <div className='dev-step-buttons'>
             <Button
               label='Back'
               severity='secondary'

@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { Dropdown } from 'primereact/dropdown'
 
 function SubSceneMotionSensor({
   device,
@@ -6,43 +7,35 @@ function SubSceneMotionSensor({
   setConditionalPayload,
   setConditionalText,
 }) {
+  const [state, setState] = useState('Motion Start')
   useEffect(() => {
     setConditionalTopic(device.attributes.receive_status_topic)
-    if (device.manufacter == 'tasmota') {
-      setConditionalPayload('ON')
-    } else if (device.manufacter == 'openBeken') {
-      setConditionalPayload('1')
+    setConditionalText(state)
+    if (state == 'Motion Start') {
+      if (device.manufacter == 'tasmota') {
+        setConditionalPayload('ON')
+      } else if (device.manufacter == 'openBeken') {
+        setConditionalPayload('1')
+      }
+    } else if (state == 'Motion End') {
+      if (device.manufacter == 'tasmota') {
+        setConditionalPayload('OFF')
+      } else if (device.manufacter == 'openBeken') {
+        setConditionalPayload('0')
+      }
     }
-    setConditionalText(`Motion`)
-  }, [])
+  }, [state])
   return (
-    <div className='form-group mt-3'>
-      <label htmlFor='select-event-state'>Motion State</label>
-      <select
-        id='select-event-state'
-        className='form-select select-type'
-        aria-label='Default select example'
+    <div className='form-input-group'>
+      <label htmlFor='sub-motion-state-dropdown'>Motion State</label>
+      <Dropdown
+        id='sub-motion-state-dropdown'
+        value={state}
+        options={['Motion Start', 'Motion End']}
         onChange={(e) => {
-          if (e.target.value == 'ON') {
-            if (device.manufacter == 'tasmota') {
-              setConditionalPayload('ON')
-            } else if (device.manufacter == 'openBeken') {
-              setConditionalPayload('1')
-            }
-            setConditionalText(`Motion`)
-          } else {
-            if (device.manufacter == 'tasmota') {
-              setConditionalPayload('OFF')
-            } else if (device.manufacter == 'openBeken') {
-              setConditionalPayload('0')
-            }
-            setConditionalText(`No Motion`)
-          }
+          setState(e.target.value)
         }}
-      >
-        <option value='ON'>Motion</option>
-        <option value='OFF'>No Motion</option>
-      </select>
+      />
     </div>
   )
 }

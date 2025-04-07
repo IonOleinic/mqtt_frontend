@@ -1,4 +1,4 @@
-.smart-siren-alarm {
+.smart-siren {
   width: 100%;
   background: transparent;
   display: flex;
@@ -7,43 +7,45 @@
   justify-content: center;
   min-height: 160px;
   position: relative;
-  gap: 1rem;
+  height: 100%;
 }
-.siren-alarm-control {
+.siren-sensors {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 15px;
+  height: 40px;
+}
+.siren-sensor-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 35px;
+}
+.siren-sensor-item p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+.siren-temp-item p {
+  margin: 0 0.2rem;
+}
+
+.siren-control {
   justify-content: space-between;
   width: 100%;
   display: flex;
   align-items: center;
-  height: 160px;
+  height: 130px;
 }
-.siren-alarm-sensors {
+.siren-volume {
   display: flex;
-  height: 100%;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  gap: 0.5rem;
+  flex-direction: column;
 }
-.siren-alarm-sensor-item {
-  /* width: 100%; */
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  /* margin: 0.5rem 0rem; */
-}
-.siren-alarm-temp-item {
-  margin-left: 0.8rem;
-}
-
-.siren-alarm-sensor-item p {
-  margin: 0;
-  margin-left: 0.3rem;
-  font-size: 1.1rem;
-  font-weight: 400;
-}
-
-.siren-alarm-btn {
+.siren-btn {
   padding: 0.8rem;
   width: 110px;
   height: 110px;
@@ -51,44 +53,38 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
+  border: 2px solid black;
   border-radius: 50%;
   color: black;
+  user-select: none;
 }
-.siren-alarm-btn-info {
-  border-top: 1px solid black;
+.siren-btn-info {
+  border-top: 2px solid black;
   margin: 0;
   margin-top: 0.5rem;
   padding-top: 0.4rem;
   font-size: 0.8rem;
   color: inherit;
 }
-.siren-alarm-active {
+.siren-active {
   border-color: var(--active-color);
   color: var(--active-color);
 }
-.siren-alarm-btn:hover {
+.siren-btn:hover {
   background-color: #efefef;
   cursor: pointer;
 }
-.siren-alarm-btn:active {
+.siren-btn:active {
   background-color: #d4d4d4;
 }
-.siren-alarm-options {
-  width: 90px;
+.siren-option {
+  width: 100px;
   max-height: 100%;
-  /* margin-left: 0.7rem; */
-}
-.siren-alarm-options select,
-.siren-alarm-options input {
-  width: 90%;
-}
-.siren-alarm-volume {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 250px;
 }
-.volume-control-icon {
-  margin-right: 0.4rem;
+.siren-option > div,
+.siren-option input {
+  width: 94%;
 }

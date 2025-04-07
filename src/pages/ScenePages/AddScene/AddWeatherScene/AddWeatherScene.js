@@ -1,67 +1,50 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { InputText } from 'primereact/inputtext'
+import { Dropdown } from 'primereact/dropdown'
+import { Message } from 'primereact/message'
+import { Button } from 'primereact/button'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import { VscError } from 'react-icons/vsc'
-import CheckMessage from '../../../../components/CheckMessage/CheckMessage'
-import UseAnimations from 'react-useanimations'
-import loading from 'react-useanimations/lib/loading'
 import SubSceneSmartStrip from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartStrip'
 import SubSceneSirenAlarm from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartIR'
 import SubSceneSmartLed from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartLed'
 import useWeatherData from '../../../../hooks/useWeatherData'
-import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import './AddWeatherScene.css'
-
-let iconSucces = <IoIosCheckmarkCircleOutline size='25px' color='green' />
-let iconError = <VscError className='icon-inside' color='red' size='25px' />
-let iconLoading = <UseAnimations animation={loading} size={40} />
+import { InputNumber } from 'primereact/inputnumber'
 
 function AddWeatherScene() {
   const axios = useAxiosPrivate()
   const { userLocation } = useWeatherData()
   const navigate = useNavigate()
-  //validation info
-  const [checkmark, setCheckmark] = useState(false)
-  const [icon, setIcon] = useState(iconLoading)
-  const [message, setMessage] = useState('Loading...')
-  const [textColor, setTextColor] = useState('black')
-
   const [name, setName] = useState('')
+  // validation info
+  const [errorMsg, setErrorMsg] = useState('')
+  const [errorVisibility, setErrorVisibility] = useState(false)
+
   const [devices, setDevices] = useState([])
   const [comparisonSign, setComparisonSign] = useState('>=')
   const [targetTemperature, setTargetTemperature] = useState(10)
   //executable device
-  const [deviceId, setDeviceId] = useState(undefined)
+  const [selectedDevice, setSelectedDevice] = useState(undefined)
+  const [invalidSelectedDevice, setInvalidSelectedDevice] = useState(false)
   const [executableTopic, setExecutableTopic] = useState('')
   const [executablePayload, setExecutablePayload] = useState('OFF')
   const [executableText, setExecutableText] = useState('')
-  const [subActionDevice, setSubActionDevice] = useState(<></>)
+  const [subActionScene, setSubActionScene] = useState(<></>)
 
-  const revertFieldStyle = (field) => {
-    field.style.backgroundColor = '#fff'
-  }
-  const changeFieldStyle = (field) => {
-    field.style.backgroundColor = 'pink'
-  }
   const checkAllFields = () => {
-    let device = document.getElementById('select-device')
-    if (!deviceId) {
-      changeFieldStyle(device)
+    if (!selectedDevice) {
+      setErrorVisibility(true)
+      setErrorMsg('Please select a device!')
+      setInvalidSelectedDevice(true)
       return false
     }
     return true
   }
-  const createWeatherScene = async () => {
-    setIcon(iconLoading)
-    setMessage('Sending..')
-    setTextColor('black')
-    setCheckmark(true)
+  const createWeatherScene = async (e) => {
+    e.preventDefault()
     if (checkAllFields() == false) {
-      setIcon(iconError)
-      setMessage('Please complete all fields !')
-      setTextColor('red')
-      setCheckmark(true)
       return
     }
     let scene = {}
@@ -69,7 +52,7 @@ function AddWeatherScene() {
       ? name
       : 'weather_' + Math.random().toString(16).slice(2, 7)
     scene.scene_type = 'weather'
-    scene.exec_device_id = Number(deviceId)
+    scene.exec_device_id = selectedDevice.id
     scene.executable_topic = executableTopic
     scene.executable_payload = executablePayload
     scene.executable_text = executableText
@@ -83,12 +66,11 @@ function AddWeatherScene() {
       navigate('/scenes')
     } catch (error) {
       console.log(error)
-      setIcon(iconError)
-      setTextColor('red')
-      setMessage(error.response.data?.msg || 'Server error.Please Try again.')
+      setErrorVisibility(true)
+      setErrorMsg(error.response.data?.msg || 'Server error.Please Try again.')
     }
   }
-  async function getAllDevices() {
+  async function getDevices() {
     try {
       let result = await axios.get(`/devices`)
       setDevices(result.data)
@@ -96,176 +78,154 @@ function AddWeatherScene() {
       console.log(error.message)
     }
   }
-  const chooseSubDevice = (device_id, event_or_action) => {
-    let sub_dev = <></>
-    for (let i = 0; i < devices.length; i++) {
-      if (devices[i].id == device_id) {
-        if (devices[i].device_type == 'smartStrip') {
-          sub_dev = (
-            <SubSceneSmartStrip
-              device={devices[i]}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        } else if (devices[i].device_type == 'smartSirenAlarm') {
-          sub_dev = (
-            <SubSceneSirenAlarm
-              device={devices[i]}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        } else if (devices[i].device_type == 'smartIR') {
-          sub_dev = (
-            <SubSceneSmartIR
-              device={devices[i]}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        } else if (devices[i].device_type == 'smartLed') {
-          sub_dev = (
-            <SubSceneSmartLed
-              device={devices[i]}
-              setExecutableTopic={setExecutableTopic}
-              setExecutablePayload={setExecutablePayload}
-              setExecutableText={setExecutableText}
-              event_or_action={event_or_action}
-            />
-          )
-        }
-      }
+  const chooseSubScene = (device, eventOrAction) => {
+    let subScene = <></>
+    switch (device.device_type) {
+      case 'smartStrip':
+        subScene = (
+          <SubSceneSmartStrip
+            device={device}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      case 'smartSirenAlarm':
+        subScene = (
+          <SubSceneSirenAlarm
+            device={device}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      case 'smartIR':
+        subScene = (
+          <SubSceneSmartIR
+            device={device}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      case 'smartLed':
+        subScene = (
+          <SubSceneSmartLed
+            device={device}
+            setExecutableTopic={setExecutableTopic}
+            setExecutablePayload={setExecutablePayload}
+            setExecutableText={setExecutableText}
+            eventOrAction={eventOrAction}
+          />
+        )
+        break
+      default:
+        subScene = <></>
+        break
     }
-    return sub_dev
+    return subScene
   }
   useEffect(() => {
-    getAllDevices()
+    getDevices()
   }, [])
+
   useEffect(() => {
-    setCheckmark(false)
-  }, [deviceId, name])
+    setErrorVisibility(false)
+    setInvalidSelectedDevice(false)
+  }, [selectedDevice, name])
 
   return (
-    <div className='Add-form-container'>
-      <form className='Add-form'>
-        <div className='Add-form-content'>
-          <h3 className='Add-form-title'>Add Weather Scene</h3>
-          <div className='form-group mt-3'>
-            <label htmlFor='wheater-scene-name'>Name</label>
-            <input
-              id='wheater-scene-name'
-              type='text'
-              className='form-control mt-1'
-              placeholder='Wheater scene name'
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value)
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-            }}
-          >
-            <div
-              className='form-group mt-3'
-              style={{
-                width: '45%',
-              }}
-            >
-              <label htmlFor='select-comparison-sign'>Sign</label>
-              <select
-                id='select-comparison-sign'
-                className='form-select select-type'
-                aria-label='Default select example'
+    <div className='add-form-container'>
+      <form className='add-form' onSubmit={createWeatherScene}>
+        <div className='add-form-content'>
+          <h3 className='add-form-title'>Add Weather Scene</h3>
+          <div className='add-form-inputs'>
+            <div className='form-input-group'>
+              <label htmlFor='add-wheater-name-input'>Name</label>
+              <InputText
+                id='add-wheater-name-input'
+                type='text'
+                placeholder='Wheater scene name'
+                value={name}
                 onChange={(e) => {
-                  setComparisonSign(e.target.value)
-                }}
-                value={comparisonSign}
-              >
-                <option value='>'>{'>'}</option>
-                <option value='>='>{'>='}</option>
-                <option value='='>{'='}</option>
-                <option value='<'>{'<'}</option>
-                <option value='<='>{'<='}</option>
-              </select>
-            </div>
-            <div
-              className='form-group mt-3'
-              style={{
-                width: '45%',
-              }}
-            >
-              <label htmlFor='wheater-scene-temp'>Temperature</label>
-              <input
-                id='wheater-scene-temp'
-                type='Number'
-                min={-30}
-                max={50}
-                className='form-control mt-1'
-                placeholder='Temperature'
-                value={targetTemperature}
-                onChange={(e) => {
-                  setTargetTemperature(e.target.value)
+                  setName(e.target.value)
                 }}
               />
             </div>
+            <div className='form-input-group-inline'>
+              <div
+                className='form-input-group'
+                style={{
+                  width: '45%',
+                }}
+              >
+                <label htmlFor='add-wheater-sign-dropdown'>Sign</label>
+                <Dropdown
+                  id='add-wheater-sign-dropdown'
+                  value={comparisonSign}
+                  options={['>', '>=', '=', '<', '<=']}
+                  placeholder='Select a sign'
+                  onChange={(e) => {
+                    setComparisonSign(e.target.value)
+                  }}
+                />
+              </div>
+              <div
+                className='form-input-group'
+                style={{
+                  width: '45%',
+                }}
+              >
+                <label htmlFor='add-wheater-temp-input'>Temperature</label>
+                <InputNumber
+                  id='add-wheater-temp-input'
+                  type='Number'
+                  min={-30}
+                  max={50}
+                  placeholder='Temperature'
+                  value={targetTemperature}
+                  onValueChange={(e) => {
+                    setTargetTemperature(e.target.value)
+                  }}
+                />
+              </div>
+            </div>
+            <div className='form-input-group'>
+              <label htmlFor='add-weather-device-dropdown'>Device</label>
+              <Dropdown
+                id='add-weather-device-dropdown'
+                optionLabel='name'
+                placeholder='Select a device'
+                value={selectedDevice}
+                options={devices.filter((device) => {
+                  return !device.read_only
+                })}
+                invalid={invalidSelectedDevice}
+                onChange={(e) => {
+                  setSelectedDevice(e.value)
+                  setSubActionScene(chooseSubScene(e.value, 'action'))
+                }}
+              />
+            </div>
+            {subActionScene}
           </div>
-          <div className='form-group mt-3'>
-            <label htmlFor='select-device'>Device</label>
-            <select
-              value={deviceId}
-              id='select-device'
-              className='form-select select-type'
-              aria-label='Default select example'
-              onChange={(e) => {
-                setDeviceId(e.target.value)
-                setSubActionDevice(chooseSubDevice(e.target.value, 'action'))
-                revertFieldStyle(e.target)
-              }}
-            >
-              <option value={undefined}>None</option>
-              {devices.map((device) => {
-                if (device.read_only == false)
-                  return (
-                    <option key={device.id} value={device.id}>
-                      {device.name}
-                    </option>
-                  )
-              })}
-            </select>
+          <div
+            className={
+              errorVisibility
+                ? 'form-error-msg'
+                : 'form-error-msg form-error-msg-hidden'
+            }
+          >
+            <Message severity='error' text={errorMsg} />
           </div>
-          {subActionDevice}
-          <div className='form-group mt-3 btn-form-container'>
-            <button
-              id='btn-set-scene'
-              type='button'
-              className='btn btn-primary btn-set-scene'
-              onClick={() => {
-                createWeatherScene()
-              }}
-            >
-              Set
-            </button>
-          </div>
-          <div className='form-group mt-3'>
-            <CheckMessage
-              textColor={textColor}
-              visibility={checkmark}
-              icon={icon}
-              message={message}
-            />
+          <div className='form-input-group form-button-container'>
+            <Button label='Set' />
           </div>
         </div>
       </form>
