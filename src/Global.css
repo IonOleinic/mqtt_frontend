@@ -56,7 +56,6 @@
   left: 0;
   width: 100%;
   overflow: hidden;
-  max-height: 10rem;
   height: var(--toolbar-height);
   padding: 0.2rem 2rem;
   display: flex;
@@ -186,11 +185,14 @@
 /* vertical menu */
 .vertical-menu {
   margin: 0;
-  margin-left: 0.3rem;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: transparent;
   user-select: none;
-  padding: 0.4rem;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   transition: background-color 0.3s ease-in-out;
 }
@@ -202,8 +204,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 25px;
-  height: 25px;
 }
 @media (max-width: 568px) {
   .toolbar {
@@ -328,14 +328,16 @@
 }
 .auth-invalid-input-msg {
   display: flex;
-  align-items: center;
   gap: 5px;
   padding-left: 0.3rem;
   width: 100%;
   max-height: 50px;
   transition: all 0.4s ease-in-out;
   color: red;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+}
+.auth-invalid-input-msg svg {
+  margin-top: 3px;
 }
 .auth-invalid-input-msg-hidden {
   max-height: 0;

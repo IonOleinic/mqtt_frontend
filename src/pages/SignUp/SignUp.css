@@ -3,3 +3,7 @@
   align-items: center;
   gap: 3px;
 }
+.sign-up-gender-radio-group {
+  justify-content: flex-start;
+  gap: 10px;
+}

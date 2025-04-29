@@ -25,7 +25,7 @@ function Device({ handleDeleteDevice, initDevice }) {
 
   const updateDevice = async () => {
     try {
-      let response = await axios.put(`/device/${device.id}`, device)
+      const response = await axios.put(`/device/${device.id}`, device)
       setDevice(response.data)
     } catch (error) {
       console.log(error)
@@ -158,10 +158,10 @@ function Device({ handleDeleteDevice, initDevice }) {
             onClick={(e) => menuRight.current.toggle(e)}
             className='vertical-menu-dots'
           >
-            <FiMoreVertical size={25} />
+            <FiMoreVertical size={26} />
           </span>
         </div>
-        <button className='device-expand'>
+        <button className='device-details-button'>
           <CgArrowTopRightR size={20} />
         </button>
         <div className='device-status-icons'>

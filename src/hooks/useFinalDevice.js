@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import SmartSirenAlarm from '../components/DeviceComponents/Device/SmartAlarmSiren/SmartSirenAlarm'
 import SmartLed from '../components/DeviceComponents/Device/SmartLed/SmartLed'
 import SmartMotionSensor from '../components/DeviceComponents/Device/SmartMotionSensor/SmartMotionSensor'
-import SmartStrip from '../components/DeviceComponents/Device/SmartStrip/SmartStrip'
+import SmartSwitch from '../components/DeviceComponents/Device/SmartSwitch/SmartSwitch'
 import SmartIR from '../components/DeviceComponents/Device/SmartIR/SmartIR'
 import SmartTempSensor from '../components/DeviceComponents/Device/SmartTempSensor/SmartTempSensor'
 import SmartDoorSensor from '../components/DeviceComponents/Device/SmartDoorSensor/SmartDoorSensor'
@@ -14,7 +14,7 @@ function useFinalDevice(device) {
     const loadFinalDevice = async () => {
       try {
         if (device.device_type === 'smartStrip') {
-          setFinalDevice(<SmartStrip device={device} />)
+          setFinalDevice(<SmartSwitch device={device} />)
         } else if (device.device_type === 'smartIR') {
           setFinalDevice(<SmartIR device={device} />)
         } else if (device.device_type === 'smartTempSensor') {

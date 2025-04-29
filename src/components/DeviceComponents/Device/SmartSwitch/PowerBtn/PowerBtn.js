@@ -9,7 +9,6 @@ const PowerBtn = ({ isChecked, size, handlePower, id }) => {
       onClick={() => {
         handlePower(id)
       }}
-      color={isChecked ? 'black' : '#ccc'}
     >
       <FaPowerOff size={size} />
     </button>

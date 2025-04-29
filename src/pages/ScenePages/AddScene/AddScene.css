@@ -40,12 +40,12 @@
 }
 .add-scene-menu-item:hover {
   border: 1px solid var(--hover-color);
-  background-color: var(--very-light-purple);
+  background-color: var(--hover-color-tran);
   cursor: pointer;
 }
 .add-scene-menu-item:focus {
-  background-color: var(--very-light-purple);
   border: 1px solid var(--hover-color);
+  background-color: var(--hover-color-tran);
 }
 .add-scene-menu-item img {
   height: 100%;

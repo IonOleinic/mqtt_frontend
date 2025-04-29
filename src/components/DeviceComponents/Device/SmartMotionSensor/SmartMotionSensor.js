@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react'
-import no_motion_img from './MotionSensorImages/no_motion_img.jpg'
-import motion_img from './MotionSensorImages/motion_img.jpg'
+import MotionImage from './MotionSensorImages/MotionImage'
+import NoMotionImage from './MotionSensorImages/NoMotionImage'
 import './SmartMotionSensor.css'
 
 function SmartMotionSensor({ device }) {
   const [status, setStatus] = useState('No Motion')
-  const [statusImg, setStatusImg] = useState(no_motion_img)
+  const [statusImg, setStatusImg] = useState(
+    <NoMotionImage color={'black'} size={200} />
+  )
   useEffect(() => {
     setStatus(device.attributes.status)
     if (device.attributes.status == 'Motion') {
-      setStatusImg(motion_img)
+      setStatusImg(<MotionImage color={'black'} size={200} />)
     } else {
-      setStatusImg(no_motion_img)
+      setStatusImg(<NoMotionImage color={'black'} size={200} />)
     }
   }, [device])
 
   return (
     <div className='smart-motion-sensor'>
-      <div className='motion-sensor-image'>
-        <img src={statusImg} alt='Motion Sensor Img' />
-      </div>
-      <div className='display-motion-status'>
+      <div className='motion-image-container'>{statusImg}</div>
+      <div className='motion-status-container'>
         <p style={{ color: status == 'Motion' ? 'red' : 'black' }}>
           {status == 'Motion' ? 'Motion Detected !' : 'No Motion'}
         </p>

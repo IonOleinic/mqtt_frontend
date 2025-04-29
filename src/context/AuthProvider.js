@@ -13,6 +13,9 @@ export const AuthProvider = ({ children }) => {
       logout()
     }
   }, [])
+  useEffect(() => {
+    localStorage.setItem('persist', JSON.stringify(persist))
+  }, [persist])
 
   return (
     <AuthContext.Provider value={{ auth, setAuth, persist, setPersist }}>

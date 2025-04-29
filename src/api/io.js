@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 import { serverPort, serverURL } from './api.js'
-let socket = undefined
+let socket = null
 
 function initSocket(__bool) {
   if (__bool) {

@@ -30,6 +30,8 @@ function SignUp() {
 
   const [errorMsg, setErrorMsg] = useState('')
   const [errorVisibility, setErrorVisibility] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [disabledRegBtn, setDisabledRegBtn] = useState(true)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -63,9 +65,19 @@ function SignUp() {
     setErrorVisibility(false)
   }, [name, email, password, confirmPassword])
 
+  useEffect(() => {
+    if (validEmail && validName && validPassword && validConfirmPassword) {
+      setDisabledRegBtn(false)
+    } else {
+      setDisabledRegBtn(true)
+    }
+  }, [validEmail, validName, validPassword, validConfirmPassword])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (validEmail && validEmail && validPassword && validConfirmPassword)
+    if (validEmail && validName && validPassword && validConfirmPassword) {
+      setLoading(true)
+      setErrorVisibility(false)
       try {
         const response = await axios.post('/register', {
           name,
@@ -77,8 +89,10 @@ function SignUp() {
           login(email, password)
         }
       } catch (error) {
-        console.log(error)
         setErrorVisibility(true)
+        if (!error.response) {
+          setErrorMsg('No server response!')
+        }
         if (error.response.status === 409) {
           setValidEmail(false)
           emailRef.current.focus()
@@ -86,11 +100,15 @@ function SignUp() {
         } else if (error.response.status === 500) {
           setErrorMsg('Server Error. Please try again.')
         }
+        console.log(error)
+      } finally {
+        setLoading(false)
       }
+    }
   }
   const login = async (email, password) => {
     try {
-      const response = await axios.post(`./login`, { email, password })
+      const response = await axios.post(`/login`, { email, password })
       setAuth((prev) => {
         return {
           ...prev,
@@ -115,8 +133,9 @@ function SignUp() {
             <div className='form-input-group auth-form-input-group'>
               <label htmlFor='sign-up-name-input'>Name</label>
               <InputText
-                required
                 id='sign-up-name-input'
+                required
+                disabled={loading}
                 invalid={!validName}
                 placeholder='Enter name'
                 value={name}
@@ -137,10 +156,11 @@ function SignUp() {
             </div>
             <div className='form-input-group auth-form-input-group'>
               <label>Gender</label>
-              <div className='form-input-group-inline'>
+              <div className='form-input-group-inline sign-up-gender-radio-group'>
                 <div className='sign-up-radio-button'>
                   <RadioButton
                     inputId='sign-up-male-radio'
+                    disabled={loading}
                     value='male'
                     checked={gender === 'male' ? true : false}
                     onChange={(e) => {
@@ -151,6 +171,7 @@ function SignUp() {
                 </div>
                 <div className='sign-up-radio-button'>
                   <RadioButton
+                    disabled={loading}
                     inputId='sign-up-female-radio'
                     value='female'
                     checked={gender === 'female' ? true : false}
@@ -167,6 +188,7 @@ function SignUp() {
               <InputText
                 ref={emailRef}
                 required
+                disabled={loading}
                 id='sign-up-email-input'
                 type='email'
                 invalid={!validEmail}
@@ -190,8 +212,9 @@ function SignUp() {
             <div className='form-input-group auth-form-input-group'>
               <label htmlFor='sign-up-password-input'>Password</label>
               <InputText
-                required
                 id='sign-up-password-input'
+                required
+                disabled={loading}
                 type='password'
                 invalid={!validPassword}
                 placeholder='Enter password'
@@ -219,8 +242,9 @@ function SignUp() {
                 Confirm Password
               </label>
               <InputText
-                required
                 id='sign-up-conf-password-input'
+                required
+                disabled={loading}
                 type={'password'}
                 invalid={!validConfirmPassword}
                 placeholder='Confirm password'
@@ -243,20 +267,25 @@ function SignUp() {
           </div>
           <div
             className={
-              errorVisibility ? 'auth-error' : 'auth-error auth-error-hidden'
+              errorVisibility
+                ? 'form-error-msg'
+                : 'form-error-msg form-error-msg-hidden'
             }
           >
             <Message severity='error' text={errorMsg} />
           </div>
           <div className='form-input-group auth-form-input-group auth-button-container'>
-            <Button label='Register' />
+            <Button
+              label={loading ? 'Registering...' : 'Register'}
+              disabled={loading || disabledRegBtn}
+            />
           </div>
           <div className='auth-external-links'>
             <p>
               <a href='./forgot'>Forgot password?</a>
             </p>
             <p>
-              Already have an account? <Link to={'/signin'}>Sign in here</Link>
+              Already have an account? <Link to='/signin'>Sign in here</Link>
             </p>
           </div>
         </div>

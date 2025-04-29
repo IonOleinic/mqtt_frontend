@@ -3,33 +3,33 @@
   --custom-red: #e60b0b;
 
   /* blue colors */
-  --light-blue: #007bff;
-  --very-light-blue: #3395ff;
-  --hover-blue: rgb(35, 68, 255);
-  --active-blue: rgb(35, 68, 255);
-  --hover-light-blue: #75bee9;
-  --active-light-blue: #75bee9;
+  --light-blue: #007bff; /* primereact light-blue theme primary color */
+  --hover-blue: #0062cc; /* primereact light-blue theme primary color hover */
+  --light-blue-tran: rgba(0, 123, 255, 0.15);
 
   /* purple colors */
-  /* --light-purple: rgb(233, 123, 255);
-  --very-light-purple: rgba(240, 189, 250, 0.311);
-  --hover-purple: rgb(228, 93, 255); */
-  --light-purple: rgb(188, 111, 255);
-  --hover-purple: rgb(161, 53, 255);
-  --very-light-purple: rgba(240, 189, 250, 0.311);
+  --light-purple: rgb(180, 94, 255);
+  --hover-purple: rgb(151, 31, 255);
+  --light-purple-tran: rgba(180, 94, 255, 0.15);
 
-  /* hover colors */
-  --active-color: var(--light-purple);
-  --hover-color: var(--hover-purple);
+  /* indigo colors */
+  --light-indigo: #6366f1; /* primereact light-indigo theme primary color */
+  --hover-indigo: #4338ca; /* primereact light-indigo theme primary color hover */
+  --light-indigo-tran: rgba(99, 102, 241, 0.15);
 
   /* grey colors */
   --light-grey: rgb(84, 84, 84);
-  --bck-page-default: rgb(227, 227, 227);
+  --bck-page-default: rgb(220, 220, 220);
   --bck-grey-hover-color: #ccccccc7;
   --bck-grey-light-hover-color: #cccccc5f;
   --bck-grey-active-color: #cccccc87;
   --transp-grey-bck: #a7a7a7aa;
   --bck-hover-color: linear-gradient(to right, #cbcbcba2, #f0f0f069);
+
+  /*========== default colors ============*/
+  --active-color: var(--light-indigo);
+  --hover-color: var(--hover-indigo);
+  --hover-color-tran: var(--light-indigo-tran);
 
   /* heights */
   --toolbar-height: 68px;

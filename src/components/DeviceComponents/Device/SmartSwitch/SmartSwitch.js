@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import PowerBtn from './PowerBtn/PowerBtn'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import voltageIcon from './SensorDataIcons/voltage-icon.png'
-import currentIcon from './SensorDataIcons/current-icon.png'
-import powerIcon from './SensorDataIcons/power-icon.png'
-import totalPowerIcon from './SensorDataIcons/total-power-icon.png'
-import './SmartStrip.css'
+import VoltageIcon from './SensorDataIcons/VoltageIcon'
+import CurrentIcon from './SensorDataIcons/CurrentIcon'
+import PowerIcon from './SensorDataIcons/PowerIcon'
+import TotalPowerIcon from './SensorDataIcons/TotalPowerIcon'
+import './SmartSwitch.css'
 
-function SmartStrip({ device }) {
-  const axios = useAxiosPrivate()
+function SmartSwitch({ device }) {
   let initStatuses = []
   let initCheckedlist = []
   let sensorPart = <></>
@@ -28,7 +27,7 @@ function SmartStrip({ device }) {
     initStatuses.push('OFF')
     initCheckedlist.push(false)
   }
-
+  const axios = useAxiosPrivate()
   const [statusList, setStatusList] = useState(initStatuses)
   const [isCheckedList, setIsCheckedList] = useState(initCheckedlist)
   const [sensorData, setSensorData] = useState({})
@@ -53,7 +52,7 @@ function SmartStrip({ device }) {
     }
   }
   const sendChangePower = async (socket_nr, pwr_status) => {
-    const response = await axios.post(
+    await axios.post(
       `/smartStrip?status=${pwr_status}&device_id=${device.id}&socket_nr=${
         socket_nr + 1
       }`
@@ -85,24 +84,23 @@ function SmartStrip({ device }) {
             display: sensorData === undefined ? 'none' : 'flex',
           }}
         >
-          <h1>{sensorData.Today}</h1>
-          <p>kW</p>
+          <p>{sensorData.Today} kW</p>
         </div>
         <div className='sensor'>
           <div className='sensor-item'>
-            <img src={voltageIcon} />
+            <VoltageIcon size={30} />
             <p style={{ marginLeft: '0.2rem' }}>{sensorData.Voltage} V</p>
           </div>
           <div className='sensor-item'>
-            <img src={currentIcon} />
+            <CurrentIcon size={30} />
             <p>{sensorData.Current} A</p>
           </div>
           <div className='sensor-item'>
-            <img src={powerIcon} />
+            <PowerIcon size={30} />
             <p style={{ marginLeft: '0.2rem' }}>{sensorData.Power} W</p>
           </div>
           <div className='sensor-item' style={{ width: '140px' }}>
-            <img src={totalPowerIcon} />
+            <TotalPowerIcon size={30} />
             <p>{sensorData.Total} kW</p>
           </div>
         </div>
@@ -141,4 +139,4 @@ function SmartStrip({ device }) {
   )
 }
 
-export default SmartStrip
+export default SmartSwitch

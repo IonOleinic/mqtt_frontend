@@ -6,21 +6,17 @@
   justify-content: center;
   width: 100%;
 }
-.motion-sensor-image {
+.motion-image-container {
   width: 100%;
   height: 200px;
   user-select: none;
 }
-.motion-sensor-image img {
-  max-height: 100%;
-  max-width: 100%;
-}
-.display-motion-status {
+.motion-status-container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.display-motion-status p {
+.motion-status-container p {
   font-size: 1.4rem;
   font-weight: 600;
   text-transform: capitalize;

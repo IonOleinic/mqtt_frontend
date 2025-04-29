@@ -18,6 +18,7 @@ const SignIn = () => {
   const [validPassword, setValidPassword] = useState(true)
   const [errorVisibility, setErrorVisibility] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -31,8 +32,12 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true)
+    setErrorVisibility(false)
+    setValidEmail(true)
+    setValidPassword(true)
     try {
-      let response = await axios.post(`./login`, { email, password })
+      let response = await axios.post(`/login`, { email, password })
       setAuth((prev) => {
         return {
           ...prev,
@@ -55,14 +60,10 @@ const SignIn = () => {
         setErrorMsg('Server Error!')
       }
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
-  const togglePersist = () => {
-    setPersist((prev) => !prev)
-  }
-  useEffect(() => {
-    localStorage.setItem('persist', persist)
-  }, [persist])
 
   return (
     <div className='auth-form-container'>
@@ -74,6 +75,7 @@ const SignIn = () => {
               <label htmlFor='sign-in-email-input'>Email address</label>
               <InputText
                 id='sign-in-email-input'
+                disabled={loading}
                 required
                 type='email'
                 invalid={!validEmail}
@@ -89,6 +91,7 @@ const SignIn = () => {
               <InputText
                 id='sign-in-password-input'
                 required
+                disabled={loading}
                 type='password'
                 invalid={!validPassword}
                 placeholder='Enter password'
@@ -102,8 +105,9 @@ const SignIn = () => {
           <div className='checkbox-remember-me'>
             <Checkbox
               id='sign-in-persist-check'
-              onChange={togglePersist}
+              onChange={() => setPersist((prev) => !prev)}
               checked={persist}
+              disabled={loading}
             />
             <label htmlFor='sign-in-persist-check'>Remember Me</label>
           </div>
@@ -117,7 +121,10 @@ const SignIn = () => {
             <Message severity='error' text={errorMsg} />
           </div>
           <div className='form-input-group auth-form-input-group form-button-container'>
-            <Button label='Login' />
+            <Button
+              label={loading ? 'Loging in...' : 'Login'}
+              disabled={loading}
+            />
           </div>
           <div className='auth-external-links'>
             <p>
