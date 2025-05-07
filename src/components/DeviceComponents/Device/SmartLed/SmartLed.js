@@ -2,18 +2,17 @@ import { useState, useEffect } from 'react'
 import { HuePicker } from 'react-color'
 import { AlphaPicker } from 'react-color'
 import { BsLightbulbFill } from 'react-icons/bs'
-import { LedStripIcon } from './Icons/LedStripIcon'
+import LedStripIcon from './Icons/LedStripIcon'
 import { BsPlayCircle } from 'react-icons/bs'
 import { BsStopCircle } from 'react-icons/bs'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { Slider } from 'primereact/slider'
 import PaletteItem from './PaletteItem/PaletteItem'
 import { TbAlertTriangle } from 'react-icons/tb'
+import { BiSolidColorFill, BiSolidPalette } from 'react-icons/bi'
+import { RiSunFill } from 'react-icons/ri'
 import useDebounce from '../../../../hooks/useDebounce'
 import './SmartLed.css'
-
-let bulb_icon = <BsLightbulbFill size={50} />
-let led_strip_icon = <LedStripIcon size={50} />
 
 function SmartLed({ device }) {
   const axios = useAxiosPrivate()
@@ -28,34 +27,14 @@ function SmartLed({ device }) {
   const debouncedPeletteSpeed = useDebounce(paletteSpeed, 300)
   const [paletteItems, setPaletteItems] = useState([])
   const [ledIcon, setLedIcon] = useState(<></>)
-  const [paletteColors, setPaletteColors] = useState([])
 
-  const changeTab = (index) => {
-    setCurrentTab(index)
-  }
-  const setLedIconFunc = () => {
+  useEffect(() => {
     if (device.sub_type == 'ledStrip') {
-      setLedIcon(led_strip_icon)
+      setLedIcon(<LedStripIcon size={50} />)
     } else {
-      setLedIcon(bulb_icon)
+      setLedIcon(<BsLightbulbFill size={50} />)
     }
-  }
-
-  useEffect(() => {
-    setLedIconFunc()
-  }, [color, device.attributes.status, device.attributes.color])
-
-  useEffect(() => {
-    setPaletteColors(
-      device.attributes.palette
-        .map((paletteColor) => {
-          if (paletteColor) {
-            return `#${paletteColor}`
-          }
-        })
-        .filter((item) => item)
-    )
-  }, [device.attributes.palette])
+  }, [device.sub_type])
 
   useEffect(() => {
     if (device.attributes.led_type?.includes('rgb')) {
@@ -81,13 +60,13 @@ function SmartLed({ device }) {
     setTimeout(() => {
       setStarted(true) //used to delay send change dimmer (change dimmer cause forced power ON)
     }, 1500)
-  }, [device])
+  }, [device.attributes])
 
   useEffect(() => {
-    setPaletteItemsFunc(device.attributes.palette)
+    populatePaletteItems(device.attributes.palette)
   }, [device.attributes.palette])
 
-  const setPaletteItemsFunc = (palette) => {
+  const populatePaletteItems = (palette) => {
     let items = []
     for (let i = 0; i < palette.length; i++) {
       items.push(
@@ -104,10 +83,10 @@ function SmartLed({ device }) {
     }
     setPaletteItems(items)
   }
-  const sendChangeColor = async (rgb_color, cold, warm) => {
-    let newColor = rgb_color.replace('#', '') + toHex(cold) + toHex(warm)
+  const sendChangeColor = async (rgbColor, cold, warm) => {
+    let newColor = rgbColor.replace('#', '') + toHex(cold) + toHex(warm)
     try {
-      const response = await axios.post(
+      await axios.post(
         `/SmartLed/color?device_id=${device.id}&color=${newColor}`
       )
     } catch (error) {
@@ -116,7 +95,7 @@ function SmartLed({ device }) {
   }
   const sendChangeDimmer = async (newValue) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `/SmartLed/dimmer?device_id=${device.id}&dimmer=${newValue}`
       )
     } catch (error) {
@@ -126,7 +105,7 @@ function SmartLed({ device }) {
   const sendChangePower = async () => {
     const newStatus = 'TOGGLE'
     try {
-      const response = await axios.post(
+      await axios.post(
         `/SmartLed/power?device_id=${device.id}&status=${newStatus}`
       )
     } catch (error) {
@@ -139,7 +118,7 @@ function SmartLed({ device }) {
   }
   const sendChangePalette = async (palette) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `/SmartLed/palette?device_id=${device.id}&palette=${palette}`
       )
     } catch (error) {
@@ -148,7 +127,7 @@ function SmartLed({ device }) {
   }
   const sendChangePaletteSpeed = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `/SmartLed/speed?device_id=${device.id}&speed=${paletteSpeed}`
       )
     } catch (error) {
@@ -157,7 +136,7 @@ function SmartLed({ device }) {
   }
   const sendChangeScheme = async (scheme) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `/SmartLed/scheme?device_id=${device.id}&scheme=${scheme}`
       )
     } catch (error) {
@@ -169,7 +148,6 @@ function SmartLed({ device }) {
     temp[id] = color.replaceAll('#', '').toUpperCase()
     sendChangePalette(temp)
   }
-
   useEffect(() => {
     //used to delay send change dimmer (because dimmer was changed before device init by debouncedDimmer )
     if (started) {
@@ -188,7 +166,7 @@ function SmartLed({ device }) {
     <div className='smart-led'>
       <div className='custom-tab-content'>
         {currentTab === 0 && (
-          <div className='smart-led-tab colors-tab'>
+          <div className='smart-led-tab'>
             <div
               className='slider-item'
               style={{
@@ -200,11 +178,11 @@ function SmartLed({ device }) {
               <label htmlFor='#'>Color</label>
               <HuePicker
                 color={color}
-                onChange={(e) => {
-                  setColor(e.hex)
+                onChange={(color) => {
+                  setColor(color.hex)
                 }}
-                onChangeComplete={(e) => {
-                  sendChangeColor(e.hex, cold, warm)
+                onChangeComplete={(color) => {
+                  sendChangeColor(color.hex, cold, warm)
                 }}
                 width='100%'
               />
@@ -242,7 +220,7 @@ function SmartLed({ device }) {
           </div>
         )}
         {currentTab === 1 && (
-          <div className='smart-led-tab cold-warm-tab'>
+          <div className='smart-led-tab'>
             {device.attributes.led_type?.includes('c') ||
             device.attributes.led_type?.includes('w') ? (
               <>
@@ -295,19 +273,19 @@ function SmartLed({ device }) {
           </div>
         )}
         {currentTab === 2 && (
-          <div className='smart-led-tab palette-tab'>
+          <div className='smart-led-tab'>
             {device.manufacter == 'tasmota' &&
             device.attributes.led_type?.includes('rgb') ? (
               <div
-                className='slider-item palette-controll'
+                className='palette-control'
                 style={{
                   display: device.manufacter == 'tasmota' ? 'flex' : 'none',
                 }}
               >
-                <div className='palette-controll-item palette-colors'>
+                <div className='palette-control-item palette-colors'>
                   {paletteItems}
                 </div>
-                <div className='palette-controll-item palette-buttons'>
+                <div className='palette-control-item palette-buttons'>
                   <div
                     className={
                       device.attributes.scheme == '1' ||
@@ -361,7 +339,7 @@ function SmartLed({ device }) {
                     />
                   </div>
                 </div>
-                <div className='palette-controll-item palette-speed'>
+                <div className='palette-control-item palette-speed'>
                   <label htmlFor='#'>Speed</label>
                   <button
                     style={{
@@ -400,49 +378,26 @@ function SmartLed({ device }) {
       <div className='custom-tabs'>
         <div
           className={`custom-tab ${currentTab === 0 ? 'active-tab' : ''}`}
-          onClick={() => changeTab(0)}
-          style={{
-            color:
-              device.available &&
-              device.attributes.status == 'ON' &&
-              currentTab === 0
-                ? color
-                : currentTab === 0
-                ? 'blue'
-                : 'revert',
-          }}
+          onClick={() => setCurrentTab(0)}
         >
-          Colors
+          <BiSolidColorFill size={18} />
+          <p>Color</p>
         </div>
         <div
-          className={`custom-tab ${currentTab === 1 ? 'active-tab' : ''}`}
-          onClick={() => changeTab(1)}
+          className={`custom-tab custom-tab-middle ${
+            currentTab === 1 ? 'active-tab' : ''
+          }`}
+          onClick={() => setCurrentTab(1)}
         >
-          <p className='cold-text'>Cold</p>
-          <p>/</p>
-          <p className='warm-text'>Warm</p>
+          <RiSunFill size={18} />
+          <p>Cold/Warm</p>
         </div>
         <div
           className={`custom-tab ${currentTab === 2 ? 'active-tab' : ''}`}
-          onClick={() => changeTab(2)}
+          onClick={() => setCurrentTab(2)}
         >
-          {currentTab === 2 ? (
-            <p
-              style={{
-                background:
-                  device.available && paletteColors.length > 1
-                    ? `linear-gradient(90deg,${paletteColors}) text`
-                    : paletteColors.length === 1
-                    ? `${paletteColors} text`
-                    : `blue text`,
-                color: 'transparent',
-              }}
-            >
-              Palette
-            </p>
-          ) : (
-            <p> Palette </p>
-          )}
+          <BiSolidPalette size={18} />
+          <p>Palette</p>
         </div>
       </div>
     </div>
@@ -451,7 +406,7 @@ function SmartLed({ device }) {
 
 function UnsupportedSmartLedOption({ additionalMessage }) {
   return (
-    <div className='smart-led-unsuported-feature'>
+    <div>
       <TbAlertTriangle size={50} color='gold' />
       <p>
         {`This option is unsupported for current device. ${additionalMessage}`}

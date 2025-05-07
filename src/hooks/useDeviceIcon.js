@@ -3,8 +3,8 @@ import { CgBatteryFull } from 'react-icons/cg'
 import { CgBattery } from 'react-icons/cg'
 import { CgBatteryEmpty } from 'react-icons/cg'
 import { TbBatteryOff } from 'react-icons/tb'
-import { IoCloudOutline } from 'react-icons/io5'
-import { IoCloudOfflineOutline } from 'react-icons/io5'
+import { TbAccessPoint } from 'react-icons/tb'
+import { TbAccessPointOff } from 'react-icons/tb'
 import { TbUsb } from 'react-icons/tb'
 import { TiStarFullOutline } from 'react-icons/ti'
 import { TiStarOutline } from 'react-icons/ti'
@@ -23,8 +23,8 @@ import SmartSirenAlarmIcon from '../components/DeviceComponents/DeviceTypeImages
 import SmartValveIcon from '../components/DeviceComponents/DeviceTypeImages/SmartValveIcon'
 
 //available icons
-let iconOnline = <IoCloudOutline size={20} />
-let iconOffline = <IoCloudOfflineOutline size={20} />
+let iconOnline = <TbAccessPoint size={20} />
+let iconOffline = <TbAccessPointOff size={20} />
 
 //battery icons
 let poweredUsbIcon = (

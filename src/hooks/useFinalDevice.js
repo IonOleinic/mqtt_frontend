@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import SmartSirenAlarm from '../components/DeviceComponents/Device/SmartAlarmSiren/SmartSirenAlarm'
+import SmartSirenAlarm from '../components/DeviceComponents/Device/SmartSirenAlarm/SmartSirenAlarm'
 import SmartLed from '../components/DeviceComponents/Device/SmartLed/SmartLed'
 import SmartMotionSensor from '../components/DeviceComponents/Device/SmartMotionSensor/SmartMotionSensor'
 import SmartSwitch from '../components/DeviceComponents/Device/SmartSwitch/SmartSwitch'

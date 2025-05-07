@@ -15,7 +15,7 @@
   /* indigo colors */
   --light-indigo: #6366f1; /* primereact light-indigo theme primary color */
   --hover-indigo: #4338ca; /* primereact light-indigo theme primary color hover */
-  --light-indigo-tran: rgba(99, 102, 241, 0.15);
+  --light-indigo-tran: rgba(99, 101, 241, 0.25);
 
   /* grey colors */
   --light-grey: rgb(84, 84, 84);

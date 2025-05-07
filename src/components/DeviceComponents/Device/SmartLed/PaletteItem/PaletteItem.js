@@ -5,16 +5,15 @@ import { HexColorPicker } from 'react-colorful'
 import './PaletteItem.css'
 
 function PaletteItem({ initColor, handlePaletteChange, position, id }) {
-  const [checked, setChecked] = useState(false)
-  const [clear, setClear] = useState(false)
+  const [isClear, setIsClear] = useState(false)
   const [iconVisibility, setIconVisibility] = useState(true)
   const [pickerVisibility, setPickerVisibility] = useState(false)
   const [color, setColor] = useState('#ffffff')
+
   useEffect(() => {
     if (initColor != '') {
-      setChecked(true)
       setColor('#' + initColor)
-      setClear(true)
+      setIsClear(true)
       setIconVisibility(false)
     }
   }, [])
@@ -33,7 +32,7 @@ function PaletteItem({ initColor, handlePaletteChange, position, id }) {
         setIconVisibility(true)
       }}
       onMouseLeave={() => {
-        if (clear == false) {
+        if (isClear == false) {
           setIconVisibility(true)
         } else if (pickerVisibility == false) {
           setIconVisibility(false)
@@ -44,7 +43,7 @@ function PaletteItem({ initColor, handlePaletteChange, position, id }) {
         <div
           className='palette-box-add'
           onClick={() => {
-            if (clear == false) {
+            if (isClear == false) {
               setColor('#efab89')
               setPickerVisibility(true)
             } else {
@@ -52,11 +51,11 @@ function PaletteItem({ initColor, handlePaletteChange, position, id }) {
               setPickerVisibility(false)
               handlePaletteChange(id, '')
             }
-            setClear(!clear)
+            setIsClear((prev) => !prev)
           }}
           style={{ display: iconVisibility == false ? 'none' : 'flex' }}
         >
-          <UseAnimations reverse={checked} size={50} animation={plusToX} />
+          <UseAnimations reverse={isClear} size={50} animation={plusToX} />
         </div>
         <div
           className='palette-box-color'
@@ -67,12 +66,7 @@ function PaletteItem({ initColor, handlePaletteChange, position, id }) {
         className={`palette-color-picker palette-color-picker-position-${position}`}
         style={{ display: pickerVisibility == false ? 'none' : 'flex' }}
       >
-        <HexColorPicker
-          color={color}
-          onChange={(clr) => {
-            setColor(clr)
-          }}
-        />
+        <HexColorPicker color={color} onChange={setColor} />
       </div>
     </div>
   )

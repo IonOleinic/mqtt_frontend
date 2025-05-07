@@ -1,5 +1,5 @@
 /* =====================================================*/
-.smart-strip {
+.smart-switch {
   width: 100%;
   background: transparent;
   display: flex;
@@ -8,7 +8,6 @@
   justify-content: center;
   font-size: 1.2rem;
   height: 100%;
-  padding: 0.5rem 0;
 }
 /* =====================================================*/
 .power-buttons-container {
@@ -18,8 +17,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 140px;
-  max-height: 200px;
+  height: 140px;
 }
 .power-buttons {
   display: flex;
@@ -47,7 +45,6 @@
 .sensor-container {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
   align-items: center;
   justify-content: center;
   width: 100%;

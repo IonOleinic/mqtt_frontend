@@ -17,6 +17,9 @@
   gap: 15px;
   height: 40px;
 }
+.siren-sensors-hidden {
+  display: none;
+}
 .siren-sensor-item {
   display: flex;
   align-items: center;
@@ -28,27 +31,35 @@
   font-size: 1.1rem;
   font-weight: 400;
 }
-.siren-temp-item p {
-  margin: 0 0.2rem;
-}
 
 .siren-control {
-  justify-content: space-between;
   width: 100%;
+  height: 130px;
   display: flex;
   align-items: center;
-  height: 130px;
+  justify-content: space-between;
+}
+.siren-option {
+  width: 100px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.siren-option input {
+  width: 90px;
 }
 .siren-volume {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
 }
 .siren-btn {
-  padding: 0.8rem;
   width: 110px;
   height: 110px;
+  padding: 0.8rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,15 +87,4 @@
 }
 .siren-btn:active {
   background-color: #d4d4d4;
-}
-.siren-option {
-  width: 100px;
-  max-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.siren-option > div,
-.siren-option input {
-  width: 94%;
 }

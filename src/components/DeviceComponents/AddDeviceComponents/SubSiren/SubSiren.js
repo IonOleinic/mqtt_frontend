@@ -24,21 +24,23 @@ function SubSiren({ mqttName, manufacter, setAttributes }) {
   const [receiveHumTopic, setReceiveHumTopic] = useState(`${mqttName}/6/get`)
   const [tempHumSensor, setTempHumSensor] = useState(false)
   const [nrOfRingtones, setNrOfRingtones] = useState(10)
-  const [volumeMapper, setVolumeMapper] = useState({
-    low: -1,
-    medium: -1,
-    high: -1,
-    mute: -1,
+  const [volumeMapper, setVolumeMapper] = useState([
+    { name: 'low', code: -1 },
+    { name: 'medium', code: -1 },
+    { name: 'high', code: -1 },
+    { name: 'mute', code: -1 },
+  ])
+  const filteredVolumeMapper = volumeMapper.filter((item) => item.code != -1)
+  const [selectedVolumeLabel, setSelectedVolumeLabel] = useState({
+    name: 'low',
+    index: 0,
   })
-  const [selectedVolumeLabel, setSelectedVolumeLabel] = useState(
-    Object.keys(volumeMapper)[0]
-  )
   const [advancedVisibility, setAdvancedVisibility] = useState(false)
 
   useEffect(() => {
     if (tempHumSensor) {
       setAttributes({
-        volume_mapper: volumeMapper,
+        volume_mapper: filteredVolumeMapper,
         nr_of_ringtones: nrOfRingtones,
         receive_status_topic: receiveStatusTopic,
         receive_ringtone_topic: receiveRingtoneTopic,
@@ -50,7 +52,7 @@ function SubSiren({ mqttName, manufacter, setAttributes }) {
       })
     } else {
       setAttributes({
-        volume_mapper: volumeMapper,
+        volume_mapper: filteredVolumeMapper,
         nr_of_ringtones: nrOfRingtones,
         receive_status_topic: receiveStatusTopic,
         receive_ringtone_topic: receiveRingtoneTopic,
@@ -60,7 +62,7 @@ function SubSiren({ mqttName, manufacter, setAttributes }) {
       })
     }
   }, [
-    volumeMapper,
+    filteredVolumeMapper,
     nrOfRingtones,
     receiveStatusTopic,
     receiveRingtoneTopic,
@@ -94,7 +96,12 @@ function SubSiren({ mqttName, manufacter, setAttributes }) {
           <Dropdown
             id='sub-siren-selected-vol-label-dropdown'
             value={selectedVolumeLabel}
-            options={Object.keys(volumeMapper)}
+            options={[
+              { name: 'low', index: 0 },
+              { name: 'medium', index: 1 },
+              { name: 'high', index: 2 },
+              { name: 'mute', index: 3 },
+            ]}
             optionLabel='name'
             placeholder='Select a volume label'
             onChange={(e) => {
@@ -106,14 +113,15 @@ function SubSiren({ mqttName, manufacter, setAttributes }) {
           <label htmlFor='sub-siren-binded-vol-input'>Binded Volume</label>
           <InputNumber
             id='sub-siren-binded-vol-input'
-            value={volumeMapper[selectedVolumeLabel]}
+            value={volumeMapper[selectedVolumeLabel.index]?.code}
             placeholder='Enter binded volume'
             min={-1}
             max={3}
             onValueChange={(e) => {
-              setVolumeMapper({
-                ...volumeMapper,
-                [selectedVolumeLabel]: e.value,
+              setVolumeMapper((prev) => {
+                const newVolumeMapper = [...prev]
+                newVolumeMapper[selectedVolumeLabel.index].code = e.value
+                return newVolumeMapper
               })
             }}
           />

@@ -122,7 +122,7 @@ function SmartSwitch({ device }) {
   }
 
   return (
-    <div className='smart-strip'>
+    <div className='smart-switch'>
       <div className='power-buttons-container'>
         <div
           className='power-buttons'

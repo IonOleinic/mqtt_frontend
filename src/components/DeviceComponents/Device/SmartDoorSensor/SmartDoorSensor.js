@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
-import { AiFillLock } from 'react-icons/ai'
-import { AiFillUnlock } from 'react-icons/ai'
+import { LuLock, LuLockOpen } from 'react-icons/lu'
 import { HiOutlineSwitchHorizontal } from 'react-icons/hi'
 import DoorMainModuleImage from './DoorSensorImages/DoorMainModuleImage'
 import DoorSecondModuleImage from './DoorSensorImages/DoorSecondModuleImage'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import './SmartDoorSensor.css'
 
-let lockedImg = <AiFillLock size={25} color='#46B60A' />
-let unlockedImg = <AiFillUnlock size={25} color='red' />
+let lockedImg = <LuLock size={25} color='#46B60A' />
+let unlockedImg = <LuLockOpen size={25} color='red' />
 
 function SmartDoorSensor({ device }) {
   const axios = useAxiosPrivate()
@@ -24,9 +23,7 @@ function SmartDoorSensor({ device }) {
   }, [device])
   const sendToggleDirection = async () => {
     try {
-      const response = await axios.post(
-        `/smartDoorSensor?device_id=${device.id}`
-      )
+      await axios.post(`/smartDoorSensor?device_id=${device.id}`)
     } catch (error) {
       console.log(error)
     }

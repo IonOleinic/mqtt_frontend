@@ -1,10 +1,10 @@
-export const LedStripIcon = (props) => {
+export default function LedStripIcon(props) {
   return (
     <svg
-      width={props.size || '350'}
-      height={props.size || '350'}
       version='1.0'
       xmlns='http://www.w3.org/2000/svg'
+      width={props.size || '350'}
+      height={props.size || '350'}
       viewBox='0 0 350 350'
       preserveAspectRatio='xMidYMid meet'
       fill={props.color || 'currentColor'}
