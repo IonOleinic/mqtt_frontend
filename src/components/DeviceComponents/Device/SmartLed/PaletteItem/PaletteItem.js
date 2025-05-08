@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import plusToX from 'react-useanimations/lib/plusToX'
 import UseAnimations from 'react-useanimations'
-import { HexColorPicker } from 'react-colorful'
+import CustomColorPicker from '../../../../CustomColorPicker/CustomColorPicker'
 import './PaletteItem.css'
 
-function PaletteItem({ initColor, handlePaletteChange, position, id }) {
+function PaletteItem({ initColor, handlePaletteChange, id }) {
   const [isClear, setIsClear] = useState(false)
   const [iconVisibility, setIconVisibility] = useState(true)
   const [pickerVisibility, setPickerVisibility] = useState(false)
@@ -21,13 +21,6 @@ function PaletteItem({ initColor, handlePaletteChange, position, id }) {
   return (
     <div
       className='palette-color-item'
-      onBlur={() => {
-        setTimeout(() => {
-          setPickerVisibility(false)
-          handlePaletteChange(id, color)
-          setIconVisibility(false)
-        }, 200)
-      }}
       onMouseEnter={() => {
         setIconVisibility(true)
       }}
@@ -62,12 +55,16 @@ function PaletteItem({ initColor, handlePaletteChange, position, id }) {
           style={{ backgroundColor: color }}
         ></div>
       </div>
-      <div
-        className={`palette-color-picker palette-color-picker-position-${position}`}
-        style={{ display: pickerVisibility == false ? 'none' : 'flex' }}
-      >
-        <HexColorPicker color={color} onChange={setColor} />
-      </div>
+      <CustomColorPicker
+        color={color}
+        onChange={setColor}
+        visibility={pickerVisibility}
+        setVisibility={setPickerVisibility}
+        onFinish={() => {
+          handlePaletteChange(id, color)
+          setIconVisibility(false)
+        }}
+      />
     </div>
   )
 }

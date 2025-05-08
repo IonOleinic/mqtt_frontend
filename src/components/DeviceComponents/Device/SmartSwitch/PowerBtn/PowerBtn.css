@@ -8,6 +8,8 @@
   transition: all 0.4s ease-in-out;
   color: #ccc;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
 }
 
 .power-btn-checked {

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { HuePicker } from 'react-color'
 import { AlphaPicker } from 'react-color'
 import { BsLightbulbFill } from 'react-icons/bs'
 import LedStripIcon from './Icons/LedStripIcon'
@@ -12,6 +11,8 @@ import { TbAlertTriangle } from 'react-icons/tb'
 import { BiSolidColorFill, BiSolidPalette } from 'react-icons/bi'
 import { RiSunFill } from 'react-icons/ri'
 import useDebounce from '../../../../hooks/useDebounce'
+import CustomColorPicker from '../../../CustomColorPicker/CustomColorPicker'
+import { Ripple } from 'primereact/ripple'
 import './SmartLed.css'
 
 function SmartLed({ device }) {
@@ -27,12 +28,13 @@ function SmartLed({ device }) {
   const debouncedPeletteSpeed = useDebounce(paletteSpeed, 300)
   const [paletteItems, setPaletteItems] = useState([])
   const [ledIcon, setLedIcon] = useState(<></>)
+  const [pickerVisibility, setPickerVisibility] = useState(false)
 
   useEffect(() => {
     if (device.sub_type == 'ledStrip') {
       setLedIcon(<LedStripIcon size={50} />)
     } else {
-      setLedIcon(<BsLightbulbFill size={50} />)
+      setLedIcon(<BsLightbulbFill size={40} />)
     }
   }, [device.sub_type])
 
@@ -40,7 +42,7 @@ function SmartLed({ device }) {
     if (device.attributes.led_type?.includes('rgb')) {
       if (device.attributes.color?.substring(0, 6).toUpperCase() === 'FFFFFF') {
         setColor('#ffff00')
-      } else {
+      } else if (device.attributes.color?.substring(0, 6) !== '000000') {
         setColor('#' + device.attributes.color?.substring(0, 6))
       }
     } else {
@@ -156,7 +158,6 @@ function SmartLed({ device }) {
   }, [debouncedDimmer])
 
   useEffect(() => {
-    //used to delay send change speed (because palette speed was changed before device init by debouncedPeletteSpeed)
     if (started) {
       sendChangePaletteSpeed(debouncedPeletteSpeed)
     }
@@ -176,26 +177,34 @@ function SmartLed({ device }) {
               }}
             >
               <label htmlFor='#'>Color</label>
-              <HuePicker
+              <div
+                className='smart-led-picker-button p-ripple'
+                style={{ backgroundColor: color }}
+                onClick={() => setPickerVisibility(true)}
+              >
+                <Ripple />
+              </div>
+              <CustomColorPicker
                 color={color}
-                onChange={(color) => {
-                  setColor(color.hex)
-                }}
-                onChangeComplete={(color) => {
-                  sendChangeColor(color.hex, cold, warm)
-                }}
-                width='100%'
+                onChange={setColor}
+                visibility={pickerVisibility}
+                setVisibility={setPickerVisibility}
+                onFinish={() => sendChangeColor(color, cold, warm)}
               />
             </div>
             <div className='slider-item'>
-              <label htmlFor='#'>Dimmer</label>
+              <label htmlFor='#'>Dimmer ({dimmer}%)</label>
               <button
-                style={{ border: 'none', background: 'none', width: '100%' }}
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  width: '100%',
+                }}
               >
                 <Slider
                   min={0}
                   max={100}
-                  value={dimmer}
+                  value={Number(dimmer)}
                   step={1}
                   onChange={(e) => {
                     setDimmer(e.value)
@@ -206,7 +215,7 @@ function SmartLed({ device }) {
             </div>
             <div className='bulb-item'>
               <button
-                className='bulb-item-icon'
+                className='bulb-item-icon p-ripple'
                 style={{
                   borderColor:
                     device.attributes.status == 'ON' ? color : `#ccc`,
@@ -215,6 +224,18 @@ function SmartLed({ device }) {
                 onClick={sendChangePower}
               >
                 {ledIcon}
+                <Ripple
+                  pt={{
+                    root: {
+                      style: {
+                        background:
+                          device.attributes.status == 'ON'
+                            ? '#ccc'
+                            : `${color}4d`,
+                      },
+                    },
+                  }}
+                />
               </button>
             </div>
           </div>
@@ -232,7 +253,7 @@ function SmartLed({ device }) {
                       : 'none',
                   }}
                 >
-                  <label htmlFor='#'>Cold</label>
+                  <label htmlFor='#'>Cold ({~~(cold * 100)}%)</label>
                   <AlphaPicker
                     color={{ r: 0, g: 0, b: 255, a: cold }}
                     onChange={(e) => {
@@ -252,7 +273,7 @@ function SmartLed({ device }) {
                       : 'none',
                   }}
                 >
-                  <label htmlFor='#'>Warm</label>
+                  <label htmlFor='#'>Warm ({~~(warm * 100)}%)</label>
                   <AlphaPicker
                     color={{ r: 255, g: 193, b: 7, a: warm }}
                     onChange={(e) => {
@@ -339,8 +360,10 @@ function SmartLed({ device }) {
                     />
                   </div>
                 </div>
-                <div className='palette-control-item palette-speed'>
-                  <label htmlFor='#'>Speed</label>
+                <div className='slider-item palette-speed'>
+                  <label htmlFor='#'>
+                    Speed ({~~(((41 - paletteSpeed) * 100) / 40)}%)
+                  </label>
                   <button
                     style={{
                       border: 'none',
@@ -351,7 +374,7 @@ function SmartLed({ device }) {
                     <Slider
                       min={1}
                       max={40}
-                      value={41 - paletteSpeed}
+                      value={Number(41 - paletteSpeed)}
                       step={1}
                       onChange={(e) => {
                         setPaletteSpeed(41 - e.value)
@@ -377,27 +400,46 @@ function SmartLed({ device }) {
       </div>
       <div className='custom-tabs'>
         <div
-          className={`custom-tab ${currentTab === 0 ? 'active-tab' : ''}`}
+          className={`custom-tab p-ripple ${
+            currentTab === 0 ? 'active-tab' : ''
+          }`}
           onClick={() => setCurrentTab(0)}
         >
           <BiSolidColorFill size={18} />
           <p>Color</p>
+          <Ripple
+            pt={{
+              root: { style: { background: 'rgba(99, 101, 241, 0.25)' } },
+            }}
+          />
         </div>
         <div
-          className={`custom-tab custom-tab-middle ${
+          className={`custom-tab p-ripple custom-tab-middle ${
             currentTab === 1 ? 'active-tab' : ''
           }`}
           onClick={() => setCurrentTab(1)}
         >
           <RiSunFill size={18} />
           <p>Cold/Warm</p>
+          <Ripple
+            pt={{
+              root: { style: { background: 'rgba(99, 101, 241, 0.25)' } },
+            }}
+          />
         </div>
         <div
-          className={`custom-tab ${currentTab === 2 ? 'active-tab' : ''}`}
+          className={`custom-tab p-ripple ${
+            currentTab === 2 ? 'active-tab' : ''
+          }`}
           onClick={() => setCurrentTab(2)}
         >
           <BiSolidPalette size={18} />
           <p>Palette</p>
+          <Ripple
+            pt={{
+              root: { style: { background: 'rgba(99, 101, 241, 0.25)' } },
+            }}
+          />
         </div>
       </div>
     </div>
