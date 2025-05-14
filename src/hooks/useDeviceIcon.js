@@ -54,7 +54,7 @@ const useDeviceIcon = (device) => {
 
   useEffect(() => {
     switch (device.device_type) {
-      case 'smartStrip':
+      case 'smartSwitch':
         if (device.sub_type === 'plug') {
           setDeviceIcon(
             device.attributes?.nr_of_sockets == 1 ? (

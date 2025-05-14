@@ -1,33 +1,32 @@
 .smart-ir {
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  position: relative;
+  padding: 0 8px;
   overflow: hidden;
-  padding: 0;
   user-select: none;
+  width: 100%;
+  height: 100%;
+  gap: 3px;
 }
 .ir-block {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.ir-block-top,
-.ir-block-center,
-.ir-block-bottom {
+.ir-block-section {
+  width: 100%;
   display: flex;
   flex-direction: row;
-  width: 100%;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0.5rem;
 }
-.ir-block-vol,
-.ir-block-chanel {
+.ir-block-vol-ch {
   flex-direction: column;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 .ir-block-ok-menu {
   width: 150px;
@@ -36,16 +35,14 @@
   flex-wrap: wrap;
   align-items: center;
 }
-
-.ir-block-ok-menu .ir-buttons {
+.ir-block-ok-menu .ir-button {
   border: none;
   border-radius: 50%;
 }
-.ir-block-vol .ir-buttons,
-.ir-block-chanel .ir-buttons {
+.ir-block-vol-ch .ir-button {
   border: none;
 }
-.ir-buttons {
+.ir-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,10 +53,10 @@
   border: 1px solid #ccc;
   border-radius: 6px;
 }
-.ir-buttons:hover {
+.ir-button:hover {
   cursor: pointer;
 }
-.ir-buttons:active {
+.ir-button:active {
   background-color: #ccc;
   color: #4abced;
 }
@@ -70,44 +67,39 @@
   align-items: center;
   justify-content: center;
 }
-.back,
-.exit {
-  border-radius: 6px;
-}
-
-.btn-pow {
-  border-radius: 6px;
-}
 .btn-pow:active {
   color: red;
 }
-.numbers {
+.ir-numbers {
   position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  top: -200%;
+  bottom: 0;
   left: 0;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.5rem;
   height: 100%;
   background-color: white;
-  transition: all 0.5s ease-in-out;
+  transition: max-height 0.3s ease-in-out;
+  max-height: 260px;
+  overflow: hidden;
 }
-.numbers-top,
-.numbers-center,
-.numbers-bottom,
-.numbers-last {
+.ir-numbers-hidden {
+  max-height: 0;
+  padding: 0;
+}
+.ir-numbers-section {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 }
-.numbers-last {
+.ir-numbers-last {
   justify-content: center;
   gap: 60px;
 }
-.number {
+.ir-number {
   border-radius: 50%;
 }

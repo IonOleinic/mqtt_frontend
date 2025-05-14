@@ -5,7 +5,7 @@ import { Dropdown } from 'primereact/dropdown'
 import { Message } from 'primereact/message'
 import { Button } from 'primereact/button'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import SubSceneSmartStrip from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartStrip'
+import SubSceneSmartSwitch from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartSwitch'
 import SubSceneSirenAlarm from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartIR'
 import SubSceneSmartLed from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartLed'
@@ -81,9 +81,10 @@ function AddWeatherScene() {
   const chooseSubScene = (device, eventOrAction) => {
     let subScene = <></>
     switch (device.device_type) {
-      case 'smartStrip':
+      case 'smartSwitch':
         subScene = (
-          <SubSceneSmartStrip
+          <SubSceneSmartSwitch
+            key={device.id}
             device={device}
             setExecutableTopic={setExecutableTopic}
             setExecutablePayload={setExecutablePayload}
@@ -95,6 +96,7 @@ function AddWeatherScene() {
       case 'smartSirenAlarm':
         subScene = (
           <SubSceneSirenAlarm
+            key={device.id}
             device={device}
             setExecutableTopic={setExecutableTopic}
             setExecutablePayload={setExecutablePayload}
@@ -106,6 +108,7 @@ function AddWeatherScene() {
       case 'smartIR':
         subScene = (
           <SubSceneSmartIR
+            key={device.id}
             device={device}
             setExecutableTopic={setExecutableTopic}
             setExecutablePayload={setExecutablePayload}
@@ -117,6 +120,7 @@ function AddWeatherScene() {
       case 'smartLed':
         subScene = (
           <SubSceneSmartLed
+            key={device.id}
             device={device}
             setExecutableTopic={setExecutableTopic}
             setExecutablePayload={setExecutablePayload}

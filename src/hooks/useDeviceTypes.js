@@ -63,25 +63,25 @@ function useDeviceTypes(group) {
         return [
           {
             label: 'Switch',
-            type: 'smartStrip',
+            type: 'smartSwitch',
             sub_type: 'switch',
             icon: <SmartSwitchIcon />,
           },
           {
             label: 'Wall Switch',
-            type: 'smartStrip',
+            type: 'smartSwitch',
             sub_type: 'wall_switch',
             icon: <SmartWallSwitchIcon />,
           },
           {
             label: 'Plug',
-            type: 'smartStrip',
+            type: 'smartSwitch',
             sub_type: 'plug',
             icon: <SmartPlugIcon />,
           },
           {
             label: 'Valve',
-            type: 'smartStrip',
+            type: 'smartSwitch',
             sub_type: 'valve',
             icon: <SmartValveIcon />,
           },

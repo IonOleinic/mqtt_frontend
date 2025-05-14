@@ -55,12 +55,12 @@ function SubSceneSmartStrip({
             setSelectedSocket(e.target.value)
             if (eventOrAction == 'event') {
               setConditionalTopic(
-                device.attributes.stat_power_topics[e.target.value]
+                device.attributes.stat_power_topics[e.target.value - 1]
               )
               setConditionalText(`Power ${e.target.value} ${state}`)
             } else if (eventOrAction == 'action') {
               setExecutableTopic(
-                device.attributes.cmnd_power_topics[e.target.value]
+                device.attributes.cmnd_power_topics[e.target.value - 1]
               )
               setExecutableText(`Power ${e.target.value} ${state}`)
             }
@@ -94,10 +94,16 @@ function SubSceneSmartStrip({
                   setConditionalPayload('1')
                 }
               }
-              setConditionalText(`Power${selectedSocket} ${e.target.value}`)
+              if (selectedSocket == 1)
+                setConditionalText(`Power ${e.target.value}`)
+              else
+                setConditionalText(`Power ${selectedSocket} ${e.target.value}`)
             } else if (eventOrAction == 'action') {
               setExecutablePayload(e.target.value)
-              setExecutableText(`Power${selectedSocket} ${e.target.value}`)
+              if (selectedSocket == 1)
+                setExecutableText(`Power ${e.target.value}`)
+              else
+                setExecutableText(`Power ${selectedSocket} ${e.target.value}`)
             }
           }}
         />

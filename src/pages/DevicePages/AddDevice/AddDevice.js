@@ -12,11 +12,11 @@ import SubSwitch from '../../../components/DeviceComponents/AddDeviceComponents/
 import SubIR from '../../../components/DeviceComponents/AddDeviceComponents/SubIR/SubIR'
 import SubLed from '../../../components/DeviceComponents/AddDeviceComponents/SubLed/SubLed'
 import { useNavigate } from 'react-router-dom'
-import tasmotaLogoPng from './images/tasmota-logo-blue.png'
-import openBekenLogoPng from './images/openBeken-logo.png'
+import tasmotaLogoPng from '../../../components/DeviceComponents/ManufacterImages/tasmota-logo-blue.png'
+import openBekenLogoPng from '../../../components/DeviceComponents/ManufacterImages/openBeken-logo.png'
 import { toast } from 'react-toastify'
-import './AddDevice.css'
 import SubSiren from '../../../components/DeviceComponents/AddDeviceComponents/SubSiren/SubSiren'
+import './AddDevice.css'
 
 const tasmotaIcon = (
   <img src={tasmotaLogoPng} style={{ width: '20px', height: '20px' }} />

@@ -13,7 +13,7 @@ function useFinalDevice(device) {
   useEffect(() => {
     const loadFinalDevice = async () => {
       try {
-        if (device.device_type === 'smartStrip') {
+        if (device.device_type === 'smartSwitch') {
           setFinalDevice(<SmartSwitch device={device} />)
         } else if (device.device_type === 'smartIR') {
           setFinalDevice(<SmartIR device={device} />)

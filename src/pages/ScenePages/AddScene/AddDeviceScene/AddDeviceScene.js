@@ -4,7 +4,7 @@ import { Dropdown } from 'primereact/dropdown'
 import { Message } from 'primereact/message'
 import { Button } from 'primereact/button'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import SubSceneSmartStrip from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartStrip'
+import SubSceneSmartSwitch from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartSwitch'
 import SubSceneSirenAlarm from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSirenAlarm'
 import SubSceneSmartIR from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartIR'
 import SubSceneSmartLed from '../../../../components/SceneComponents/AddSceneComponents/SubSceneDevice/SubSceneSmartLed'
@@ -98,7 +98,7 @@ function AddSchedule() {
     attributes.conditional_text = conditionalText
     scene.attributes = attributes
     try {
-      let response = await axios.post(`/scene`, scene)
+      await axios.post(`/scene`, scene)
       navigate('/scenes')
     } catch (error) {
       console.log(error)
@@ -127,9 +127,10 @@ function AddSchedule() {
   const chooseSubScene = (device, eventOrAction) => {
     let subScene = <></>
     switch (device.device_type) {
-      case 'smartStrip':
+      case 'smartSwitch':
         subScene = (
-          <SubSceneSmartStrip
+          <SubSceneSmartSwitch
+            key={eventOrAction + device.id}
             device={device}
             setConditionalTopic={setConditionalTopic}
             setConditionalPayload={setConditionalPayload}
@@ -144,6 +145,7 @@ function AddSchedule() {
       case 'smartSirenAlarm':
         subScene = (
           <SubSceneSirenAlarm
+            key={eventOrAction + device.id}
             device={device}
             setConditionalTopic={setConditionalTopic}
             setConditionalPayload={setConditionalPayload}
@@ -158,6 +160,7 @@ function AddSchedule() {
       case 'smartIR':
         subScene = (
           <SubSceneSmartIR
+            key={eventOrAction + device.id}
             device={device}
             setConditionalTopic={setConditionalTopic}
             setConditionalPayload={setConditionalPayload}
@@ -172,6 +175,7 @@ function AddSchedule() {
       case 'smartLed':
         subScene = (
           <SubSceneSmartLed
+            key={eventOrAction + device.id}
             device={device}
             setConditionalTopic={setConditionalTopic}
             setConditionalPayload={setConditionalPayload}
@@ -186,6 +190,7 @@ function AddSchedule() {
       case 'smartDoorSensor':
         subScene = (
           <SubSceneDoorSensor
+            key={eventOrAction + device.id}
             device={device}
             setConditionalTopic={setConditionalTopic}
             setConditionalPayload={setConditionalPayload}
@@ -196,6 +201,7 @@ function AddSchedule() {
       case 'smartMotionSensor':
         subScene = (
           <SubSceneMotionSensor
+            key={eventOrAction + device.id}
             device={device}
             setConditionalTopic={setConditionalTopic}
             setConditionalPayload={setConditionalPayload}

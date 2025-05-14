@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MdOutlineExpandMore } from 'react-icons/md'
-import { CgArrowTopRightR } from 'react-icons/cg'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { socket } from '../../../api/io'
 import useDeviceIcon from '../../../hooks/useDeviceIcon'
@@ -11,6 +10,11 @@ import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
 import { Menu } from 'primereact/menu'
 import { FiMoreVertical } from 'react-icons/fi'
 import { LiaCubesSolid } from 'react-icons/lia'
+import tasmotaLogoPng from '../ManufacterImages/tasmota-logo-blue.png'
+import openBekenLogoPng from '../ManufacterImages/openBeken-logo.png'
+import wifiLogo from '../ConnectionTypeImages/wifi-logo.png'
+import zigbeeLogo from '../ConnectionTypeImages/zigbee-logo.png'
+import bluetoothLogo from '../ConnectionTypeImages/bluetooth-logo.png'
 import './Device.css'
 
 function Device({ handleDeleteDevice, initDevice }) {
@@ -31,7 +35,6 @@ function Device({ handleDeleteDevice, initDevice }) {
       console.log(error)
     }
   }
-
   useEffect(() => {
     if (socket) {
       const updateDeviceHandler = (data) => {
@@ -56,7 +59,6 @@ function Device({ handleDeleteDevice, initDevice }) {
       }
     }
   }, [])
-
   const menuItems = [
     { label: 'Info', icon: 'pi pi-info-circle' },
     {
@@ -87,7 +89,13 @@ function Device({ handleDeleteDevice, initDevice }) {
   ]
 
   return (
-    <div className='device' key={device.mqtt_name}>
+    <div
+      className='device'
+      key={device.id}
+      style={{
+        borderColor: device.manufacter === 'tasmota' ? 'skyblue' : 'orange',
+      }}
+    >
       <div className='device-top'>
         <button
           className={
@@ -161,9 +169,6 @@ function Device({ handleDeleteDevice, initDevice }) {
             <FiMoreVertical size={26} />
           </span>
         </div>
-        <button className='device-details-button'>
-          <CgArrowTopRightR size={20} />
-        </button>
         <div className='device-status-icons'>
           <div
             className={
@@ -184,6 +189,23 @@ function Device({ handleDeleteDevice, initDevice }) {
           >
             {batteryIcon}
           </div>
+        </div>
+        <div className='device-right-icons'>
+          <img
+            src={device.connection_type === 'wifi' ? wifiLogo : zigbeeLogo}
+            style={{
+              width: device.connection_type === 'wifi' ? '30px' : '20px',
+              height: '20px',
+            }}
+          />
+          <img
+            src={
+              device.manufacter === 'tasmota'
+                ? tasmotaLogoPng
+                : openBekenLogoPng
+            }
+            style={{ width: '20px', height: '20px' }}
+          />
         </div>
       </div>
       <div
