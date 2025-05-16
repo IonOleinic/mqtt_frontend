@@ -10,8 +10,6 @@ import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
 import { Menu } from 'primereact/menu'
 import { FiMoreVertical } from 'react-icons/fi'
 import { LiaCubesSolid } from 'react-icons/lia'
-import tasmotaLogoPng from '../ManufacterImages/tasmota-logo-blue.png'
-import openBekenLogoPng from '../ManufacterImages/openBeken-logo.png'
 import wifiLogo from '../ConnectionTypeImages/wifi-logo.png'
 import zigbeeLogo from '../ConnectionTypeImages/zigbee-logo.png'
 import bluetoothLogo from '../ConnectionTypeImages/bluetooth-logo.png'
@@ -93,7 +91,10 @@ function Device({ handleDeleteDevice, initDevice }) {
       className='device'
       key={device.id}
       style={{
-        borderColor: device.manufacter === 'tasmota' ? 'skyblue' : 'orange',
+        borderColor:
+          device.connection_type === 'wifi'
+            ? 'rgba(20, 20, 250, 0.8)'
+            : 'rgba(250, 20, 20, 0.8)',
       }}
     >
       <div className='device-top'>
@@ -198,14 +199,6 @@ function Device({ handleDeleteDevice, initDevice }) {
               height: '20px',
             }}
           />
-          <img
-            src={
-              device.manufacter === 'tasmota'
-                ? tasmotaLogoPng
-                : openBekenLogoPng
-            }
-            style={{ width: '20px', height: '20px' }}
-          />
         </div>
       </div>
       <div
@@ -216,7 +209,7 @@ function Device({ handleDeleteDevice, initDevice }) {
         }
       >
         {finalDevice}
-        <InactiveLayer visibility={!device.available} />
+        {/* <InactiveLayer visibility={!device.available} /> */}
       </div>
     </div>
   )

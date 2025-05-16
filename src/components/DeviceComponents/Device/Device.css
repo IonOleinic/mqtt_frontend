@@ -80,7 +80,6 @@
 }
 .device-group-container p {
   font-size: 1rem;
-  font-style: oblique;
 }
 .fav-icon {
   display: flex;
@@ -143,7 +142,7 @@
 .device-right-icons {
   position: absolute;
   bottom: 0;
-  right: 0.5rem;
+  right: 5px;
   display: flex;
   align-items: center;
   justify-content: center;

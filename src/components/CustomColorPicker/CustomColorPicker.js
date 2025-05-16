@@ -8,7 +8,7 @@ function ColorPicker({ color, onChange, visibility, setVisibility, onFinish }) {
     <Dialog
       header='Color Picker'
       visible={visibility}
-      style={{ width: '95vw', maxWidth: '350px' }}
+      style={{ width: '100vw', maxWidth: '370px' }}
       onHide={() => {
         if (onFinish) onFinish()
         setVisibility(false)

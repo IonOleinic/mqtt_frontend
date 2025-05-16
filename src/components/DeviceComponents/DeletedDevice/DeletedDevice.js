@@ -1,7 +1,7 @@
 import { CgUndo } from 'react-icons/cg'
 import { IoMdTrash } from 'react-icons/io'
-import useDeviceIcon from '../../../../hooks/useDeviceIcon'
-import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
+import useDeviceIcon from '../../../hooks/useDeviceIcon'
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { confirmDialog } from 'primereact/confirmdialog'
 import './DeletedDevice.css'
 
@@ -11,7 +11,7 @@ function DeletedDevice({ device, refreshDevices }) {
 
   const recoverDevice = async () => {
     try {
-      const response = await axios.post(`/recover-device/${device.id}`)
+      await axios.post(`/recover-device/${device.id}`)
       if (refreshDevices) refreshDevices()
     } catch (error) {
       console.log(error)
@@ -19,7 +19,7 @@ function DeletedDevice({ device, refreshDevices }) {
   }
   const destroyDevice = async () => {
     try {
-      const response = await axios.delete(`/destroy-device/${device.id}`)
+      await axios.delete(`/destroy-device/${device.id}`)
       if (refreshDevices) refreshDevices()
     } catch (error) {
       console.log(error)
@@ -33,7 +33,7 @@ function DeletedDevice({ device, refreshDevices }) {
       </div>
       <div className='deleted-device-btns'>
         <button
-          className='btn-recover-device deleted-device-btn'
+          className='recover-device-btn deleted-device-btn'
           onClick={() => {
             confirmDialog({
               message: `Do you want to recover device ${device.name}?`,
@@ -49,7 +49,7 @@ function DeletedDevice({ device, refreshDevices }) {
           <CgUndo size={28} />
         </button>
         <button
-          className='btn-destroy-device deleted-device-btn'
+          className='destroy-device-btn deleted-device-btn'
           onClick={() => {
             confirmDialog({
               message: `Do you want to destroy device ${device.name}?`,
