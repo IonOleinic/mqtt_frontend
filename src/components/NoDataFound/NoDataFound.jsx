@@ -12,7 +12,9 @@ const NoDataFound = () => {
       }}
     >
       <NoDataFoundIcon size={150} color='#ccc' />
-      <p style={{ fontSize: 20, color: '#ccc' }}>No Data Found</p>
+      <p style={{ fontSize: 20, color: '#ccc', fontWeight: '600' }}>
+        No Data Found
+      </p>
     </div>
   )
 }

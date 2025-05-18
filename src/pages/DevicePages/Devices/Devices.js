@@ -78,7 +78,7 @@ const Devices = () => {
 
   const getGroups = async () => {
     try {
-      let response = await axios.get('/groups')
+      const response = await axios.get('/groups')
       setGroups([{ id: null, name: 'No group' }, ...response.data])
     } catch (error) {
       console.log(error.message)
@@ -154,7 +154,7 @@ const Devices = () => {
                   ? 'active-filter-indicator'
                   : 'active-filter-indicator-hidden'
               }
-            ></span>
+            />
           </div>
           <div className='toolbar-item'>
             <label>Add</label>
@@ -204,7 +204,7 @@ const Devices = () => {
                   ? 'toolbar-item-filter-indicator'
                   : 'toolbar-item-filter-indicator-hidden'
               }
-            ></span>
+            />
             <label>Name</label>
             <InputText
               placeholder='type device name'
@@ -221,7 +221,7 @@ const Devices = () => {
                   ? 'toolbar-item-filter-indicator'
                   : 'toolbar-item-filter-indicator-hidden'
               }
-            ></span>
+            />
             <label>
               <LiaCubesSolid size={24} />
             </label>
@@ -250,7 +250,7 @@ const Devices = () => {
                   ? 'toolbar-item-filter-indicator'
                   : 'toolbar-item-filter-indicator-hidden'
               }
-            ></span>
+            />
             <label>
               <TiStarOutline size={22} />
             </label>
@@ -310,15 +310,14 @@ const Devices = () => {
             />
           </div>
         </div>
-        <div className='colapse-toolbar-btn'>
-          <button
-            onClick={() => {
-              setToolbarExpanded(false)
-            }}
-          >
-            <VscChromeClose size={25} />
-          </button>
-        </div>
+        <button
+          className='colapse-toolbar-btn'
+          onClick={() => {
+            setToolbarExpanded(false)
+          }}
+        >
+          <VscChromeClose size={25} />
+        </button>
       </div>
       {devices.length === 0 ? (
         <div className='empty-page'>

@@ -94,6 +94,9 @@
 .toolbar-item-refresh {
   display: flex;
 }
+.toolbar-item-filter {
+  display: none;
+}
 .toolbar-filter-btn {
   background: transparent;
   border: none;
@@ -118,10 +121,6 @@
 .toolbar-add-btn:focus {
   box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--active-color),
     0 1px 2px 0 rgb(0, 0, 0);
-}
-.toolbar-item-filter {
-  display: none;
-  position: relative;
 }
 .active-filter-indicator {
   display: block;
@@ -163,14 +162,15 @@
   position: absolute;
   right: 2rem;
   top: 5rem;
-}
-.colapse-toolbar-btn button {
   background-color: transparent;
   border: none;
   padding: 0.3rem;
-  border-radius: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.colapse-toolbar-btn button:hover {
+.colapse-toolbar-btn:hover {
   background-color: var(--bck-grey-light-hover-color);
 }
 .dropdown-template {
