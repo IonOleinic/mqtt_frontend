@@ -1,4 +1,4 @@
-const NoMotionImage = (props) => {
+export default function NoMotionImage(props) {
   return (
     <svg
       version='1.0'
@@ -66,5 +66,3 @@ const NoMotionImage = (props) => {
     </svg>
   )
 }
-
-export default NoMotionImage

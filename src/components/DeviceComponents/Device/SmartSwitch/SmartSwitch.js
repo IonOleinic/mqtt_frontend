@@ -84,24 +84,28 @@ function SmartSwitch({ device }) {
             display: sensorData === undefined ? 'none' : 'flex',
           }}
         >
-          <p>{sensorData.Today} kW</p>
+          <p>{sensorData?.Today?.toString() || '--'} kW</p>
         </div>
         <div className='sensor'>
           <div className='sensor-item'>
             <VoltageIcon size={30} />
-            <p style={{ marginLeft: '0.2rem' }}>{sensorData.Voltage} V</p>
+            <p style={{ marginLeft: '0.2rem' }}>
+              {sensorData?.Voltage?.toString() || '--'} V
+            </p>
           </div>
           <div className='sensor-item'>
             <CurrentIcon size={30} />
-            <p>{sensorData.Current} A</p>
+            <p>{sensorData?.Current?.toString() || '--'} A</p>
           </div>
           <div className='sensor-item'>
             <PowerIcon size={30} />
-            <p style={{ marginLeft: '0.2rem' }}>{sensorData.Power} W</p>
+            <p style={{ marginLeft: '0.2rem' }}>
+              {sensorData?.Power?.toString() || '--'} W
+            </p>
           </div>
           <div className='sensor-item' style={{ width: '140px' }}>
             <TotalPowerIcon size={30} />
-            <p>{sensorData.Total} kW</p>
+            <p>{sensorData?.Total?.toString() || '--'} kW</p>
           </div>
         </div>
       </div>

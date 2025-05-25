@@ -16,18 +16,23 @@ import tasmotaLogoPng from '../../../components/DeviceComponents/ManufacterImage
 import openBekenLogoPng from '../../../components/DeviceComponents/ManufacterImages/openBeken-logo.png'
 import { toast } from 'react-toastify'
 import SubSiren from '../../../components/DeviceComponents/AddDeviceComponents/SubSiren/SubSiren'
+import wifiLogo from '../../../components/DeviceComponents/ConnectionTypeImages/wifi-logo.png'
+import zigbeeLogo from '../../../components/DeviceComponents/ConnectionTypeImages/zigbee-logo.png'
 import './AddDevice.css'
 
-const tasmotaIcon = (
-  <img src={tasmotaLogoPng} style={{ width: '20px', height: '20px' }} />
-)
-const openBekenIcon = (
-  <img src={openBekenLogoPng} style={{ width: '20px', height: '20px' }} />
-)
-
 const selectedManufacterOptions = [
-  { name: 'tasmota', icon: tasmotaIcon },
-  { name: 'openBeken', icon: openBekenIcon },
+  {
+    name: 'tasmota',
+    icon: (
+      <img src={tasmotaLogoPng} style={{ width: '20px', height: '20px' }} />
+    ),
+  },
+  {
+    name: 'openBeken',
+    icon: (
+      <img src={openBekenLogoPng} style={{ width: '20px', height: '20px' }} />
+    ),
+  },
 ]
 
 function AddDevice() {
@@ -37,6 +42,7 @@ function AddDevice() {
   const { selectedOptionTemplate, optionTemplate } = useOptionTemplate()
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
+  const [shortAddr, setShortAddr] = useState('')
   const [isMqttNameValid, setIsMqttNameValid] = useState(undefined)
   const [isFirstStepValid, setIsFirstStepValid] = useState(false)
   const [isSecondStepValid, setIsSecondStepValid] = useState(false)
@@ -58,7 +64,7 @@ function AddDevice() {
 
   const getGroups = async () => {
     try {
-      let response = await axios.get('/groups')
+      const response = await axios.get('/groups')
       setGroups([{ id: null, name: 'No group' }, ...response.data])
     } catch (error) {
       console.log(error)
@@ -75,26 +81,26 @@ function AddDevice() {
   const validateFirstStep = () => {
     setResultMessage('')
     let isValid = false
-    if (mqttName.length >= 2 && mqttName.length < 30) {
+    if (selectedTypeGroup && selectedSubTypeGroup) {
       isValid = true
+      setIsFirstStepValid(true)
     } else {
       isValid = false
+      setIsFirstStepValid(false)
     }
-    setIsMqttNameValid(isValid)
-    setIsFirstStepValid(isValid)
     return isValid
   }
 
   const validateSecondStep = () => {
     setResultMessage('')
     let isValid = false
-    if (selectedTypeGroup && selectedSubTypeGroup) {
+    if (mqttName.length >= 2 && mqttName.length < 30) {
       isValid = true
-      setIsSecondStepValid(true)
     } else {
       isValid = false
-      setIsSecondStepValid(false)
     }
+    setIsMqttNameValid(isValid)
+    setIsSecondStepValid(isValid)
     return isValid
   }
   useEffect(() => {
@@ -104,18 +110,18 @@ function AddDevice() {
   }, [subTypeGroups])
 
   useEffect(() => {
-    validateSecondStep()
+    if (validateFirstStep()) resetSelectedOptions()
     chooseSubDevice(selectedSubTypeGroup?.type)
   }, [selectedSubTypeGroup])
 
   useEffect(() => {
-    if (validateFirstStep()) resetSelectedOptions()
+    validateSecondStep()
   }, [mqttName])
 
   const resetSelectedOptions = () => {
     setIsSecondStepValid(false)
-    setSelectedTypeGroup(undefined)
-    setSelectedSubTypeGroup(undefined)
+    setMqttName('')
+    setShortAddr('')
     setSelectedDeviceGroup({ id: null, name: 'No group' })
     setGroupId(null)
     setAttributes({})
@@ -166,6 +172,9 @@ function AddDevice() {
       case 'smartLed':
         subDevice = <SubLed setAttributes={setAttributes} />
         break
+      case 'zbHub':
+        subDevice = undefined
+        break
       default:
         subDevice = undefined
         break
@@ -182,10 +191,14 @@ function AddDevice() {
     deviceData.manufacter = selectedManufacter?.name
     deviceData.device_type = selectedSubTypeGroup?.type
     deviceData.sub_type = selectedSubTypeGroup?.sub_type
+    deviceData.connection_type = selectedSubTypeGroup?.connectionType
     deviceData.group_id = groupId ? Number(groupId) : null
     deviceData.attributes = attributes
+    deviceData.attributes.short_addr =
+      selectedSubTypeGroup?.connectionType === 'zigbee' ? shortAddr : undefined
+
     try {
-      let response = await axios.post('/device', deviceData)
+      await axios.post('/device', deviceData)
       navigate('/devices')
     } catch (error) {
       console.log(error)
@@ -207,130 +220,75 @@ function AddDevice() {
         orientation='vertical'
         className='dev-step'
       >
-        <StepperPanel header='Initial Setup'>
-          <div className='dev-step-content'>
-            <div className='dev-step-initial-setup'>
-              <div className='form-input-group'>
-                <label htmlFor='input-device-name'>Device Name</label>
-                <InputText
-                  id='input-device-name'
-                  aria-describedby='device-name-help'
-                  placeholder='Type Device Name'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className='form-input-group'>
-                <label htmlFor='select-manufacter'>Manufacter</label>
-                <Dropdown
-                  id='select-manufacter'
-                  value={selectedManufacter}
-                  options={selectedManufacterOptions}
-                  optionLabel='name'
-                  onChange={(e) => {
-                    setSelectedManufacter(e.value)
-                  }}
-                  valueTemplate={selectedOptionTemplate}
-                  itemTemplate={optionTemplate}
-                  placeholder='Select a manufacter'
-                />
-              </div>
-              <div className='form-input-group'>
-                <label htmlFor='input-mqtt-name'>
-                  MQTT Name <span style={{ color: 'red' }}>*</span>
-                </label>
-                <InputText
-                  id='input-mqtt-name'
-                  aria-describedby='mqtt-name-help'
-                  placeholder='Type MQTT Name'
-                  required
-                  invalid={!isMqttNameValid}
-                  value={mqttName}
-                  onChange={(e) => {
-                    setMqttName(e.target.value)
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className='dev-step-buttons'>
-            <Button
-              label='Next'
-              icon='pi pi-arrow-right'
-              iconPos='right'
-              onClick={() => {
-                if (validateFirstStep()) {
-                  stepperRef.current.nextCallback()
-                } else {
-                  toast.dismiss()
-                  toast.error('Mqtt name is not valid')
-                }
-              }}
-            />
-          </div>
-        </StepperPanel>
         <StepperPanel header='Device Type'>
           <div className='dev-step-content'>
-            {isFirstStepValid ? (
-              <div className='dev-step-all-groups'>
-                <div className='dev-step-type-groups-contn'>
-                  <p className='dev-step-groups-title'>Base Groups</p>
-                  <div className='dev-step-type-groups'>
-                    {typeGroups.map((group) => {
+            <div className='dev-step-all-groups'>
+              <div className='dev-step-type-groups-contn'>
+                <p className='dev-step-groups-title'>Base Groups</p>
+                <div className='dev-step-type-groups'>
+                  {typeGroups.map((group) => {
+                    return (
+                      <div
+                        className={
+                          group?.label == selectedTypeGroup?.label
+                            ? 'dev-step-type-group dev-step-type-group-selected'
+                            : 'dev-step-type-group'
+                        }
+                        key={group.label}
+                        onClick={() => {
+                          setSelectedTypeGroup(group)
+                        }}
+                      >
+                        <>{group.icon}</>
+                        <p>{group.label}</p>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+              <div className='dev-step-sub-type-groups-contn'>
+                <p className='dev-step-groups-title'>Sub Groups</p>
+                {subTypeGroups?.length > 0 ? (
+                  <div className='dev-step-sub-type-groups'>
+                    {subTypeGroups.map((subTypeGroup) => {
                       return (
                         <div
                           className={
-                            group?.label == selectedTypeGroup?.label
-                              ? 'dev-step-type-group dev-step-type-group-selected'
-                              : 'dev-step-type-group'
+                            subTypeGroup?.label == selectedSubTypeGroup?.label
+                              ? 'dev-step-sub-type-group dev-step-sub-type-group-selected'
+                              : subTypeGroup?.disabled
+                              ? 'dev-step-sub-type-group dev-step-sub-type-group-disabled'
+                              : 'dev-step-sub-type-group'
                           }
-                          key={group.label}
+                          key={subTypeGroup.label}
                           onClick={() => {
-                            setSelectedTypeGroup(group)
+                            if (!subTypeGroup.disabled)
+                              setSelectedSubTypeGroup(subTypeGroup)
                           }}
                         >
-                          <>{group.icon}</>
-                          <p>{group.label}</p>
+                          <>{subTypeGroup.icon}</>
+                          <p>{subTypeGroup.label}</p>
+                          {subTypeGroup.connectionType && (
+                            <img
+                              src={
+                                subTypeGroup.connectionType === 'wifi'
+                                  ? wifiLogo
+                                  : zigbeeLogo
+                              }
+                              alt='connection type icon'
+                            />
+                          )}
                         </div>
                       )
                     })}
                   </div>
-                </div>
-                <div className='dev-step-sub-type-groups-contn'>
-                  <p className='dev-step-groups-title'>Sub Groups</p>
-                  {subTypeGroups?.length > 0 ? (
-                    <div className='dev-step-sub-type-groups'>
-                      {subTypeGroups.map((subTypeGroup) => {
-                        return (
-                          <div
-                            className={
-                              subTypeGroup?.label == selectedSubTypeGroup?.label
-                                ? 'dev-step-sub-type-group dev-step-sub-type-group-selected'
-                                : 'dev-step-sub-type-group'
-                            }
-                            key={subTypeGroup.label}
-                            onClick={() =>
-                              setSelectedSubTypeGroup(subTypeGroup)
-                            }
-                          >
-                            <>{subTypeGroup.icon}</>
-                            <p>{subTypeGroup.label}</p>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  ) : (
-                    <div className='dev-step-empty-sub-type-groups'>
-                      <p>Please select a base device group.</p>
-                    </div>
-                  )}
-                </div>
+                ) : (
+                  <div className='dev-step-empty-sub-type-groups'>
+                    <p>Please select a base device group.</p>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className='dev-step-prev-steps-required'>
-                <p>Please complete previous step.</p>
-              </div>
-            )}
+            </div>
           </div>
           <div className='dev-step-buttons'>
             <Button
@@ -345,15 +303,128 @@ function AddDevice() {
               iconPos='right'
               onClick={() => {
                 if (validateFirstStep()) {
+                  stepperRef.current.nextCallback()
+                } else {
+                  toast.dismiss()
+                  toast.error('Please choose a device type')
+                }
+              }}
+            />
+          </div>
+        </StepperPanel>
+        <StepperPanel header='Name Setup'>
+          <div className='dev-step-content'>
+            {isFirstStepValid ? (
+              <div className='dev-step-name-setup'>
+                <div className='form-input-group'>
+                  <label htmlFor='input-device-name'>Device Name</label>
+                  <InputText
+                    id='input-device-name'
+                    aria-describedby='device-name-help'
+                    placeholder='Type Device Name'
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className='form-input-group'>
+                  <label htmlFor='select-manufacter'>Manufacter</label>
+                  <Dropdown
+                    id='select-manufacter'
+                    value={selectedManufacter}
+                    options={selectedManufacterOptions}
+                    optionLabel='name'
+                    onChange={(e) => {
+                      setSelectedManufacter(e.value)
+                    }}
+                    valueTemplate={selectedOptionTemplate}
+                    itemTemplate={optionTemplate}
+                    placeholder='Select a manufacter'
+                    disabled={
+                      selectedSubTypeGroup?.type === 'zbHub'
+                        ? true
+                        : selectedSubTypeGroup?.connectionType === 'zigbee'
+                        ? true
+                        : false
+                    }
+                  />
+                </div>
+                <div
+                  className='form-input-group'
+                  style={{
+                    display:
+                      selectedSubTypeGroup?.connectionType === 'zigbee'
+                        ? 'none'
+                        : 'flex',
+                  }}
+                >
+                  <label htmlFor='input-mqtt-name'>
+                    MQTT Name <span style={{ color: 'red' }}>*</span>
+                  </label>
+                  <InputText
+                    id='input-mqtt-name'
+                    aria-describedby='mqtt-name-help'
+                    placeholder='Type MQTT Name'
+                    required
+                    invalid={!isMqttNameValid}
+                    value={mqttName}
+                    onChange={(e) => {
+                      setMqttName(e.target.value)
+                    }}
+                  />
+                </div>
+                <div
+                  className='form-input-group'
+                  style={{
+                    display:
+                      selectedSubTypeGroup?.connectionType === 'zigbee'
+                        ? 'flex'
+                        : 'none',
+                  }}
+                >
+                  <label htmlFor='input-short-addr'>
+                    Short Address of Zigbee device
+                    <span style={{ color: 'red' }}> *</span>
+                  </label>
+                  <InputText
+                    id='input-short-addr'
+                    aria-describedby='short-addr-help'
+                    placeholder='0x0000'
+                    required
+                    invalid={!isMqttNameValid}
+                    value={shortAddr}
+                    onChange={(e) => {
+                      setShortAddr(e.target.value)
+                      setMqttName(`zb_${e.target.value}`)
+                    }}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className='dev-step-prev-steps-required'>
+                <p>Please complete previous step.</p>
+              </div>
+            )}
+          </div>
+          <div className='dev-step-buttons'>
+            <Button
+              label='Next'
+              icon='pi pi-arrow-right'
+              iconPos='right'
+              onClick={() => {
+                if (validateFirstStep()) {
                   if (validateSecondStep()) {
                     stepperRef.current.nextCallback()
                   } else {
                     toast.dismiss()
-                    toast.error('Please select a device type')
+                    if (selectedSubTypeGroup?.connectionType === 'wifi') {
+                      toast.error('Mqtt name is not valid')
+                    } else {
+                      toast.error('Zigbee short address is not valid')
+                    }
                   }
                 } else {
                   toast.dismiss()
-                  toast.error('Please complete the first step')
+                  toast.error('Please complete previous step')
                 }
               }}
             />
@@ -372,6 +443,31 @@ function AddDevice() {
                 >
                   {subDevice}
                 </div>
+                {/* <div
+                  className='dev-step-select-conn-type-contn'
+                  style={{
+                    display:
+                      selectedSubTypeGroup?.type === 'zbHub' ? 'none' : 'flex',
+                  }}
+                >
+                  <div className='form-input-group'>
+                    <label htmlFor='select-connection-type'>
+                      Connection Type
+                    </label>
+                    <Dropdown
+                      id='select-connection-type'
+                      value={selectedConnectionType}
+                      options={selectedConnectionTypeOptions}
+                      optionLabel='name'
+                      onChange={(e) => {
+                        setSelectedConnectionType(e.value)
+                      }}
+                      valueTemplate={selectedOptionTemplate}
+                      itemTemplate={optionTemplate}
+                      placeholder='Select connection type'
+                    />
+                  </div>
+                </div> */}
                 <div className='dev-step-select-group-contn'>
                   <div className='form-input-group'>
                     <label htmlFor='select-device-group'>Add to a group</label>

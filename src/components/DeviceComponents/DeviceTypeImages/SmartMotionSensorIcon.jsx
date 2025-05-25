@@ -3,13 +3,14 @@ export default function SmartMotionSensorIcon(props) {
     <svg
       version='1.0'
       xmlns='http://www.w3.org/2000/svg'
-      width='140.000000pt'
-      height='140.000000pt'
+      width={props.size || '140.000000pt'}
+      height={props.size || '140.000000pt'}
       viewBox='0 0 140.000000 140.000000'
       preserveAspectRatio='xMidYMid meet'
       fill={props.color || 'currentColor'}
       stroke='none'
       className={props.className}
+      style={props.size}
     >
       <g transform='translate(0.000000,140.000000) scale(0.100000,-0.100000)'>
         <path

@@ -1,15 +1,16 @@
 export default function SmartSwitchIcon(props) {
   return (
     <svg
-      width={props.size || '500'}
-      height={props.size || '450'}
       version='1.0'
       xmlns='http://www.w3.org/2000/svg'
+      width={props.size || '500'}
+      height={props.size || '450'}
       viewBox='0 0 500 450'
       preserveAspectRatio='xMidYMid meet'
       fill={props.color || 'currentColor'}
       stroke='none'
       className={props.className}
+      style={props.style}
     >
       <g transform='translate(0,450) scale(0.1,-0.1)'>
         <path

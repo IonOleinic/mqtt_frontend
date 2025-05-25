@@ -5,6 +5,7 @@ import SmartDoorIcon from '../components/DeviceComponents/DeviceTypeImages/Smart
 import SmartBulbIcon from '../components/DeviceComponents/DeviceTypeImages/SmartBulbIcon'
 import SmartRGBControllerIcon from '../components/DeviceComponents/DeviceTypeImages/SmartRGBControllerIcon'
 import SmartMotionIcon from '../components/DeviceComponents/DeviceTypeImages/SmartMotionSensorIcon'
+import SmartVibrationIcon from '../components/DeviceComponents/DeviceTypeImages/SmartVibrationSensorIcon'
 import SmartStripIcon from '../components/DeviceComponents/DeviceTypeImages/SmartStripIcon'
 import SmartPlugIcon from '../components/DeviceComponents/DeviceTypeImages/SmartPlugIcon'
 import SmartSwitchIcon from '../components/DeviceComponents/DeviceTypeImages/SmartSwitchIcon'
@@ -12,6 +13,7 @@ import SmartWallSwitchIcon from '../components/DeviceComponents/DeviceTypeImages
 import SmartTempSensorIcon from '../components/DeviceComponents/DeviceTypeImages/SmartThermometerIcon'
 import SmartSirenAlarmIcon from '../components/DeviceComponents/DeviceTypeImages/SmartSirenAlarmIcon'
 import SmartValveIcon from '../components/DeviceComponents/DeviceTypeImages/SmartValveIcon'
+import ZbHubIcon from '../components/DeviceComponents/DeviceTypeImages/ZbHubIcon'
 
 function useDeviceTypes(group) {
   const [subTypeGroups, setSubTypeGroups] = useState([])
@@ -38,7 +40,7 @@ function useDeviceTypes(group) {
       icon: <SmartTempSensorIcon />,
     },
     {
-      label: 'Pir Motion',
+      label: 'Motion',
       type: 'smartMotionSensor',
       icon: <SmartMotionIcon />,
     },
@@ -52,7 +54,13 @@ function useDeviceTypes(group) {
       type: 'smartLed',
       icon: <SmartBulbIcon />,
     },
+    {
+      label: 'Zigbee Hub',
+      type: 'zbHub',
+      icon: <ZbHubIcon />,
+    },
   ]
+
   useEffect(() => {
     setSubTypeGroups(getSubTypeGroups(group))
   }, [group])
@@ -62,77 +70,199 @@ function useDeviceTypes(group) {
       case 'Switch/Relay':
         return [
           {
-            label: 'Switch',
+            label: 'Wifi Switch',
             type: 'smartSwitch',
             sub_type: 'switch',
             icon: <SmartSwitchIcon />,
+            connectionType: 'wifi',
           },
           {
-            label: 'Wall Switch',
+            label: 'Wifi Wall Switch',
             type: 'smartSwitch',
             sub_type: 'wall_switch',
             icon: <SmartWallSwitchIcon />,
+            connectionType: 'wifi',
           },
           {
-            label: 'Plug',
+            label: 'Wifi Plug',
             type: 'smartSwitch',
             sub_type: 'plug',
             icon: <SmartPlugIcon />,
+            connectionType: 'wifi',
           },
           {
-            label: 'Valve',
+            label: 'Wifi Valve',
             type: 'smartSwitch',
             sub_type: 'valve',
             icon: <SmartValveIcon />,
+            connectionType: 'wifi',
+          },
+          {
+            label: 'Zigbee Switch',
+            type: 'smartSwitch',
+            sub_type: 'switch',
+            icon: <SmartSwitchIcon />,
+            connectionType: 'zigbee',
+          },
+          {
+            label: 'Zb Wall Switch',
+            type: 'smartSwitch',
+            sub_type: 'wall_switch',
+            icon: <SmartWallSwitchIcon />,
+            connectionType: 'zigbee',
+          },
+          {
+            label: 'Zigbee Plug',
+            type: 'smartSwitch',
+            sub_type: 'plug',
+            icon: <SmartPlugIcon />,
+            connectionType: 'zigbee',
+          },
+          {
+            label: 'Zigbee Valve',
+            type: 'smartSwitch',
+            sub_type: 'valve',
+            icon: <SmartValveIcon />,
+            connectionType: 'zigbee',
           },
         ]
       case 'IR':
-        return [{ label: 'IR', type: 'smartIR', icon: <SmartIrIcon /> }]
+        return [
+          {
+            label: 'Wifi IR',
+            type: 'smartIR',
+            icon: <SmartIrIcon />,
+            connectionType: 'wifi',
+          },
+          {
+            label: 'Zigbee IR',
+            type: 'smartIR',
+            icon: <SmartIrIcon />,
+            connectionType: 'zigbee',
+            disabled: true,
+          },
+        ]
       case 'Door/Window':
         return [
           {
-            label: 'Door Sensor',
+            label: 'Wifi Door Sensor',
             type: 'smartDoorSensor',
             icon: <SmartDoorIcon />,
+            connectionType: 'wifi',
+          },
+          {
+            label: 'Zb Door Sensor',
+            type: 'smartDoorSensor',
+            icon: <SmartDoorIcon />,
+            connectionType: 'zigbee',
+            disabled: true,
           },
         ]
       case 'Temp/Humidity':
         return [
           {
-            label: 'Temp Sensor',
+            label: 'Wifi Temp Sensor',
             type: 'smartTempSensor',
             icon: <SmartTempSensorIcon />,
+            connectionType: 'wifi',
+          },
+          {
+            label: 'Zb Temp Sensor',
+            type: 'smartTempSensor',
+            icon: <SmartTempSensorIcon />,
+            connectionType: 'zigbee',
+            disabled: true,
           },
         ]
-      case 'Pir Motion':
+      case 'Motion':
         return [
           {
-            label: 'Motion Sensor',
+            label: 'Wifi Pir Motion Sensor',
             type: 'smartMotionSensor',
+            sub_type: 'pir',
             icon: <SmartMotionIcon />,
+            connectionType: 'wifi',
+          },
+          {
+            label: 'Wifi Vibration Sensor',
+            type: 'smartMotionSensor',
+            sub_type: 'vibration',
+            icon: <SmartVibrationIcon />,
+            connectionType: 'wifi',
+            disabled: true,
+          },
+          {
+            label: 'Zb Pir Motion Sensor',
+            type: 'smartMotionSensor',
+            sub_type: 'pir',
+            icon: <SmartMotionIcon />,
+            connectionType: 'zigbee',
+            disabled: true,
+          },
+          {
+            label: 'Zb Vibration Sensor',
+            type: 'smartMotionSensor',
+            sub_type: 'vibration',
+            icon: <SmartVibrationIcon />,
+            connectionType: 'zigbee',
           },
         ]
       case 'Siren/Alarm':
         return [
           {
-            label: 'Siren Alarm',
+            label: 'Wifi Siren Alarm',
             type: 'smartSirenAlarm',
             icon: <SmartSirenAlarmIcon />,
+            connectionType: 'wifi',
+          },
+          {
+            label: 'Zb Siren Alarm',
+            type: 'smartSirenAlarm',
+            icon: <SmartSirenAlarmIcon />,
+            connectionType: 'zigbee',
+            disabled: true,
           },
         ]
       case 'Led':
         return [
           {
-            label: 'Bulb',
+            label: 'Wifi Bulb',
             type: 'smartLed',
             sub_type: 'bulb',
             icon: <SmartBulbIcon />,
+            connectionType: 'wifi',
           },
           {
-            label: 'Led Strip',
+            label: 'Wifi Led Strip',
             type: 'smartLed',
             sub_type: 'ledStrip',
             icon: <SmartRGBControllerIcon />,
+            connectionType: 'wifi',
+          },
+          {
+            label: 'Zigbee Bulb',
+            type: 'smartLed',
+            sub_type: 'bulb',
+            icon: <SmartBulbIcon />,
+            connectionType: 'zigbee',
+            disabled: true,
+          },
+          {
+            label: 'Zigbee Led Strip',
+            type: 'smartLed',
+            sub_type: 'ledStrip',
+            icon: <SmartRGBControllerIcon />,
+            connectionType: 'zigbee',
+            disabled: true,
+          },
+        ]
+      case 'Zigbee Hub':
+        return [
+          {
+            label: 'Zigbee Hub',
+            type: 'zbHub',
+            icon: <ZbHubIcon />,
+            connectionType: null,
           },
         ]
       default:
@@ -172,7 +302,13 @@ function useDeviceTypes(group) {
           <SmartRGBControllerIcon />
         )
       case 'smartMotionSensor':
-        return <SmartMotionIcon />
+        if (device.sub_type === 'pir') {
+          return <SmartMotionIcon />
+        } else if (device.sub_type === 'vibration') {
+          ;<SmartVibrationIcon />
+        }
+      case 'zbHub':
+        return <ZbHubIcon />
       default:
         // Handle default case or set a default icon
         return <></>

@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 1rem 0.5rem;
+  user-select: none;
 }
 .dev-step {
   width: 100%;
@@ -26,7 +27,7 @@
   border-radius: 6px;
   border: var(--dashed-border-basic);
 }
-.dev-step-initial-setup {
+.dev-step-name-setup {
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -82,6 +83,7 @@
 }
 .dev-step-type-group,
 .dev-step-sub-type-group {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -99,10 +101,30 @@
   width: 40px;
   height: 40px;
 }
+.dev-step-type-group p,
+.dev-step-sub-type-group p {
+  width: 120px;
+  height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.dev-step-sub-type-group img {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  max-width: 25px;
+  height: 15px;
+}
+.dev-step-sub-type-group-disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: initial;
+}
 .dev-step-type-group-selected,
 .dev-step-sub-type-group-selected {
-  color: var(--hover-color);
   border-color: var(--hover-color);
+  background-color: var(--hover-color-tran);
 }
 .dev-step-empty-sub-type-groups {
   display: flex;
@@ -123,7 +145,8 @@
   height: 100%;
 }
 .dev-step-sub-device-contn,
-.dev-step-select-group-contn {
+.dev-step-select-group-contn,
+.dev-step-select-conn-type-contn {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -244,6 +267,15 @@
   .dev-step-sub-type-group svg {
     width: 35px;
     height: 35px;
+  }
+  .dev-step-type-group img,
+  .dev-step-sub-type-group img {
+    max-width: 20px;
+    height: 10px;
+  }
+  .dev-step-type-group p,
+  .dev-step-sub-type-group p {
+    width: 80px;
   }
   .dev-step-type-group,
   .dev-step-sub-type-group {

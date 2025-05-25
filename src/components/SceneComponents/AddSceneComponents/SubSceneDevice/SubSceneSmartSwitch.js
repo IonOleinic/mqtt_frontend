@@ -15,7 +15,7 @@ function SubSceneSmartStrip({
 
   useEffect(() => {
     if (eventOrAction == 'event') {
-      setConditionalTopic(device.attributes.stat_power_topics[0])
+      setConditionalTopic(device.attributes.receive_power_topics[0])
       if (device.manufacter == 'tasmota') {
         setConditionalPayload('OFF')
       } else if (device.manufacter == 'openBeken') {
@@ -55,7 +55,7 @@ function SubSceneSmartStrip({
             setSelectedSocket(e.target.value)
             if (eventOrAction == 'event') {
               setConditionalTopic(
-                device.attributes.stat_power_topics[e.target.value - 1]
+                device.attributes.receive_power_topics[e.target.value - 1]
               )
               setConditionalText(`Power ${e.target.value} ${state}`)
             } else if (eventOrAction == 'action') {

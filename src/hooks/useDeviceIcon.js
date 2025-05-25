@@ -14,6 +14,7 @@ import SmartDoorIcon from '../components/DeviceComponents/DeviceTypeImages/Smart
 import SmartBulbIcon from '../components/DeviceComponents/DeviceTypeImages/SmartBulbIcon'
 import SmartRGBControllerIcon from '../components/DeviceComponents/DeviceTypeImages/SmartRGBControllerIcon'
 import SmartMotionIcon from '../components/DeviceComponents/DeviceTypeImages/SmartMotionSensorIcon'
+import SmartVibrationIcon from '../components/DeviceComponents/DeviceTypeImages/SmartVibrationSensorIcon'
 import SmartStripIcon from '../components/DeviceComponents/DeviceTypeImages/SmartStripIcon'
 import SmartPlugIcon from '../components/DeviceComponents/DeviceTypeImages/SmartPlugIcon'
 import SmartSwitchIcon from '../components/DeviceComponents/DeviceTypeImages/SmartSwitchIcon'
@@ -21,6 +22,7 @@ import SmartWallSwitchIcon from '../components/DeviceComponents/DeviceTypeImages
 import SmartTempSensorIcon from '../components/DeviceComponents/DeviceTypeImages/SmartThermometerIcon'
 import SmartSirenAlarmIcon from '../components/DeviceComponents/DeviceTypeImages/SmartSirenAlarmIcon'
 import SmartValveIcon from '../components/DeviceComponents/DeviceTypeImages/SmartValveIcon'
+import ZbHubIcon from '../components/DeviceComponents/DeviceTypeImages/ZbHubIcon'
 
 //available icons
 let iconOnline = <TbAccessPoint size={20} />
@@ -93,7 +95,14 @@ const useDeviceIcon = (device) => {
         )
         break
       case 'smartMotionSensor':
-        setDeviceIcon(<SmartMotionIcon />)
+        if (device.sub_type === 'pir') {
+          setDeviceIcon(<SmartMotionIcon />)
+        } else if (device.sub_type === 'vibration') {
+          setDeviceIcon(<SmartVibrationIcon />)
+        }
+        break
+      case 'zbHub':
+        setDeviceIcon(<ZbHubIcon />)
         break
       default:
         // Handle default case or set a default icon

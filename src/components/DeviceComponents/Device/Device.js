@@ -94,7 +94,9 @@ function Device({ handleDeleteDevice, initDevice }) {
         borderColor:
           device.connection_type === 'wifi'
             ? 'rgba(20, 20, 250, 0.8)'
-            : 'rgba(250, 20, 20, 0.8)',
+            : device.connection_type === 'zigbee'
+            ? 'rgba(250, 20, 20, 0.8)'
+            : 'transparent',
       }}
     >
       <div className='device-top'>
@@ -192,13 +194,15 @@ function Device({ handleDeleteDevice, initDevice }) {
           </div>
         </div>
         <div className='device-right-icons'>
-          <img
-            src={device.connection_type === 'wifi' ? wifiLogo : zigbeeLogo}
-            style={{
-              width: device.connection_type === 'wifi' ? '30px' : '20px',
-              height: '20px',
-            }}
-          />
+          {device.connection_type && (
+            <img
+              src={device.connection_type === 'wifi' ? wifiLogo : zigbeeLogo}
+              style={{
+                width: device.connection_type === 'wifi' ? '30px' : '20px',
+                height: '20px',
+              }}
+            />
+          )}
         </div>
       </div>
       <div
@@ -209,7 +213,7 @@ function Device({ handleDeleteDevice, initDevice }) {
         }
       >
         {finalDevice}
-        {/* <InactiveLayer visibility={!device.available} /> */}
+        <InactiveLayer visibility={!device.available} />
       </div>
     </div>
   )

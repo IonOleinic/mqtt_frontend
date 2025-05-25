@@ -1,4 +1,4 @@
-const MotionImage = (props) => {
+export default function MotionImage(props) {
   return (
     <svg
       version='1.0'
@@ -144,5 +144,3 @@ l-25 30 43 384 c31 279 48 396 61 427 31 69 62 268 64 406 0 80 -20 367 -57
     </svg>
   )
 }
-
-export default MotionImage

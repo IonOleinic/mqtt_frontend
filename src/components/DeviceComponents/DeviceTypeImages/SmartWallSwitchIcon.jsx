@@ -3,13 +3,14 @@ export default function SmartWallSwitchIcon(props) {
     <svg
       version='1.0'
       xmlns='http://www.w3.org/2000/svg'
-      width='620.000000pt'
-      height='620.000000pt'
+      width={props.size || '620.000000pt'}
+      height={props.size || '620.000000pt'}
       viewBox='0 0 620.000000 620.000000'
       preserveAspectRatio='xMidYMid meet'
       fill={props.color || 'currentColor'}
       stroke='none'
       className={props.className}
+      style={props.style}
     >
       <g transform='translate(0.000000,620.000000) scale(0.100000,-0.100000)'>
         <path
