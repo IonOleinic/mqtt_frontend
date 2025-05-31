@@ -40,18 +40,23 @@ function AddDevice() {
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
   const { selectedOptionTemplate, optionTemplate } = useOptionTemplate()
+  const [devices, setDevices] = useState([])
   const [name, setName] = useState('')
   const [mqttName, setMqttName] = useState('')
   const [shortAddr, setShortAddr] = useState('')
   const [isMqttNameValid, setIsMqttNameValid] = useState(undefined)
+  const [isShortAddrValid, setIsShortAddrValid] = useState(undefined)
+  const [isZbHubValid, setIsZbHubValid] = useState(undefined)
   const [isFirstStepValid, setIsFirstStepValid] = useState(false)
   const [isSecondStepValid, setIsSecondStepValid] = useState(false)
   const [selectedManufacter, setSelectedManufacter] = useState(
     selectedManufacterOptions[0]
   )
+  const [selectedZbHub, setSelectedZbHub] = useState(undefined)
   const [selectedTypeGroup, setSelectedTypeGroup] = useState(undefined)
   const [selectedSubTypeGroup, setSelectedSubTypeGroup] = useState(undefined)
-  const { typeGroups, subTypeGroups } = useDeviceTypes(selectedTypeGroup)
+  const { typeGroups, subTypeGroups, getSpecificDeviceIcon } =
+    useDeviceTypes(selectedTypeGroup)
   const [groupId, setGroupId] = useState(null)
   const [selectedGroup, setSelectedDeviceGroup] = useState({
     id: null,
@@ -62,6 +67,15 @@ function AddDevice() {
   const [subDevice, setSubDevice] = useState(undefined)
   const [resultMessage, setResultMessage] = useState('')
 
+  const getDevices = async () => {
+    try {
+      const response = await axios.get(`/devices`)
+      setDevices(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const getGroups = async () => {
     try {
       const response = await axios.get('/groups')
@@ -71,6 +85,7 @@ function AddDevice() {
     }
   }
   useEffect(() => {
+    getDevices()
     getGroups()
   }, [])
 
@@ -80,28 +95,34 @@ function AddDevice() {
 
   const validateFirstStep = () => {
     setResultMessage('')
-    let isValid = false
-    if (selectedTypeGroup && selectedSubTypeGroup) {
-      isValid = true
-      setIsFirstStepValid(true)
-    } else {
-      isValid = false
-      setIsFirstStepValid(false)
+    toast.dismiss()
+    if (!selectedTypeGroup || !selectedSubTypeGroup) {
+      return false
     }
-    return isValid
+    return true
   }
-
   const validateSecondStep = () => {
     setResultMessage('')
-    let isValid = false
-    if (mqttName.length >= 2 && mqttName.length < 30) {
-      isValid = true
+    toast.dismiss()
+    if (selectedSubTypeGroup?.connectionType === 'zigbee') {
+      if (selectedZbHub === undefined) {
+        toast.error('Zigbee hub is not selected')
+        setIsZbHubValid(false)
+        return false
+      }
+      if (shortAddr.length < 4 || shortAddr.length > 12) {
+        toast.error('Zigbee short address is not valid')
+        setIsShortAddrValid(false)
+        return false
+      }
     } else {
-      isValid = false
+      if (mqttName.length < 2 || mqttName.length > 30) {
+        toast.error('Mqtt name is not valid')
+        setIsMqttNameValid(false)
+        return false
+      }
     }
-    setIsMqttNameValid(isValid)
-    setIsSecondStepValid(isValid)
-    return isValid
+    return true
   }
   useEffect(() => {
     if (subTypeGroups.length > 0) {
@@ -110,13 +131,21 @@ function AddDevice() {
   }, [subTypeGroups])
 
   useEffect(() => {
-    if (validateFirstStep()) resetSelectedOptions()
+    const isFirstStepValid = validateFirstStep()
+    setIsFirstStepValid(isFirstStepValid)
+    if (isFirstStepValid) resetSelectedOptions()
     chooseSubDevice(selectedSubTypeGroup?.type)
   }, [selectedSubTypeGroup])
 
   useEffect(() => {
-    validateSecondStep()
+    setIsMqttNameValid(true)
   }, [mqttName])
+  useEffect(() => {
+    setIsShortAddrValid(true)
+  }, [shortAddr])
+  useEffect(() => {
+    setIsZbHubValid(true)
+  }, [selectedZbHub])
 
   const resetSelectedOptions = () => {
     setIsSecondStepValid(false)
@@ -126,6 +155,7 @@ function AddDevice() {
     setGroupId(null)
     setAttributes({})
     setSubDevice(undefined)
+    setSelectedZbHub(undefined)
   }
   const chooseSubDevice = (type) => {
     setAttributes({})
@@ -196,6 +226,7 @@ function AddDevice() {
     deviceData.attributes = attributes
     deviceData.attributes.short_addr =
       selectedSubTypeGroup?.connectionType === 'zigbee' ? shortAddr : undefined
+    deviceData.attributes.zb_hub_mqtt_name = selectedZbHub?.mqtt_name
 
     try {
       await axios.post('/device', deviceData)
@@ -271,9 +302,9 @@ function AddDevice() {
                           {subTypeGroup.connectionType && (
                             <img
                               src={
-                                subTypeGroup.connectionType === 'wifi'
-                                  ? wifiLogo
-                                  : zigbeeLogo
+                                subTypeGroup.connectionType === 'zigbee'
+                                  ? zigbeeLogo
+                                  : wifiLogo
                               }
                               alt='connection type icon'
                             />
@@ -292,17 +323,13 @@ function AddDevice() {
           </div>
           <div className='dev-step-buttons'>
             <Button
-              label='Back'
-              severity='secondary'
-              icon='pi pi-arrow-left'
-              onClick={() => stepperRef.current.prevCallback()}
-            />
-            <Button
               label='Next'
               icon='pi pi-arrow-right'
               iconPos='right'
               onClick={() => {
-                if (validateFirstStep()) {
+                const isFirstStepValid = validateFirstStep()
+                setIsFirstStepValid(isFirstStepValid)
+                if (isFirstStepValid) {
                   stepperRef.current.nextCallback()
                 } else {
                   toast.dismiss()
@@ -381,8 +408,41 @@ function AddDevice() {
                         : 'none',
                   }}
                 >
+                  <label htmlFor='select-zb-hub'>
+                    Select a Hub for zigbee device
+                    <span style={{ color: 'red' }}> *</span>
+                  </label>
+                  <Dropdown
+                    id='select-zb-hub'
+                    value={selectedZbHub}
+                    options={devices
+                      .filter((device) => device.device_type === 'zbHub')
+                      .map((zbHub) => ({
+                        name: zbHub.name,
+                        mqtt_name: zbHub.mqtt_name,
+                        icon: getSpecificDeviceIcon(zbHub),
+                      }))}
+                    optionLabel='name'
+                    onChange={(e) => {
+                      setSelectedZbHub(e.value)
+                    }}
+                    invalid={!isZbHubValid}
+                    valueTemplate={selectedOptionTemplate}
+                    itemTemplate={optionTemplate}
+                    placeholder='Select a zigbee Hub'
+                  />
+                </div>
+                <div
+                  className='form-input-group'
+                  style={{
+                    display:
+                      selectedSubTypeGroup?.connectionType === 'zigbee'
+                        ? 'flex'
+                        : 'none',
+                  }}
+                >
                   <label htmlFor='input-short-addr'>
-                    Short Address of Zigbee device
+                    Short address of zigbee device
                     <span style={{ color: 'red' }}> *</span>
                   </label>
                   <InputText
@@ -390,7 +450,7 @@ function AddDevice() {
                     aria-describedby='short-addr-help'
                     placeholder='0x0000'
                     required
-                    invalid={!isMqttNameValid}
+                    invalid={!isShortAddrValid}
                     value={shortAddr}
                     onChange={(e) => {
                       setShortAddr(e.target.value)
@@ -407,20 +467,23 @@ function AddDevice() {
           </div>
           <div className='dev-step-buttons'>
             <Button
+              label='Back'
+              severity='secondary'
+              icon='pi pi-arrow-left'
+              onClick={() => stepperRef.current.prevCallback()}
+            />
+            <Button
               label='Next'
               icon='pi pi-arrow-right'
               iconPos='right'
               onClick={() => {
-                if (validateFirstStep()) {
-                  if (validateSecondStep()) {
+                const isFirstStepValid = validateFirstStep()
+                const isSecondStepValid = validateSecondStep()
+                setIsFirstStepValid(isFirstStepValid)
+                setIsSecondStepValid(isSecondStepValid)
+                if (isFirstStepValid) {
+                  if (isSecondStepValid) {
                     stepperRef.current.nextCallback()
-                  } else {
-                    toast.dismiss()
-                    if (selectedSubTypeGroup?.connectionType === 'wifi') {
-                      toast.error('Mqtt name is not valid')
-                    } else {
-                      toast.error('Zigbee short address is not valid')
-                    }
                   }
                 } else {
                   toast.dismiss()
@@ -527,8 +590,29 @@ function AddDevice() {
                       <p>{name || '?'}</p>
                     </div>
                     <div className='dev-step-summar-data-row'>
-                      <label>MQTT Name:</label>
-                      <p>{mqttName}</p>
+                      <label>Connection Type:</label>
+                      <img
+                        style={{ maxWidth: '30px', height: '20px' }}
+                        src={
+                          selectedSubTypeGroup.connectionType === 'zigbee'
+                            ? zigbeeLogo
+                            : wifiLogo
+                        }
+                        alt='connection type icon'
+                      />
+                      <p>({selectedSubTypeGroup.connectionType || 'wifi'})</p>
+                    </div>
+                    <div className='dev-step-summar-data-row'>
+                      <label>
+                        {selectedSubTypeGroup?.connectionType === 'zigbee'
+                          ? 'Short Address:'
+                          : 'MQTT Name:'}
+                      </label>
+                      <p>
+                        {selectedSubTypeGroup?.connectionType === 'zigbee'
+                          ? shortAddr
+                          : mqttName}
+                      </p>
                     </div>
                     <div className='dev-step-summar-data-row'>
                       <label>Manufacter:</label>

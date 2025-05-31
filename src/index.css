@@ -1,6 +1,7 @@
 :root {
   /* red colors */
   --custom-red: #e60b0b;
+  --hover-custom-red: #b70505;
 
   /* blue colors */
   --light-blue: #007bff; /* primereact light-blue theme primary color */
@@ -30,6 +31,8 @@
   --active-color: var(--light-indigo);
   --hover-color: var(--hover-indigo);
   --hover-color-tran: var(--light-indigo-tran);
+  --danger-color: var(--custom-red);
+  --hover-danger-color: var(--hover-custom-red);
 
   /* heights */
   --toolbar-height: 68px;

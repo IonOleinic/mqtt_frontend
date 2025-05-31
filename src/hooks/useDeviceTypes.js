@@ -20,9 +20,30 @@ function useDeviceTypes(group) {
 
   const typeGroups = [
     {
-      label: 'Switch/Relay',
+      label: 'Switch & Relay',
       type: 'smartStrip',
-      icon: <SmartSwitchIcon />,
+      icon: (
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+          }}
+        >
+          <SmartSwitchIcon />
+          <span
+            style={{
+              width: 1,
+              height: 30,
+              backgroundColor: 'black',
+              transform: 'rotate(20deg)',
+            }}
+          />
+          <SmartValveIcon />
+        </div>
+      ),
     },
     {
       label: 'IR',
@@ -30,32 +51,73 @@ function useDeviceTypes(group) {
       icon: <SmartIrIcon />,
     },
     {
-      label: 'Door/Window',
+      label: 'Door & Window',
       type: 'smartTempSensor',
       icon: <SmartDoorIcon />,
     },
     {
-      label: 'Temp/Humidity',
+      label: 'Temp & Humidity',
       type: 'smartTempSensor',
       icon: <SmartTempSensorIcon />,
     },
     {
       label: 'Motion',
       type: 'smartMotionSensor',
-      icon: <SmartMotionIcon />,
+      icon: (
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <SmartMotionIcon />
+          <span
+            style={{
+              width: 1,
+              height: 30,
+              backgroundColor: 'black',
+              transform: 'rotate(20deg)',
+            }}
+          />
+          <SmartVibrationIcon />
+        </div>
+      ),
     },
     {
-      label: 'Siren/Alarm',
+      label: 'Alarm',
       type: 'smartSirenAlarm',
       icon: <SmartSirenAlarmIcon />,
     },
     {
       label: 'Led',
       type: 'smartLed',
-      icon: <SmartBulbIcon />,
+      icon: (
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '3px',
+          }}
+        >
+          <SmartBulbIcon />
+          <span
+            style={{
+              width: 1,
+              height: 30,
+              backgroundColor: 'black',
+              transform: 'rotate(20deg)',
+            }}
+          />
+          <SmartRGBControllerIcon style={{ marginLeft: '3px' }} />
+        </div>
+      ),
     },
     {
-      label: 'Zigbee Hub',
+      label: 'Hub',
       type: 'zbHub',
       icon: <ZbHubIcon />,
     },
@@ -67,7 +129,7 @@ function useDeviceTypes(group) {
 
   const getSubTypeGroups = (group) => {
     switch (group?.label) {
-      case 'Switch/Relay':
+      case 'Switch & Relay':
         return [
           {
             label: 'Wifi Switch',
@@ -142,7 +204,7 @@ function useDeviceTypes(group) {
             disabled: true,
           },
         ]
-      case 'Door/Window':
+      case 'Door & Window':
         return [
           {
             label: 'Wifi Door Sensor',
@@ -158,7 +220,7 @@ function useDeviceTypes(group) {
             disabled: true,
           },
         ]
-      case 'Temp/Humidity':
+      case 'Temp & Humidity':
         return [
           {
             label: 'Wifi Temp Sensor',
@@ -207,7 +269,7 @@ function useDeviceTypes(group) {
             connectionType: 'zigbee',
           },
         ]
-      case 'Siren/Alarm':
+      case 'Alarm':
         return [
           {
             label: 'Wifi Siren Alarm',
@@ -256,13 +318,13 @@ function useDeviceTypes(group) {
             disabled: true,
           },
         ]
-      case 'Zigbee Hub':
+      case 'Hub':
         return [
           {
             label: 'Zigbee Hub',
             type: 'zbHub',
             icon: <ZbHubIcon />,
-            connectionType: null,
+            connectionType: 'wifi',
           },
         ]
       default:
@@ -270,45 +332,45 @@ function useDeviceTypes(group) {
     }
   }
 
-  const getSpecificDeviceIcon = (device) => {
+  const getSpecificDeviceIcon = (device, size = 30) => {
     switch (device.device_type) {
       case 'smartStrip':
         if (device.sub_type === 'plug') {
           return device.nr_of_sockets == 1 ? (
-            <SmartPlugIcon />
+            <SmartPlugIcon size={size} />
           ) : (
-            <SmartStripIcon />
+            <SmartStripIcon size={size} />
           )
         } else if (device.sub_type === 'switch') {
-          return <SmartSwitchIcon />
+          return <SmartSwitchIcon size={size} />
         } else if (device.sub_type === 'wall_switch') {
-          return <SmartWallSwitchIcon />
+          return <SmartWallSwitchIcon size={size} />
         } else if (device.sub_type === 'valve') {
-          return <SmartValveIcon />
+          return <SmartValveIcon size={size} />
         }
         break
       case 'smartIR':
-        return <SmartIrIcon />
+        return <SmartIrIcon size={size} />
       case 'smartTempSensor':
-        return <SmartTempSensorIcon />
+        return <SmartTempSensorIcon size={size} />
       case 'smartDoorSensor':
-        return <SmartDoorIcon />
+        return <SmartDoorIcon size={size} />
       case 'smartSirenAlarm':
-        return <SmartSirenAlarmIcon />
+        return <SmartSirenAlarmIcon size={size} />
       case 'smartLed':
         return device.sub_type === 'bulb' ? (
-          <SmartBulbIcon />
+          <SmartBulbIcon size={size} />
         ) : (
-          <SmartRGBControllerIcon />
+          <SmartRGBControllerIcon size={size} />
         )
       case 'smartMotionSensor':
         if (device.sub_type === 'pir') {
-          return <SmartMotionIcon />
+          return <SmartMotionIcon size={size} />
         } else if (device.sub_type === 'vibration') {
-          ;<SmartVibrationIcon />
+          return <SmartVibrationIcon size={size} />
         }
       case 'zbHub':
-        return <ZbHubIcon />
+        return <ZbHubIcon size={size} />
       default:
         // Handle default case or set a default icon
         return <></>

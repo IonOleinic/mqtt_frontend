@@ -15,7 +15,7 @@ import zigbeeLogo from '../ConnectionTypeImages/zigbee-logo.png'
 import bluetoothLogo from '../ConnectionTypeImages/bluetooth-logo.png'
 import './Device.css'
 
-function Device({ handleDeleteDevice, initDevice }) {
+function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
   const menuRight = useRef(null)
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ function Device({ handleDeleteDevice, initDevice }) {
   const [device, setDevice] = useState(initDevice)
   const { deviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
     useDeviceIcon(device)
-  const finalDevice = useFinalDevice(device)
+  const finalDevice = useFinalDevice(device, refreshDevices)
 
   const updateDevice = async () => {
     try {
@@ -92,10 +92,10 @@ function Device({ handleDeleteDevice, initDevice }) {
       key={device.id}
       style={{
         borderColor:
-          device.connection_type === 'wifi'
-            ? 'rgba(20, 20, 250, 0.8)'
-            : device.connection_type === 'zigbee'
+          device.connection_type === 'zigbee'
             ? 'rgba(250, 20, 20, 0.8)'
+            : device.connection_type === 'wifi'
+            ? 'rgba(20, 20, 250, 0.8)'
             : 'transparent',
       }}
     >
@@ -196,7 +196,7 @@ function Device({ handleDeleteDevice, initDevice }) {
         <div className='device-right-icons'>
           {device.connection_type && (
             <img
-              src={device.connection_type === 'wifi' ? wifiLogo : zigbeeLogo}
+              src={device.connection_type === 'zigbee' ? zigbeeLogo : wifiLogo}
               style={{
                 width: device.connection_type === 'wifi' ? '30px' : '20px',
                 height: '20px',

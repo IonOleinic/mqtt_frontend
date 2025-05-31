@@ -1,5 +1,3 @@
-import React from 'react'
-
 function useOptionTemplate() {
   const selectedOptionTemplate = (option, props) => {
     if (option) {

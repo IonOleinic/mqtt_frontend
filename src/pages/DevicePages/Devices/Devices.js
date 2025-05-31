@@ -339,6 +339,7 @@ const Devices = () => {
                 key={device.id}
                 initDevice={device}
                 handleDeleteDevice={handleDeleteDevice}
+                refreshDevices={getDevices}
               />
             )
           })}

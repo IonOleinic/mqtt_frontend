@@ -1,0 +1,145 @@
+.zb-hub {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.zb-pair-container {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+.zb-pair-title {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.zb-pair-title p {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+.zb-pair-btns {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.zb-pair-btn {
+  width: 110px;
+  height: 35px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.zb-pair-btn:disabled {
+  background-color: #ccc;
+  cursor: initial;
+}
+.zb-pair-btn-start {
+  background-color: var(--active-color);
+}
+.zb-pair-btn-start:hover:enabled {
+  background-color: var(--hover-color);
+}
+.zb-pair-btn-stop {
+  background-color: var(--danger-color);
+}
+.zb-pair-btn-stop:hover:enabled {
+  background-color: var(--hover-danger-color);
+}
+.zb-devices-container {
+  width: 100%;
+  height: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.zb-devices-title {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zb-devices-title p {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+.zb-devices-preview {
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow-y: auto;
+}
+.zb-device-preview {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.zb-device-info {
+  display: flex;
+  align-items: center;
+  width: 190px;
+}
+.zb-device-info p {
+  width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+.zb-device-battery-level,
+.zb-device-signal-level,
+.zb-device-last-seen,
+.zb-device-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+}
+.zb-device-last-seen {
+  width: 55px;
+  padding-left: 3px;
+  gap: 2px;
+  justify-content: flex-start;
+}
+.zb-device-last-seen p {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+.zb-device-delete {
+  transition: all 0.2s ease-in-out;
+}
+.zb-device-delete:hover {
+  color: var(--danger-color);
+  cursor: pointer;
+}

@@ -6,8 +6,9 @@ import SmartSwitch from '../components/DeviceComponents/Device/SmartSwitch/Smart
 import SmartIR from '../components/DeviceComponents/Device/SmartIR/SmartIR'
 import SmartTempSensor from '../components/DeviceComponents/Device/SmartTempSensor/SmartTempSensor'
 import SmartDoorSensor from '../components/DeviceComponents/Device/SmartDoorSensor/SmartDoorSensor'
+import ZbHub from '../components/DeviceComponents/Device/ZbHub/ZbHub'
 
-function useFinalDevice(device) {
+function useFinalDevice(device, refreshDevices) {
   const [finalDevice, setFinalDevice] = useState(<></>)
 
   useEffect(() => {
@@ -27,6 +28,10 @@ function useFinalDevice(device) {
           setFinalDevice(<SmartLed device={device} />)
         } else if (device.device_type === 'smartMotionSensor') {
           setFinalDevice(<SmartMotionSensor device={device} />)
+        } else if (device.device_type === 'zbHub') {
+          setFinalDevice(
+            <ZbHub device={device} refreshDevices={refreshDevices} />
+          )
         }
       } catch (error) {
         console.error(
