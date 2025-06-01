@@ -21,22 +21,14 @@ import useDebounce from '../../../hooks/useDebounce'
 import useOptionTemplate from '../../../hooks/useOptionTemplate'
 import './Devices.css'
 
-const tiCalendarIcon = <TiCalendar size={20} />
-const tiSortAlphabeticallyIcon = <TiSortAlphabetically size={20} />
-
-const tiStarHalfOutlineIcon = <TiStarHalfOutline color='black' />
-const tiStarFullOutlineIcon = <TiStarFullOutline color='gold' />
-const tiStarOutlineIcon = <TiStarOutline color='black' />
-
 const selectedOrderOptions = [
-  { name: 'Date', icon: tiCalendarIcon },
-  { name: 'Name', icon: tiSortAlphabeticallyIcon },
+  { name: 'Date', icon: <TiCalendar size={20} /> },
+  { name: 'Name', icon: <TiSortAlphabetically size={20} /> },
 ]
-
 const selectedFavoriteOptions = [
-  { name: 'All', icon: tiStarHalfOutlineIcon },
-  { name: 'Yes', icon: tiStarFullOutlineIcon },
-  { name: 'No', icon: tiStarOutlineIcon },
+  { name: 'All', icon: <TiStarHalfOutline color='black' /> },
+  { name: 'Yes', icon: <TiStarFullOutline color='gold' /> },
+  { name: 'No', icon: <TiStarOutline color='black' /> },
 ]
 
 const Devices = () => {

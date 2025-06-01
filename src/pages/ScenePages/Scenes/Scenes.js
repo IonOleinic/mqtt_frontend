@@ -20,26 +20,19 @@ import useDebounce from '../../../hooks/useDebounce'
 import useOptionTemplate from '../../../hooks/useOptionTemplate'
 import './Scenes.css'
 
-const tiCalendarIcon = <TiCalendar size={20} />
-const tiSortAlphabeticallyIcon = <TiSortAlphabetically size={20} />
-
-const tiStarHalfOutlineIcon = <TiStarHalfOutline color='black' />
-const tiStarFullOutlineIcon = <TiStarFullOutline color='gold' />
-const tiStarOutlineIcon = <TiStarOutline color='black' />
-
 const selectedOrderOptions = [
-  { name: 'Date', icon: tiCalendarIcon },
-  { name: 'Name', icon: tiSortAlphabeticallyIcon },
+  { name: 'Date', icon: <TiCalendar size={20} /> },
+  { name: 'Name', icon: <TiSortAlphabetically size={20} /> },
 ]
-
 const selectedFavoriteOptions = [
-  { name: 'All', icon: tiStarHalfOutlineIcon },
-  { name: 'Yes', icon: tiStarFullOutlineIcon },
-  { name: 'No', icon: tiStarOutlineIcon },
+  { name: 'All', icon: <TiStarHalfOutline color='black' /> },
+  { name: 'Yes', icon: <TiStarFullOutline color='gold' /> },
+  { name: 'No', icon: <TiStarOutline color='black' /> },
 ]
 
 const Scenes = () => {
   const { selectedOptionTemplate, optionTemplate } = useOptionTemplate()
+  const axios = useAxiosPrivate()
   const [scenes, setScenes] = useState([])
   const [sceneInvolvedDevices, setSceneInvolvedDevices] = useState([])
   const [selectedDevices, setSelectedDevices] = useState([])
@@ -61,7 +54,6 @@ const Scenes = () => {
     selectedFavoriteOptions[0]
   )
   const [toolbarExpanded, setToolbarExpanded] = useState(false)
-  const axios = useAxiosPrivate()
 
   const getScenes = async (usedFilter = filter, usedOrder = selectedOrder) => {
     try {
@@ -77,7 +69,7 @@ const Scenes = () => {
 
   const getSceneInvolvedDevices = async () => {
     try {
-      const response = await axios.get(`/scene-involved-devices`)
+      const response = await axios.get(`/devices/scene-involved`)
       setSceneInvolvedDevices(response.data)
     } catch (error) {
       console.log(error.message)
@@ -340,7 +332,7 @@ const Scenes = () => {
             {scenes.map((scene) => {
               return (
                 <Scene
-                  init_scene={scene}
+                  initScene={scene}
                   key={scene.id}
                   handleDeleteScene={handleDeleteScene}
                 />

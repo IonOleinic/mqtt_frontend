@@ -10,90 +10,74 @@ import Schedule from './Schedule/Schedule'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import DeviceScene from './DeviceScene/DeviceScene'
 import WeatherScene from './WeatherScene/WeatherScene'
-import wheather_icon from '../SceneTypeImages/wheather_scene_icon.png'
-import location_icon from '../SceneTypeImages/location_scene_icon.png'
-import device_scene_icon from '../SceneTypeImages/device_scene_icon.png'
-import schedule_icon from '../SceneTypeImages/schedule_icon.png'
-import './Scene.css'
+import wheatherIcon from '../SceneTypeImages/wheather_scene_icon.png'
+import locationIcon from '../SceneTypeImages/location_scene_icon.png'
+import deviceSceneIcon from '../SceneTypeImages/device_scene_icon.png'
+import scheduleIcon from '../SceneTypeImages/schedule_icon.png'
 import InactiveLayer from '../../CSSLayers/InactiveLayer/InactiveLayer'
+import useUtils from '../../../hooks/useUtils'
+import './Scene.css'
 
-const favIconEnabled = <TiStarFullOutline size={26} style={{ color: 'gold' }} />
-const favIconDisabled = <TiStarOutline size={26} style={{ color: 'black' }} />
-function Scene({ init_scene, handleDeleteScene }) {
+function Scene({ initScene, handleDeleteScene }) {
   const axios = useAxiosPrivate()
   const menuRight = useRef(null)
-  const [favIcon, setFavIcon] = useState(favIconDisabled)
+  const [favIcon, setFavIcon] = useState(<></>)
   const [favBool, setFavBool] = useState(false)
-  const [visibility, setVisibility] = useState(true)
+  const [expanded, setExpanded] = useState(true)
   const [isActive, setIsActive] = useState(false)
-  const [scene, setScene] = useState(init_scene)
+  const [scene, setScene] = useState(initScene)
   const [sceneIcon, setSceneIcon] = useState('')
+  const { getDateFromStr } = useUtils()
 
-  const getDateFromStr = (date) => {
-    const addZero = (i) => {
-      if (i <= 9) {
-        return '0' + i
-      } else {
-        return i
-      }
-    }
-    let temp_date = new Date(date)
-    return (
-      addZero(temp_date.getDate()) +
-      '-' +
-      addZero(temp_date.getMonth() + 1) +
-      '-' +
-      temp_date.getFullYear()
-    )
-  }
-  async function updateScene() {
-    try {
-      let result = await axios.put(`/scene/${scene.id}`, scene)
-      if (result.data) {
-        setScene(result.data)
-      }
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
   useEffect(() => {
-    if (scene.favorite == 'true' || scene.favorite == true) {
-      setFavIcon(favIconEnabled)
+    if (scene.favorite) {
+      setFavIcon(<TiStarFullOutline size={26} style={{ color: 'gold' }} />)
       setFavBool(true)
     } else {
-      setFavIcon(favIconDisabled)
+      setFavIcon(<TiStarOutline size={26} style={{ color: 'black' }} />)
       setFavBool(false)
     }
-    if (scene.active == true || scene.active == 'true') {
+    if (scene.active) {
       setIsActive(true)
     } else {
       setIsActive(false)
     }
     switch (scene.scene_type) {
       case 'weather':
-        setSceneIcon(wheather_icon)
+        setSceneIcon(wheatherIcon)
         break
       case 'location':
-        setSceneIcon(location_icon)
+        setSceneIcon(locationIcon)
         break
       case 'deviceScene':
-        setSceneIcon(device_scene_icon)
+        setSceneIcon(deviceSceneIcon)
         break
       case 'schedule':
-        setSceneIcon(schedule_icon)
+        setSceneIcon(scheduleIcon)
         break
       default:
         break
     }
   }, [scene])
 
-  let final_scene = <></>
+  async function updateScene() {
+    try {
+      const response = await axios.put(`/scene/${scene.id}`, scene)
+      if (response.data) {
+        setScene(response.data)
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  let finalScene = <></>
   if (scene.scene_type === 'schedule') {
-    final_scene = <Schedule scene={scene} />
+    finalScene = <Schedule scene={scene} />
   } else if (scene.scene_type === 'deviceScene') {
-    final_scene = <DeviceScene scene={scene} />
+    finalScene = <DeviceScene scene={scene} />
   } else if (scene.scene_type === 'weather') {
-    final_scene = <WeatherScene scene={scene} />
+    finalScene = <WeatherScene scene={scene} />
   }
   const menuItems = [
     { label: 'Info', icon: 'pi pi-info-circle' },
@@ -126,10 +110,10 @@ function Scene({ init_scene, handleDeleteScene }) {
         <label
           className='icon-expand'
           onClick={() => {
-            setVisibility(!visibility)
+            setExpanded(!expanded)
           }}
           style={{
-            transform: visibility ? 'rotate(180deg)' : 'rotate(0)',
+            transform: expanded ? 'rotate(180deg)' : 'rotate(0)',
           }}
         >
           <MdOutlineExpandMore
@@ -142,18 +126,22 @@ function Scene({ init_scene, handleDeleteScene }) {
           alt='scene-img'
           className='scene-img'
           onClick={() => {
-            setVisibility(!visibility)
+            setExpanded(!expanded)
           }}
         />
         <div className='scene-info'>
-          <h3
+          <p
             onClick={() => {
-              setVisibility(!visibility)
+              setExpanded(!expanded)
             }}
           >
             {scene.name}
-          </h3>
+          </p>
           <Switch
+            onColor='#6366f1'
+            offColor='#ccc'
+            checkedIcon={false}
+            uncheckedIcon={false}
             checked={isActive}
             onChange={() => {
               scene.active = !isActive
@@ -187,18 +175,14 @@ function Scene({ init_scene, handleDeleteScene }) {
           </span>
         </div>
         <span className='scene-date'>
-          {getDateFromStr(scene.createdAt.toString())}
+          {getDateFromStr(scene.createdAt?.toString())}
         </span>
       </div>
       <div
-        className={
-          visibility === true ? 'final-scene' : 'final-scene final-scene-hidden'
-        }
+        className={expanded ? 'final-scene' : 'final-scene final-scene-hidden'}
       >
-        {final_scene}
-        <InactiveLayer
-          visibility={!(scene.active === true || scene.active === 'true')}
-        />
+        {finalScene}
+        <InactiveLayer visibility={!scene.active} />
       </div>
     </div>
   )

@@ -89,6 +89,7 @@
 .zb-devices-preview {
   width: 100%;
   min-height: 100px;
+  max-height: 150px;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -102,9 +103,9 @@
   justify-content: space-between;
 }
 .zb-device-info {
+  width: 190px;
   display: flex;
   align-items: center;
-  width: 190px;
 }
 .zb-device-info p {
   width: 190px;
@@ -116,10 +117,7 @@
   padding: 0;
   font-size: 16px;
 }
-.zb-device-battery-level,
-.zb-device-signal-level,
-.zb-device-last-seen,
-.zb-device-delete {
+.zb-device-section {
   display: flex;
   align-items: center;
   justify-content: center;

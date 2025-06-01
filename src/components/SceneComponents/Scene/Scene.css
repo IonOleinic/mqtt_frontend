@@ -22,7 +22,7 @@
   overflow: hidden;
 }
 .scene-img:hover,
-.scene-info h3:hover {
+.scene-info p:hover {
   cursor: pointer;
 }
 .scene-info {
@@ -31,10 +31,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  text-align: center;
-  width: 10rem;
+  width: 150px;
 }
-.scene-info h3 {
+.scene-info p {
+  width: 100%;
+  word-wrap: break-word;
+  text-align: center;
   font-size: 1.3rem;
   margin: 0;
   margin-top: 0.2rem;
@@ -42,7 +44,7 @@
 .scene-date {
   position: absolute;
   font-size: 0.8rem;
-  bottom: 0rem;
+  bottom: 0;
   left: 0.5rem;
   font-style: italic;
 }

@@ -412,3 +412,6 @@
 .p-stepper.p-stepper-vertical .p-stepper-panel .p-stepper-separator {
   margin-inline-start: 0.8rem;
 }
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+  max-width: 460px;
+}

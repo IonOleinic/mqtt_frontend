@@ -12,14 +12,13 @@ import { FiMoreVertical } from 'react-icons/fi'
 import { LiaCubesSolid } from 'react-icons/lia'
 import wifiLogo from '../ConnectionTypeImages/wifi-logo.png'
 import zigbeeLogo from '../ConnectionTypeImages/zigbee-logo.png'
-import bluetoothLogo from '../ConnectionTypeImages/bluetooth-logo.png'
 import './Device.css'
 
 function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
   const menuRight = useRef(null)
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
-  const [visibility, setVisibility] = useState(false)
+  const [expanded, setExpanded] = useState(true)
   const [device, setDevice] = useState(initDevice)
   const { deviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
     useDeviceIcon(device)
@@ -71,7 +70,7 @@ function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
       icon: 'pi pi-trash',
       command: () => {
         confirmDialog({
-          message: `Do you want to move to trash device ${device.name}?`,
+          message: `Do you want to move to trash device ${device.name}? Associated scenes will be destroyed!`,
           header: 'Delete Confirmation',
           icon: 'pi pi-trash',
           defaultFocus: 'reject',
@@ -102,10 +101,10 @@ function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
       <div className='device-top'>
         <button
           className={
-            visibility ? 'icon-expand icon-expand-rotated' : 'icon-expand'
+            expanded ? 'icon-expand icon-expand-rotated' : 'icon-expand'
           }
           onClick={() => {
-            setVisibility(!visibility)
+            setExpanded(!expanded)
           }}
         >
           <MdOutlineExpandMore
@@ -115,7 +114,7 @@ function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
         </button>
         <div
           onClick={() => {
-            setVisibility(!visibility)
+            setExpanded(!expanded)
           }}
           className={
             device.available
@@ -132,7 +131,7 @@ function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
               : 'device-info inactive-color'
           }
           onClick={() => {
-            setVisibility(!visibility)
+            setExpanded(!expanded)
           }}
         >
           <h3>{device.name} </h3>
@@ -207,7 +206,7 @@ function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
       </div>
       <div
         className={
-          visibility === true
+          expanded === true
             ? 'final-device'
             : 'final-device final-device-hidden'
         }

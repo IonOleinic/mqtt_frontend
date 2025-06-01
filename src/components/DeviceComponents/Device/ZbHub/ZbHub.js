@@ -123,7 +123,7 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
   }, [zbDevice])
 
   const toMinutes = (seconds) => {
-    if (!seconds) return '00 m'
+    if (!seconds) return ' - - '
     const minutes = Math.floor(seconds / 60)
     if (minutes <= 60) {
       return minutes.toString().padStart(2, '0') + ' m'
@@ -144,17 +144,19 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
       <div className='zb-device-info'>
         <p>{`(${zbDevice.Device}) ${zbDevice?.Name || 'unknown'}`}</p>
       </div>
-      <div className='zb-device-battery-level'>{batteryIcon}</div>
-      <div className='zb-device-signal-level'>{signalIcon}</div>
-      <div className='zb-device-last-seen'>
+      <div className='zb-device-section'>{batteryIcon}</div>
+      <div className='zb-device-section'>{signalIcon}</div>
+      <div className='zb-device-section zb-device-last-seen'>
         <GoClock size={16} color='black' />
         <p>{toMinutes(zbDevice?.LastSeen)}</p>
       </div>
       <div
-        className='zb-device-delete'
+        className='zb-device-section zb-device-delete'
         onClick={() => {
           confirmDialog({
-            message: `Do you want to destroy and unpair zigbee device (${zbDevice.Device})?`,
+            message: `Do you want to destroy and unpair zigbee device (${
+              zbDevice.Device
+            }) ${zbDevice.Name || ''} ? Associated scenes will be destroyed!`,
             header: 'Destroy Confirmation',
             icon: 'pi pi-trash',
             defaultFocus: 'reject',
