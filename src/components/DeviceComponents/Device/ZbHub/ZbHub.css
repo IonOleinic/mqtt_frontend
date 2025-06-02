@@ -10,12 +10,12 @@
 }
 .zb-pair-container {
   width: 100%;
-  height: 80px;
+  height: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 10px 0;
+  margin-top: 5px;
 }
 .zb-pair-title {
   width: 100%;
@@ -103,12 +103,12 @@
   justify-content: space-between;
 }
 .zb-device-info {
-  width: 190px;
+  width: 180px;
   display: flex;
   align-items: center;
 }
 .zb-device-info p {
-  width: 190px;
+  width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

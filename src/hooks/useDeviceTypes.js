@@ -217,7 +217,6 @@ function useDeviceTypes(group) {
             type: 'smartDoorSensor',
             icon: <SmartDoorIcon />,
             connectionType: 'zigbee',
-            disabled: true,
           },
         ]
       case 'Temp & Humidity':
@@ -233,7 +232,6 @@ function useDeviceTypes(group) {
             type: 'smartTempSensor',
             icon: <SmartTempSensorIcon />,
             connectionType: 'zigbee',
-            disabled: true,
           },
         ]
       case 'Motion':
@@ -259,7 +257,6 @@ function useDeviceTypes(group) {
             sub_type: 'pir',
             icon: <SmartMotionIcon />,
             connectionType: 'zigbee',
-            disabled: true,
           },
           {
             label: 'Zb Vibration Sensor',

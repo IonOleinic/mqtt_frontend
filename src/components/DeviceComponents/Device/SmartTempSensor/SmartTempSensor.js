@@ -28,7 +28,7 @@ function SmartTempSensor({ device }) {
           <div className='temp-item-icon'>
             <WiHumidity size={60} color='blue' />
           </div>
-          <p>{humidity}</p>
+          <p style={{ marginRight: 2 }}>{humidity}</p>
           <AiOutlinePercentage size={36} />
         </div>
       </div>

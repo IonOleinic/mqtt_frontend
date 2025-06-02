@@ -100,7 +100,6 @@ function SubSceneSmartLed({
             value={selectedPowerValue}
             options={['OFF', 'ON']}
             onChange={(e) => {
-              console.log(e.value)
               setSelectedPowerValue(e.value)
               if (eventOrAction == 'event') {
                 if (e.target.value == 'OFF') {

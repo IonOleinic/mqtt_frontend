@@ -15,10 +15,12 @@ function SmartDoorSensor({ device }) {
   const [lockImg, setLockImg] = useState(lockedImg)
   useEffect(() => {
     setStatus(device.attributes.status)
-    if (device.attributes.status == 'Closed') {
-      setLockImg(lockedImg)
-    } else {
+    if (device.attributes.status === 'ON') {
+      setStatus('Opened')
       setLockImg(unlockedImg)
+    } else {
+      setStatus('Closed')
+      setLockImg(lockedImg)
     }
   }, [device])
   const sendToggleDirection = async () => {
@@ -33,13 +35,13 @@ function SmartDoorSensor({ device }) {
     <div className='smart-door-sensor'>
       <div className='door-status-container'>
         {lockImg}
-        <p style={{ color: status == 'Closed' ? '#46B60A' : 'red' }}>
+        <p style={{ color: status === 'Opened' ? 'red' : '#46B60A' }}>
           {status}
         </p>
       </div>
       <div
         className='door-image-container'
-        style={{ gap: status == 'Closed' ? '0' : '50px' }}
+        style={{ gap: status === 'Opened' ? '50px' : '0' }}
       >
         <DoorMainModuleImage color={'black'} width={70} height={130} />
         <DoorSecondModuleImage color={'black'} width={50} height={80} />
@@ -47,7 +49,12 @@ function SmartDoorSensor({ device }) {
       <div
         className='door-switch-direction-btn'
         onClick={sendToggleDirection}
-        style={{ display: device.manufacter == 'tasmota' ? 'flex' : 'none' }}
+        style={{
+          display:
+            device.connection_type === 'wifi' && device.manufacter === 'tasmota'
+              ? 'flex'
+              : 'none',
+        }}
       >
         <HiOutlineSwitchHorizontal size={20} color='black' />
       </div>

@@ -129,12 +129,20 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
       return minutes.toString().padStart(2, '0') + ' m'
     }
     const hours = Math.floor(minutes / 60)
-    if (hours <= 60) {
+    if (hours <= 24) {
       return hours.toString().padStart(2, '0') + ' h'
     }
     const days = Math.floor(hours / 24)
-    if (hours <= 60) {
+    if (days <= 365) {
       return days.toString().padStart(2, '0') + ' d'
+    }
+    const months = Math.floor(days / 30)
+    if (months <= 12) {
+      return months.toString().padStart(2, '0') + ' y'
+    }
+    const years = Math.floor(months / 12)
+    if (years > 0) {
+      return years.toString().padStart(2, '0') + ' y'
     }
     return '?'
   }
