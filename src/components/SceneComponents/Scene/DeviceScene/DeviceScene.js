@@ -4,6 +4,8 @@ import { HiOutlineArrowRight } from 'react-icons/hi'
 import { GrAction } from 'react-icons/gr'
 import { MdPendingActions } from 'react-icons/md'
 import useDeviceIcon from '../../../../hooks/useDeviceIcon'
+import wifiLogo from '../../../DeviceComponents/ConnectionTypeImages/wifi-logo.png'
+import zigbeeLogo from '../../../DeviceComponents/ConnectionTypeImages/zigbee-logo.png'
 import './DeviceScene.css'
 
 function DeviceScene({ scene }) {
@@ -38,24 +40,56 @@ function DeviceScene({ scene }) {
     <div className='device-scene'>
       <div className='device-scene-top'>
         <div className='device-scene-item'>
-          <div className='device-scene-name-img'>
+          <div className='device-scene-data'>
             <p>{condDevice.name}</p>
             {condDeviceIcons.deviceIcon}
+            <div className='device-scene-connection-type'>
+              {condDevice.connection_type && (
+                <img
+                  src={
+                    condDevice.connection_type === 'zigbee'
+                      ? zigbeeLogo
+                      : wifiLogo
+                  }
+                  style={{
+                    width:
+                      condDevice.connection_type === 'wifi' ? '30px' : '20px',
+                    height: '20px',
+                  }}
+                />
+              )}
+            </div>
           </div>
-          <div className='device-scene-text'>
-            <MdPendingActions size={25} />
+          <div className='device-scene-event'>
+            <MdPendingActions size={22} />
             <p>{scene.conditional_text}</p>
           </div>
         </div>
-        <div className='arrow-right'>
+        <div>
           <HiOutlineArrowRight size={30} color={'black'} />
         </div>
         <div className='device-scene-item'>
-          <div className='device-scene-name-img'>
+          <div className='device-scene-data'>
             <p>{execDevice.name}</p>
             {execDeviceIcons.deviceIcon}
+            <div className='device-scene-connection-type'>
+              {execDevice.connection_type && (
+                <img
+                  src={
+                    execDevice.connection_type === 'zigbee'
+                      ? zigbeeLogo
+                      : wifiLogo
+                  }
+                  style={{
+                    width:
+                      execDevice.connection_type === 'wifi' ? '30px' : '20px',
+                    height: '20px',
+                  }}
+                />
+              )}
+            </div>
           </div>
-          <div className='device-scene-text'>
+          <div className='device-scene-event'>
             <GrAction size={20} />
             {scene.executable_text.includes('Color') ? (
               <div

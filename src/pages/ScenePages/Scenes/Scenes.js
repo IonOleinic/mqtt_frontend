@@ -34,7 +34,7 @@ const Scenes = () => {
   const { selectedOptionTemplate, optionTemplate } = useOptionTemplate()
   const axios = useAxiosPrivate()
   const [scenes, setScenes] = useState([])
-  const [sceneInvolvedDevices, setSceneInvolvedDevices] = useState([])
+  const [involvedDevices, setInvolvedDevices] = useState([])
   const [selectedDevices, setSelectedDevices] = useState([])
   const [filter, setFilter] = useState({
     name: '',
@@ -67,17 +67,17 @@ const Scenes = () => {
     }
   }
 
-  const getSceneInvolvedDevices = async () => {
+  const getInvolvedDevices = async () => {
     try {
       const response = await axios.get(`/devices/scene-involved`)
-      setSceneInvolvedDevices(response.data)
+      setInvolvedDevices(response.data)
     } catch (error) {
       console.log(error.message)
     }
   }
   useEffect(() => {
     // getScenes()
-    getSceneInvolvedDevices()
+    getInvolvedDevices()
   }, [])
 
   useEffect(() => {
@@ -177,7 +177,7 @@ const Scenes = () => {
             </div>
           </div>
           <div className='toolbar-vertical-line' />
-          <div className='toolbar-section device-filters-section'>
+          <div className='toolbar-section filters-section'>
             <div className='toolbar-item'>
               <Button
                 label='Reset'
@@ -185,6 +185,7 @@ const Scenes = () => {
                 outlined
                 onClick={() => {
                   resetFIlter()
+                  setToolbarExpanded(false)
                 }}
               />
             </div>
@@ -227,7 +228,7 @@ const Scenes = () => {
                   setFilter({ ...filter, devices: devicesIds })
                   getScenes({ ...filter, devices: devicesIds })
                 }}
-                options={sceneInvolvedDevices}
+                options={involvedDevices}
                 maxSelectedLabels={2}
                 optionLabel='name'
                 placeholder='Select devices'
@@ -279,6 +280,17 @@ const Scenes = () => {
             </div>
           </div>
           <div className='toolbar-vertical-line' />
+          <div
+            className='toolbar-section result-section'
+            style={{ display: toolbarExpanded ? 'flex' : 'none' }}
+          >
+            <div className='toolbar-item toolbar-item-result'>
+              <p>
+                Finded : {scenes.length}{' '}
+                {scenes.length === 1 ? 'result' : 'results'}
+              </p>
+            </div>
+          </div>
           <div className='toolbar-section apply-filters-section'>
             <div className='toolbar-item toolbar-item-refresh'>
               <Button
@@ -302,15 +314,14 @@ const Scenes = () => {
               />
             </div>
           </div>
-          <div className='colapse-toolbar-btn'>
-            <button
-              onClick={() => {
-                setToolbarExpanded(false)
-              }}
-            >
-              <VscChromeClose size={25} />
-            </button>
-          </div>
+          <button
+            className='colapse-toolbar-btn'
+            onClick={() => {
+              setToolbarExpanded(false)
+            }}
+          >
+            <VscChromeClose size={25} />
+          </button>
         </div>
 
         {scenes.length === 0 ? (

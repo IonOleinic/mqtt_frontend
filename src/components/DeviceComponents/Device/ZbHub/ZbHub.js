@@ -10,11 +10,16 @@ import { CgBatteryEmpty } from 'react-icons/cg'
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
 import { IoMdTrash } from 'react-icons/io'
 import { confirmDialog } from 'primereact/confirmdialog'
+import { Button } from 'primereact/button'
+import { Dialog } from 'primereact/dialog'
 import './ZbHub.css'
+import NoDataFound from '../../../NoDataFound/NoDataFound'
+import { Ripple } from 'primereact/ripple'
 
 function ZbHub({ device, refreshDevices }) {
   const axios = useAxiosPrivate()
   const [connectedDevices, setConnectedDevices] = useState([])
+  const [zbDevicesvisibility, setZbDevicesVisibility] = useState(false)
 
   useEffect(() => {
     setConnectedDevices(device.attributes?.connected_devices || [])
@@ -72,20 +77,50 @@ function ZbHub({ device, refreshDevices }) {
         </div>
       </div>
       <div className='zb-devices-container'>
-        <div className='zb-devices-title'>
+        <button
+          className='zb-devices-button p-ripple'
+          onClick={() => setZbDevicesVisibility(true)}
+        >
+          <Ripple
+            pt={{
+              root: { style: { background: 'rgba(55, 55, 55, 0.3)' } },
+            }}
+          />
           <p>{connectedDevices.length} connected devices</p>
-        </div>
-        <div className='zb-devices-preview'>
-          {connectedDevices
-            ?.sort((a, b) => b.Device - a.Device)
-            .map((zbDevice) => (
-              <ZbDevicePreview
-                key={zbDevice.Device}
-                zbDevice={zbDevice}
-                handleDeleteZbDevice={handleDeleteZbDevice}
-              />
-            ))}
-        </div>
+        </button>
+        <Dialog
+          header='Connected zigbee devices'
+          visible={zbDevicesvisibility}
+          style={{ width: '100vw', maxWidth: '370px' }}
+          onHide={() => {
+            setZbDevicesVisibility(false)
+          }}
+        >
+          <div className='zb-devices-content'>
+            {connectedDevices.length > 0 ? (
+              <div className='zb-devices-preview'>
+                {connectedDevices
+                  ?.sort((a, b) => b.Device - a.Device)
+                  .map((zbDevice) => (
+                    <ZbDevicePreview
+                      key={zbDevice.Device}
+                      zbDevice={zbDevice}
+                      handleDeleteZbDevice={handleDeleteZbDevice}
+                    />
+                  ))}
+              </div>
+            ) : (
+              <NoDataFound />
+            )}
+            <Button
+              style={{ marginTop: '30px' }}
+              label='Ok'
+              onClick={() => {
+                setZbDevicesVisibility(false)
+              }}
+            />
+          </div>
+        </Dialog>
       </div>
     </div>
   )

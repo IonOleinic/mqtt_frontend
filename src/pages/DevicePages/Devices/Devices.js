@@ -178,7 +178,7 @@ const Devices = () => {
           </div>
         </div>
         <div className='toolbar-vertical-line' />
-        <div className='toolbar-section device-filters-section'>
+        <div className='toolbar-section filters-section'>
           <div className='toolbar-item'>
             <Button
               label='Reset'
@@ -186,6 +186,7 @@ const Devices = () => {
               outlined
               onClick={() => {
                 resetFIlter()
+                setToolbarExpanded(false)
               }}
             />
           </div>
@@ -279,6 +280,17 @@ const Devices = () => {
           </div>
         </div>
         <div className='toolbar-vertical-line' />
+        <div
+          className='toolbar-section result-section'
+          style={{ display: toolbarExpanded ? 'flex' : 'none' }}
+        >
+          <div className='toolbar-item toolbar-item-result'>
+            <p>
+              Finded : {devices.length}{' '}
+              {devices.length === 1 ? 'result' : 'results'}
+            </p>
+          </div>
+        </div>
         <div className='toolbar-section apply-filters-section'>
           <div className='toolbar-item toolbar-item-refresh'>
             <Button

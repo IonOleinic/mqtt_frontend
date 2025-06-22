@@ -212,7 +212,7 @@ function Device({ handleDeleteDevice, initDevice, refreshDevices }) {
         }
       >
         {finalDevice}
-        <InactiveLayer visibility={!device.available} />
+        {/* <InactiveLayer visibility={!device.available} /> */}
       </div>
     </div>
   )

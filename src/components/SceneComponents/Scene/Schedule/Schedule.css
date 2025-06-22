@@ -1,18 +1,18 @@
-.schedule {
+.schedule-scene {
   display: flex;
   background-color: transparent;
   width: 100%;
   flex-direction: column;
   position: relative;
-  height: 160px;
-  margin-top: 0.5rem;
+  height: 170px;
+  align-items: center;
+  justify-content: center;
 }
-.schedule-top {
+.schedule-scene-top {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 120px;
 }
 .schedule-scene-item {
   display: flex;
@@ -21,7 +21,8 @@
   justify-content: center;
   width: 140px;
 }
-.schedule-scene-name-img {
+.schedule-scene-data {
+  position: relative;
   width: 100%;
   height: 100px;
   display: flex;
@@ -29,11 +30,11 @@
   align-items: center;
   justify-content: center;
 }
-.schedule-scene-name-img svg {
-  max-width: 70px;
-  max-height: 70px;
+.schedule-scene-data svg {
+  width: 70px;
+  height: 70px;
 }
-.schedule-scene-name-img p {
+.schedule-scene-data p {
   width: 140px;
   font-size: 1rem;
   font-weight: 600;
@@ -46,15 +47,17 @@
   overflow: hidden;
   text-align: center;
 }
-.arrow-right {
-  height: 65px;
+.schedule-scene-connection-type {
+  position: absolute;
+  bottom: 0;
+  left: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.schedule-text {
-  border: 1px solid rgb(173, 173, 173);
+.schedule-scene-event {
+  border: 1px solid black;
   border-radius: 4px;
   margin-top: 0.5rem;
   display: flex;
@@ -64,16 +67,16 @@
   height: 30px;
   gap: 3px;
 }
-.schedule-text p {
+.schedule-scene-event p {
   font-size: 1rem;
   font-weight: 600;
   margin: 0;
-  color: #6a6a6a;
+  color: black;
 }
 .schedule-time {
-  margin-bottom: 0.2rem;
-  margin-top: -1.5rem;
+  margin-bottom: 5px;
   width: 100%;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,37 +86,25 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  gap: 3px;
 }
 .schedule-time-group p {
   margin: 0;
   font-size: 1.3rem;
   font-weight: 600;
 }
-.schedule-time-group .schedule-clock-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 0.3rem;
-}
-.schedule-time-group .schedule-repeat-once-icon {
-  margin-left: 0.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .schedule-repeat {
   width: 100%;
   user-select: none;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 .schedule-repeat p {
   font-size: 0.8rem;
-  width: 45px;
+  width: 40px;
   height: 30px;
   padding: 0.3rem;
-  margin: 0.3rem;
   color: #ccc;
   border: 1px solid #ccc;
   border-radius: 4px;

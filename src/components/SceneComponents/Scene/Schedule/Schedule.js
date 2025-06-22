@@ -5,6 +5,8 @@ import { TbRepeatOnce } from 'react-icons/tb'
 import { BsClock } from 'react-icons/bs'
 import { GrAction } from 'react-icons/gr'
 import useDeviceIcon from '../../../../hooks/useDeviceIcon'
+import wifiLogo from '../../../DeviceComponents/ConnectionTypeImages/wifi-logo.png'
+import zigbeeLogo from '../../../DeviceComponents/ConnectionTypeImages/zigbee-logo.png'
 import './Schedule.css'
 
 function Schedule({ scene }) {
@@ -30,19 +32,35 @@ function Schedule({ scene }) {
     }
   }
   return (
-    <div className='schedule'>
-      <div className='schedule-top'>
+    <div className='schedule-scene'>
+      <div className='schedule-scene-top'>
         <div className='schedule-scene-item'>
-          <div className='schedule-scene-name-img'>
+          <div className='schedule-scene-data'>
             <p>{execDevice.name}</p>
             {execDeviceIcons.deviceIcon}
+            <div className='schedule-scene-connection-type'>
+              {execDevice.connection_type && (
+                <img
+                  src={
+                    execDevice.connection_type === 'zigbee'
+                      ? zigbeeLogo
+                      : wifiLogo
+                  }
+                  style={{
+                    width:
+                      execDevice.connection_type === 'wifi' ? '30px' : '20px',
+                    height: '20px',
+                  }}
+                />
+              )}
+            </div>
           </div>
         </div>
-        <div className='arrow-right'>
+        <div>
           <HiOutlineArrowRight size={30} color={'black'} />
         </div>
         <div className='schedule-scene-item'>
-          <div className='schedule-text'>
+          <div className='schedule-scene-event'>
             <GrAction size={20} />
             {scene.executable_text.includes('Color') ? (
               <div
@@ -73,20 +91,15 @@ function Schedule({ scene }) {
       </div>
       <div className='schedule-time'>
         <div className='schedule-time-group'>
-          <span className='schedule-clock-icon'>
-            <BsClock size={18} color={'black'} />
-          </span>
-          <p>{scene.hour}</p>
-          <p>:</p>
-          <p>{addZero(Number(scene.minute))}</p>
-          <span
-            className='schedule-repeat-once-icon'
+          <BsClock size={18} color={'black'} />
+          <p>{`${scene.hour}:${addZero(Number(scene.minute))}`}</p>
+          <TbRepeatOnce
+            size={18}
+            color={'red'}
             style={{
               display: scene.dayOfWeek == '' ? 'flex' : 'none',
             }}
-          >
-            <TbRepeatOnce size={18} color={'red'} />
-          </span>
+          />
         </div>
       </div>
       <div className='schedule-repeat'>

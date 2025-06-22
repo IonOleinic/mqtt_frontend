@@ -134,11 +134,11 @@ function AddDevice() {
     const isFirstStepValid = validateFirstStep()
     setIsFirstStepValid(isFirstStepValid)
     if (isFirstStepValid) resetSelectedOptions()
-    chooseSubDevice(selectedSubTypeGroup?.type)
   }, [selectedSubTypeGroup])
 
   useEffect(() => {
     setIsMqttNameValid(true)
+    chooseSubDevice(selectedSubTypeGroup?.type)
   }, [mqttName])
   useEffect(() => {
     setIsShortAddrValid(true)

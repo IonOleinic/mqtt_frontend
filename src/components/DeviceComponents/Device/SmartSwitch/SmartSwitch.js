@@ -51,10 +51,10 @@ function SmartSwitch({ device }) {
       }
     }
   }
-  const sendChangePower = async (socket_nr, pwr_status) => {
+  const sendChangePower = async (socketNr, pwrStatus) => {
     await axios.post(
-      `/smartStrip?status=${pwr_status}&device_id=${device.id}&socket_nr=${
-        socket_nr + 1
+      `/smartSwitch?status=${pwrStatus}&device_id=${device.id}&socket_nr=${
+        socketNr + 1
       }`
     )
   }

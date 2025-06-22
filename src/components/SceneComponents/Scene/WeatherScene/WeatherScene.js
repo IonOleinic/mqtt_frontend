@@ -6,6 +6,8 @@ import { ImLocation } from 'react-icons/im'
 import { TbTemperatureCelsius } from 'react-icons/tb'
 import { GrAction } from 'react-icons/gr'
 import useDeviceIcon from '../../../../hooks/useDeviceIcon'
+import wifiLogo from '../../../DeviceComponents/ConnectionTypeImages/wifi-logo.png'
+import zigbeeLogo from '../../../DeviceComponents/ConnectionTypeImages/zigbee-logo.png'
 import './WeatherScene.css'
 
 function WeatherScene({ scene }) {
@@ -29,36 +31,44 @@ function WeatherScene({ scene }) {
       <div className='weather-scene-top'>
         <div className='weather-scene-item'>
           <div className='weather-scene-location'>
-            <div>
-              <ImLocation size={22} color='blue' />
-            </div>
-            <p>
-              {scene?.city}
-              {', '}
-              {scene?.country}
-            </p>
+            <ImLocation size={22} color='blue' />
+            <p>{`${scene?.city}, ${scene?.country}`}</p>
           </div>
           <div className='weather-scene-temperature'>
-            <FaTemperatureLow size={38} color='red' />
-            <p>
-              {scene.comparison_sign + ' '} {scene.target_temperature}{' '}
-              <TbTemperatureCelsius
-                size={30}
-                color='black'
-                className='celsius-icon'
-              />
-            </p>
+            <FaTemperatureLow size={30} color='red' />
+            <p>{`${scene.comparison_sign} ${scene.target_temperature} `}</p>
+            <TbTemperatureCelsius
+              size={30}
+              color='black'
+              className='celsius-icon'
+            />
           </div>
         </div>
-        <div className='arrow-right'>
+        <div>
           <HiOutlineArrowRight size={30} color={'black'} />
         </div>
         <div className='weather-scene-item'>
-          <div className='weather-scene-name-img'>
+          <div className='weather-scene-data'>
             <p>{execDevice.name}</p>
             {execDeviceIcons.deviceIcon}
+            <div className='weather-scene-connection-type'>
+              {execDevice.connection_type && (
+                <img
+                  src={
+                    execDevice.connection_type === 'zigbee'
+                      ? zigbeeLogo
+                      : wifiLogo
+                  }
+                  style={{
+                    width:
+                      execDevice.connection_type === 'wifi' ? '30px' : '20px',
+                    height: '20px',
+                  }}
+                />
+              )}
+            </div>
           </div>
-          <div className='weather-scene-text'>
+          <div className='weather-scene-event'>
             <GrAction size={20} />
             {scene.executable_text.includes('Color') ? (
               <div

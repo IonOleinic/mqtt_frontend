@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .zb-pair-container {
   width: 100%;
@@ -67,20 +67,24 @@
 }
 .zb-devices-container {
   width: 100%;
-  height: 170px;
+  height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-.zb-devices-title {
-  width: 100%;
-  height: 20px;
+.zb-devices-button {
+  width: 250px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid black;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: transparent;
 }
-.zb-devices-title p {
+.zb-devices-button p {
   margin: 0;
   padding: 0;
   font-size: 18px;
@@ -88,31 +92,35 @@
 }
 .zb-devices-preview {
   width: 100%;
-  min-height: 100px;
-  max-height: 150px;
+  min-height: 200px;
+  max-height: 300px;
   display: flex;
   flex-direction: column;
   gap: 5px;
   overflow-y: auto;
 }
+.zb-devices-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
 .zb-device-preview {
   width: 100%;
-  height: 30px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 .zb-device-info {
-  width: 180px;
+  width: 170px;
   display: flex;
   align-items: center;
 }
 .zb-device-info p {
-  width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: left;
+  width: 170px;
   margin: 0;
   padding: 0;
   font-size: 16px;

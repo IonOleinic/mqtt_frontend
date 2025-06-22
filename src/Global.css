@@ -76,6 +76,9 @@
   display: flex;
   justify-self: flex-end;
 }
+.result-section {
+  display: none;
+}
 .toolbar-item {
   position: relative;
   display: flex;
@@ -205,6 +208,7 @@
   align-items: center;
   justify-content: center;
 }
+
 @media (max-width: 568px) {
   .toolbar {
     padding: 0.2rem 0 4rem 0;
@@ -222,7 +226,7 @@
     width: 100%;
     justify-content: center;
   }
-  .device-filters-section {
+  .filters-section {
     width: 100%;
     padding: 0 2rem;
     gap: 2rem;
@@ -237,6 +241,13 @@
   }
   .toolbar-vertical-line {
     display: none;
+  }
+  .result-section {
+    justify-content: flex-start;
+    padding: 0 2rem;
+  }
+  .toolbar-item-result p {
+    font-size: 1.1rem;
   }
 }
 
